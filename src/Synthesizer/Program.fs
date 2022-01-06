@@ -36,20 +36,28 @@ let write stream (data:byte[]) =
     writer.Write(data)
 
 let sample x = (x + 1.)/2. * 255. |> byte 
+let data = Array.init 44100 (fun i -> 
+    (sinWave (float i/44100.) 4. 0.25) + 
+    (sawWave (float i / 44100.) 4. 0.25) +
+    (squareWave (float i/44100.) 4. 0.25) + 
+    (triangleWave (float i / 44100.) 4. 0.25)
+    |> sample)
+let stream = File.Create("tone.wav")
 
-// let dataSin = Array.init 44100 (fun i -> sinWave (float i/44100.) 440. 1. |> sample)
-// let streamSin = File.Create("toneSin.wav")
+let dataSin = Array.init 44100 (fun i -> sinWave (float i/44100.) 1. 1. |> sample)
+let streamSin = File.Create("toneSin.wav")
 
-let dataSaw = Array.init 44100 (fun i -> sawWave (float i/44100.) 2. 1. |> sample)
+let dataSaw = Array.init 44100 (fun i -> sawWave (float i/44100.) 1. 1. |> sample)
 let streamSaw = File.Create("toneSaw.wav")
 
-// let dataSquare = Array.init 44100 (fun i -> squareWave (float i/44100.) 440. 1. |> sample)
-// let streamSquare = File.Create("toneSquare.wav")
+let dataSquare = Array.init 44100 (fun i -> squareWave (float i/44100.) 1. 1. |> sample)
+let streamSquare = File.Create("toneSquare.wav")
 
-// let dataTriangle = Array.init 44100 (fun i -> triangleWave (float i/44100.) 440. 1. |> sample)
-// let streamTriangle = File.Create("toneTriangle.wav")
+let dataTriangle = Array.init 44100 (fun i -> triangleWave (float i/44100.) 1. 1. |> sample)
+let streamTriangle = File.Create("toneTriangle.wav")
 
-// write streamSin dataSin
+write stream data
+write streamSin dataSin
 write streamSaw dataSaw
-// write streamSquare dataSquare
-// write streamTriangle dataTriangle
+write streamSquare dataSquare
+write streamTriangle dataTriangle
