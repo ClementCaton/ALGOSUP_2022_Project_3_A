@@ -1,16 +1,22 @@
 open System.IO
 
+let pi = 3.141592653589793
+
 let sinWave x frequence amplitude =
-    amplitude * sin(float frequence * x * 3.14159)
+    let buffer = frequence * 148.
+    amplitude * sin(2. * pi * x * buffer)
 
 let sawWave x frequence amplitude =
-    2. * amplitude * ( ( (x)/(float frequence) ) - floor( ( (1.) / (2.) ) + ( (x) / (float frequence) ) ) )
+    let buffer = 8000./frequence
+    2. * amplitude * ( x / buffer - floor(0.5 +  x / buffer))
 
 let squareWave x frequence amplitude = 
-    amplitude * float(sign(sin(((2. * 3.14159 * x * float frequence)))))
+    let buffer = frequence * 148.
+    amplitude * float(sign(sin(2. * pi * x * buffer)))
 
 let triangleWave x frequence amplitude = 
-    ((amplitude)/(3.14159)) * asin(sin((3.14159*2.*frequence) * x))
+    let buffer = frequence * 148.
+    2. * amplitude * asin(sin(2. * pi * x * buffer)) / pi
 
 /// Write WAVE PCM soundfile (8KHz Mono 8-bit)
 let write stream (data:byte[]) =
@@ -35,16 +41,16 @@ let write stream (data:byte[]) =
 
 let sample x = (x + 1.)/2. * 255. |> byte 
 
-let dataSin = Array.init 16000 (fun x -> sinWave x 200. 1. |> sample)
+let dataSin = Array.init 8000 (fun i -> sinWave i 1. 1. |> sample)
 let streamSin = File.Create("toneSin.wav")
 
-let dataSaw = Array.init 16000 (fun x -> sawWave x 200. 1. |> sample)
+let dataSaw = Array.init 8000 (fun i -> sawWave i 1. 1. |> sample)
 let streamSaw = File.Create("toneSaw.wav")
 
-let dataSquare = Array.init 16000 (fun x -> squareWave x 200. 1. |> sample)
+let dataSquare = Array.init 8000 (fun i -> squareWave i 1. 1. |> sample)
 let streamSquare = File.Create("toneSquare.wav")
 
-let dataTriangle = Array.init 16000 (fun x -> triangleWave x 200. 1. |> sample)
+let dataTriangle = Array.init 8000 (fun i -> triangleWave i 1. 1. |> sample)
 let streamTriangle = File.Create("toneTriangle.wav")
 
 write streamSin dataSin
