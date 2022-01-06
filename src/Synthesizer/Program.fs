@@ -7,10 +7,10 @@ let sawWave x frequence amplitude =
     2. * amplitude * ( ( (x)/(float frequence) ) - floor( ( (1.) / (2.) ) + ( (x) / (float frequence) ) ) )
 
 let squareWave x frequence amplitude = 
-    amplitude * float(sign(sin(((2. * 3.149 * x * float frequence)))))
+    amplitude * float(sign(sin(((2. * 3.14159 * x * float frequence)))))
 
 let triangleWave x frequence amplitude = 
-    ((amplitude)/(3.14)) * asin(sin((3.14*2.*frequence) * x))
+    ((amplitude)/(3.14159)) * asin(sin((3.14159*2.*frequence) * x))
 
 /// Write WAVE PCM soundfile (8KHz Mono 8-bit)
 let write stream (data:byte[]) =
