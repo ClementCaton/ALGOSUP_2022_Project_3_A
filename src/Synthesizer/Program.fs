@@ -4,27 +4,26 @@ let pi = 3.141592653589793
 
 let sinWave x frequence amplitude =
     let mutable value = amplitude * sin(2. * pi * x * frequence)
-    if value < (-1.) then value <- (-1.)
-    else if value > 1. then value <- 1.
-    value
-
+    if value < (-1.) then (-1.)
+    else if value > 1. then 1.
+    else value
 let sawWave x frequence amplitude =
     let mutable value = 2. * amplitude * ( x * frequence - floor(0.5 +  x * frequence))
-    if value < (-1.) then value <- (-1.)
-    else if value > 1. then value <- 1.
-    value
+    if value < (-1.) then (-1.)
+    else if value > 1. then 1.
+    else value
 
 let squareWave x frequence amplitude = 
     let mutable value = amplitude * float(sign(sin(2. * pi * x * frequence)))
-    if value < (-1.) then value <- (-1.)
-    else if value > 1. then value <- 1.
-    value
+    if value < (-1.) then (-1.)
+    else if value > 1. then 1.
+    else value
 
 let triangleWave x frequence amplitude = 
     let mutable value = 2. * amplitude * asin(sin(2. * pi * x * frequence)) / pi
-    if value < (-1.) then value <- (-1.)
-    else if value > 1. then value <- 1.
-    value
+    if value < (-1.) then (-1.)
+    else if value > 1. then 1.
+    else value
 
 
 /// Write WAVE PCM soundfile (8KHz Mono 8-bit)
