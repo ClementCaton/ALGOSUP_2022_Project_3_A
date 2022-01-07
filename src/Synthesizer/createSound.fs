@@ -21,14 +21,14 @@ let soundMetaData = {
     headerSize = 16;
     pcmFormat = 1s;
     mono = 1s;
-    sampleRate = 44100;
-    byteRate = 44100;
+    sampleRate = 10000;
+    byteRate = 10000;
     blockAlign = 1s;
     bitsPerSample = 8s;
 }
 
 /// Write WAVE PCM soundfile (8KHz Mono 8-bit)
-let createSound stream (metaData:soundMetaData) =
+type createSound stream (metaData:soundMetaData) =
     let sample x = (x + 1.)/2. * 255. |> byte 
     let data:byte[] = Array.init 16000 (fun i -> sin (float i/float 4 ) |> sample)
 
