@@ -2,29 +2,22 @@ open System.IO
 
 let pi = 3.141592653589793
 
+let overdrive x =
+    if x < (-1.) then (-1.)
+    else if x > 1. then 1.
+    else x
+
 let sinWave x frequence amplitude =
-    let mutable value = amplitude * sin(2. * pi * x * frequence)
-    if value < (-1.) then (-1.)
-    else if value > 1. then 1.
-    else value
+    overdrive (amplitude * sin(2. * pi * x * frequence))
+
 let sawWave x frequence amplitude =
-    let mutable value = 2. * amplitude * ( x * frequence - floor(0.5 +  x * frequence))
-    if value < (-1.) then (-1.)
-    else if value > 1. then 1.
-    else value
+    overdrive (2. * amplitude * ( x * frequence - floor(0.5 +  x * frequence)))
 
 let squareWave x frequence amplitude = 
-    let mutable value = amplitude * float(sign(sin(2. * pi * x * frequence)))
-    if value < (-1.) then (-1.)
-    else if value > 1. then 1.
-    else value
+    overdrive (amplitude * float(sign(sin(2. * pi * x * frequence))))
 
 let triangleWave x frequence amplitude = 
-    let mutable value = 2. * amplitude * asin(sin(2. * pi * x * frequence)) / pi
-    if value < (-1.) then (-1.)
-    else if value > 1. then 1.
-    else value
-
+    overdrive (2. * amplitude * asin(sin(2. * pi * x * frequence)) / pi)
 
 /// Write WAVE PCM soundfile (8KHz Mono 8-bit)
 let write stream (data:byte[]) =
