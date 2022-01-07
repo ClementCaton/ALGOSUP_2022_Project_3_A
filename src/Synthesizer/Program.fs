@@ -1,12 +1,13 @@
 ﻿open System
 open System.IO
+open XPlot.Plotly
 
 let pi = Math.PI
-let freq = 440. // In Hertz
+let freq = 1. // In Hertz
 let sampleRate = 44100 // In Hertz
 let amplitude = 0.8
 let overdrive = 0.6
-let duration = 5. // In seconds
+let duration = 1. // In seconds
 let pcmFormat = 1s
 let nbChannels = 1
 let bytesPerSample = 2
@@ -69,3 +70,27 @@ write (File.Create("toneSin.wav")) (generate sinWave)
 write (File.Create("toneSquare.wav")) (generate squareWave)
 write (File.Create("toneTriangle.wav")) (generate triangleWave)
 write (File.Create("toneSaw.wav")) (generate sawWave)
+
+let chart2 =
+    let abc = 
+        float >> (fun x -> (x / float sampleRate)) >> sinWave freq amplitude >> makeOverdrive overdrive
+    Array.init sampleRate abc
+    |> Chart.Line |> Chart.WithOptions(Options(title = "sinusoïdal")) |> Chart.Show
+
+let chart2 =
+    let abc = 
+        float >> (fun x -> (x / float sampleRate)) >> sawWave freq amplitude >> makeOverdrive overdrive
+    Array.init sampleRate abc
+    |> Chart.Line |> Chart.WithOptions(Options(title = "sinusoïdal")) |> Chart.Show
+
+let chart2 =
+    let abc = 
+        float >> (fun x -> (x / float sampleRate)) >> triangleWave freq amplitude >> makeOverdrive overdrive
+    Array.init sampleRate abc
+    |> Chart.Line |> Chart.WithOptions(Options(title = "sinusoïdal")) |> Chart.Show
+
+let chart2 =
+    let abc = 
+        float >> (fun x -> (x / float sampleRate)) >> squareWave freq amplitude >> makeOverdrive overdrive
+    Array.init sampleRate abc
+    |> Chart.Line |> Chart.WithOptions(Options(title = "sinusoïdal")) |> Chart.Show
