@@ -3,16 +3,29 @@ open System.IO
 let pi = 3.141592653589793
 
 let sinWave x frequence amplitude =
-    amplitude * sin(2. * pi * x * frequence)
+    let mutable value = amplitude * sin(2. * pi * x * frequence)
+    if value < (-1.) then value <- (-1.)
+    else if value > 1. then value <- 1.
+    value
 
 let sawWave x frequence amplitude =
-    2. * amplitude * ( x * frequence - floor(0.5 +  x * frequence))
+    let mutable value = 2. * amplitude * ( x * frequence - floor(0.5 +  x * frequence))
+    if value < (-1.) then value <- (-1.)
+    else if value > 1. then value <- 1.
+    value
 
 let squareWave x frequence amplitude = 
-    amplitude * float(sign(sin(2. * pi * x * frequence)))
+    let mutable value = amplitude * float(sign(sin(2. * pi * x * frequence)))
+    if value < (-1.) then value <- (-1.)
+    else if value > 1. then value <- 1.
+    value
 
 let triangleWave x frequence amplitude = 
-    2. * amplitude * asin(sin(2. * pi * x * frequence)) / pi
+    let mutable value = 2. * amplitude * asin(sin(2. * pi * x * frequence)) / pi
+    if value < (-1.) then value <- (-1.)
+    else if value > 1. then value <- 1.
+    value
+
 
 /// Write WAVE PCM soundfile (8KHz Mono 8-bit)
 let write stream (data:byte[]) =
@@ -44,16 +57,16 @@ let data = Array.init 44100 (fun i ->
     |> sample)
 let stream = File.Create("tone.wav")
 
-let dataSin = Array.init 44100 (fun i -> sinWave (float i/44100.) 1. 1. |> sample)
+let dataSin = Array.init 44100 (fun i -> sinWave (float i/44100.) 1. 1.2 |> sample)
 let streamSin = File.Create("toneSin.wav")
 
-let dataSaw = Array.init 44100 (fun i -> sawWave (float i/44100.) 1. 1. |> sample)
+let dataSaw = Array.init 44100 (fun i -> sawWave (float i/44100.) 1. 1.2 |> sample)
 let streamSaw = File.Create("toneSaw.wav")
 
-let dataSquare = Array.init 44100 (fun i -> squareWave (float i/44100.) 1. 1. |> sample)
+let dataSquare = Array.init 44100 (fun i -> squareWave (float i/44100.) 1. 1.2 |> sample)
 let streamSquare = File.Create("toneSquare.wav")
 
-let dataTriangle = Array.init 44100 (fun i -> triangleWave (float i/44100.) 1. 1. |> sample)
+let dataTriangle = Array.init 44100 (fun i -> triangleWave (float i/44100.) 1. 1.2 |> sample)
 let streamTriangle = File.Create("toneTriangle.wav")
 
 write stream data
