@@ -2,22 +2,22 @@ open System.IO
 
 let pi = 3.141592653589793
 
-let overdrive x =
-    if x < (-1.) then (-1.) else
-    if x > 1. then 1. else
+let makeOverdrive x multiplicator=
+    if x < (-1. * multiplicator) then (-1. * multiplicator) else
+    if x > 1. * multiplicator then 1. * multiplicator else
     x
 
 let sinWave x frequence amplitude =
-    overdrive (amplitude * sin(2. * pi * x * frequence))
+    amplitude * sin(2. * pi * x * frequence)
 
 let sawWave x frequence amplitude =
-    overdrive (2. * amplitude * ( x * frequence - floor(0.5 +  x * frequence)))
+    2. * amplitude * ( x * frequence - floor(0.5 +  x * frequence))
 
-let squareWave x frequence amplitude = 
-    overdrive (amplitude * float(sign(sin(2. * pi * x * frequence))))
+let squareWave x frequence amplitude= 
+    amplitude * float(sign(sin(2. * pi * x * frequence)))
 
-let triangleWave x frequence amplitude = 
-    overdrive (2. * amplitude * asin(sin(2. * pi * x * frequence)) / pi)
+let triangleWave x frequence amplitude= 
+    2. * amplitude * asin(sin(2. * pi * x * frequence)) / pi
 
 /// Write WAVE PCM soundfile (8KHz Mono 8-bit)
 let write stream (data:byte[]) =
@@ -41,25 +41,40 @@ let write stream (data:byte[]) =
     writer.Write(data)
 
 let sample x = (x + 1.)/2. * 255. |> byte 
+
+let stream = File.Create("tone.wav")
 let data = Array.init 44100 (fun i -> 
     (sinWave (float i/44100.) 4. 0.25) + 
     (sawWave (float i / 44100.) 4. 0.25) +
     (squareWave (float i/44100.) 4. 0.25) + 
     (triangleWave (float i / 44100.) 4. 0.25)
     |> sample)
-let stream = File.Create("tone.wav")
 
-let dataSin = Array.init 44100 (fun i -> sinWave (float i/44100.) 1. 1.2 |> sample)
 let streamSin = File.Create("toneSin.wav")
+let dataSin = Array.init 44100 (fun i -> 
+    makeOverdrive(
+        sinWave (float i/44100.)1. 1.) 0.8 
+        |> sample)
 
-let dataSaw = Array.init 44100 (fun i -> sawWave (float i/44100.) 1. 1.2 |> sample)
+
 let streamSaw = File.Create("toneSaw.wav")
+let dataSaw = Array.init 44100 (fun i -> 
+    makeOverdrive(
+        sawWave (float i/44100.)1. 1.) 0.8 
+        |> sample)
 
-let dataSquare = Array.init 44100 (fun i -> squareWave (float i/44100.) 1. 1.2 |> sample)
+
 let streamSquare = File.Create("toneSquare.wav")
+let dataSquare = Array.init 44100 (fun i -> 
+    makeOverdrive(
+        squareWave (float i/44100.)1. 1.) 0.8 
+        |> sample)
 
-let dataTriangle = Array.init 44100 (fun i -> triangleWave (float i/44100.) 1. 1.2 |> sample)
 let streamTriangle = File.Create("toneTriangle.wav")
+let dataTriangle = Array.init 44100 (fun i -> 
+    makeOverdrive(
+        triangleWave (float i/44100.)1. 1.) 0.8 
+        |> sample)
 
 write stream data
 write streamSin dataSin
