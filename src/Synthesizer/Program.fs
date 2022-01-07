@@ -4,27 +4,28 @@ open System.IO
 let pi = Math.PI
 let freq = 440. // In Hertz
 let sampleRate = 44100 // In Hertz
-let amplitude = 0.25
+let amplitude = 0.8
+let overdrive = 0.6
 let duration = 5. // In seconds
 let pcmFormat = 1s
 let nbChannels = 1
 let bytesPerSample = 2
 
-let makeOverdrive x multiplicator=
+let makeOverdrive multiplicator x =
     if x < (-1. * multiplicator) then (-1. * multiplicator) else
     if x > 1. * multiplicator then 1. * multiplicator else
     x
 
-let sinWave t frequence amplitude =
+let sinWave frequence amplitude t  =
     amplitude * sin (2. * pi * t * frequence)
 
-let sawWave t frequence amplitude =
+let sawWave frequence amplitude  t =
     2. * amplitude * (t * frequence - floor (0.5 +  t * frequence))
 
-let squareWave t frequence amplitude =
+let squareWave frequence amplitude t =
     amplitude * float (sign (sin (2. * pi * t * frequence)))
 
-let triangleWave t frequence amplitude =
+let triangleWave frequence amplitude t =
     2. * amplitude * asin (sin (2. * pi * t * frequence)) / pi
 
 
@@ -61,7 +62,7 @@ let generate func =
         let upscaled = round (unitary * (256. ** (float bytesPerSample))) - (if unitary = 1. then 1. else 0.)
         [ for k in 0..(bytesPerSample-1) do byte (upscaled/(256.**k)) ]
 
-    let getData = float >> (fun x -> (x / float sampleRate)) >> func freq amplitude >> toBytes
+    let getData = float >> (fun x -> (x / float sampleRate)) >> func freq amplitude >> makeOverdrive overdrive >> toBytes
     [ for i in 0 .. (size - 1) do yield! getData i ] |> Array.ofList
 
 write (File.Create("toneSin.wav")) (generate sinWave)
