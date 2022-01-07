@@ -71,7 +71,7 @@ write (File.Create("toneSquare.wav")) (generate squareWave)
 write (File.Create("toneTriangle.wav")) (generate triangleWave)
 write (File.Create("toneSaw.wav")) (generate sawWave)
 
-let chart2 =
+let chart1 =
     let abc = 
         float >> (fun x -> (x / float sampleRate)) >> sinWave freq amplitude >> makeOverdrive overdrive
     Array.init sampleRate abc
@@ -83,13 +83,13 @@ let chart2 =
     Array.init sampleRate abc
     |> Chart.Line |> Chart.WithOptions(Options(title = "sinusoïdal")) |> Chart.Show
 
-let chart2 =
+let chart3 =
     let abc = 
         float >> (fun x -> (x / float sampleRate)) >> triangleWave freq amplitude >> makeOverdrive overdrive
     Array.init sampleRate abc
     |> Chart.Line |> Chart.WithOptions(Options(title = "sinusoïdal")) |> Chart.Show
 
-let chart2 =
+let chart4 =
     let abc = 
         float >> (fun x -> (x / float sampleRate)) >> squareWave freq amplitude >> makeOverdrive overdrive
     Array.init sampleRate abc
