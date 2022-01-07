@@ -3,9 +3,9 @@ open System.IO
 let pi = 3.141592653589793
 
 let overdrive x =
-    if x < (-1.) then (-1.)
-    else if x > 1. then 1.
-    else x
+    if x < (-1.) then (-1.) else
+    if x > 1. then 1. else
+    x
 
 let sinWave x frequence amplitude =
     overdrive (amplitude * sin(2. * pi * x * frequence))
