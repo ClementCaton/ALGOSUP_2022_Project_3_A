@@ -76,9 +76,16 @@ let triangleWave frequence amplitude t =
 // write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
 write (File.Create("toneSaw.wav")) (generate sawWave)
 
+<<<<<<< HEAD
 
 let x = new SoundBuffer("./f.mp3")
 let y = new Sound(x)
 y.Loop <- true
 y.Play()
+=======
+let m = new SoundBuffer("./toneSaw.wav")
+let n = new Sound(m)
+n.Loop <- true
+n.Play()
+>>>>>>> 496cfd31e8c2bc2dab2cd2078e33e210722f835d
 ignore (System.Console.ReadLine())
