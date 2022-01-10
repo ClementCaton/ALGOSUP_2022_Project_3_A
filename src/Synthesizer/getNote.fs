@@ -7,7 +7,7 @@ type CalcNoteFreq(octav:int, note:string, ?a4Freq0:int) =
     //changing to the right note
     let calcNote step = System.Math.Round((startingFreq * (1.05946309436 ** step)), 2)
 
-    let output = 
+    member x.Output = 
         match note.ToUpper with
         | _ when note = "C"                 -> calcNote -9.
         | _ when note = "C#" || note = "DB" -> calcNote -8.
@@ -23,6 +23,4 @@ type CalcNoteFreq(octav:int, note:string, ?a4Freq0:int) =
         | _ when note = "B"                 -> calcNote 2.
         | _ -> 0.
 
-    do printfn $"output freq= {output}" 
 
-    member x.Output = output

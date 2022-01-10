@@ -1,5 +1,8 @@
 namespace Synthesizer
 
+open System
+open System.IO
+
 module API = 
     
     let getNote octav note =
@@ -10,4 +13,7 @@ module API =
         let output = CalcNoteFreq(octav, note, aFourFreq)
         output.Output
 
-    //let getSinData
+
+    let writeToWav path data =
+        let writer = writeWav()
+        writer.Write (File.Create(path)) (data)
