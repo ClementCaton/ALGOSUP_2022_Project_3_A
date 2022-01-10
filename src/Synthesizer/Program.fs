@@ -1,34 +1,20 @@
 ﻿open System
 open System.IO
-open XPlot.Plotly
 
-let pi = Math.PI
-let freq = 1. // In Hertz
+let freq = 440. // In Hertz
 let sampleRate = 44100 // In Hertz
 let amplitude = 0.8
-let overdrive = 0.6
+let overdrive = 0.9
 let duration = 1. // In seconds
 let pcmFormat = 1s
 let nbChannels = 1
 let bytesPerSample = 2
 
-let makeOverdrive multiplicator x =
-    if x < (-1. * multiplicator) then (-1. * multiplicator) else
-    if x > 1. * multiplicator then 1. * multiplicator else
-    x
-
-let sinWave frequence amplitude t  =
-    amplitude * sin (2. * pi * t * frequence)
-
-let sawWave frequence amplitude  t =
-    2. * amplitude * (t * frequence - floor (0.5 +  t * frequence))
-
-let squareWave frequence amplitude t =
-    amplitude * float (sign (sin (2. * pi * t * frequence)))
-
-let triangleWave frequence amplitude t =
-    2. * amplitude * asin (sin (2. * pi * t * frequence)) / pi
-
+module overD =
+    let makeOverdrive multiplicator x =
+        if x < (-1. * multiplicator) then (-1. * multiplicator) else
+        if x > 1. * multiplicator then 1. * multiplicator else
+        x
 
 let bitsPerSample = bytesPerSample * 8
 
@@ -63,34 +49,10 @@ let generate func =
         let upscaled = round (unitary * (256. ** (float bytesPerSample))) - (if unitary = 1. then 1. else 0.)
         [ for k in 0..(bytesPerSample-1) do byte (upscaled/(256.**k)) ]
 
-    let getData = float >> (fun x -> (x / float sampleRate)) >> func freq amplitude >> makeOverdrive overdrive >> toBytes
+    let getData = float >> (fun x -> (x / float sampleRate)) >> func freq amplitude >> overD.makeOverdrive overdrive >> toBytes
     [ for i in 0 .. (size - 1) do yield! getData i ] |> Array.ofList
 
-write (File.Create("toneSin.wav")) (generate sinWave)
-write (File.Create("toneSquare.wav")) (generate squareWave)
-write (File.Create("toneTriangle.wav")) (generate triangleWave)
-write (File.Create("toneSaw.wav")) (generate sawWave)
-
-let chart1 =
-    let abc = 
-        float >> (fun x -> (x / float sampleRate)) >> sinWave freq amplitude >> makeOverdrive overdrive
-    Array.init sampleRate abc
-    |> Chart.Line |> Chart.WithOptions(Options(title = "sinusoïdal")) |> Chart.Show
-
-let chart2 =
-    let abc = 
-        float >> (fun x -> (x / float sampleRate)) >> sawWave freq amplitude >> makeOverdrive overdrive
-    Array.init sampleRate abc
-    |> Chart.Line |> Chart.WithOptions(Options(title = "sinusoïdal")) |> Chart.Show
-
-let chart3 =
-    let abc = 
-        float >> (fun x -> (x / float sampleRate)) >> triangleWave freq amplitude >> makeOverdrive overdrive
-    Array.init sampleRate abc
-    |> Chart.Line |> Chart.WithOptions(Options(title = "sinusoïdal")) |> Chart.Show
-
-let chart4 =
-    let abc = 
-        float >> (fun x -> (x / float sampleRate)) >> squareWave freq amplitude >> makeOverdrive overdrive
-    Array.init sampleRate abc
-    |> Chart.Line |> Chart.WithOptions(Options(title = "sinusoïdal")) |> Chart.Show
+write (File.Create("toneSin.wav")) (generate fourWaves.sinWave)
+write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)
+write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
+write (File.Create("toneSaw.wav")) (generate fourWaves.sawWave)

@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="fourWaves.fs" />
+    <Compile Include="XPlotPreview.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
