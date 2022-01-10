@@ -60,5 +60,11 @@ type writeWav(                      //not tested this one yet
         
         let getData = float >> (fun x -> (x / float sampleRate)) >> func freq amplitude >> overD.makeOverdrive overdrive >> toBytes
         [ for i in 0 .. (size - 1) do yield! getData i ] |> Array.ofList
+    
+    let streamTriangle = File.Create("toneTriangle.wav")
+    let dataTriangle = Array.init 44100 (fun i -> 
+        makeOverdrive(
+        triangleWave (float i/44100.)1. 1.) 0.8 
+        |> sample)
     *)
     
