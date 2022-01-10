@@ -26,4 +26,4 @@ module createSoundData =
         //https://www.geogebra.org/m/NS9DJf4S
         let output = Array.init arraySize (fun i -> amplitude * sin (angularFrequency * float i - phaseShift) + varticalShift |> toByte)
 
-        member Xml.XmlOutputMethod = output
+        member x.Output = output
