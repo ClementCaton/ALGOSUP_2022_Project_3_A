@@ -20,7 +20,8 @@ module overD =
 let bitsPerSample = bytesPerSample * 8
 
 /// Write WAVE PCM soundfile
-let write stream (data: byte []) =
+let write s (data: byte []) =
+    let stream = new MemoryStream()
     let byteRate = sampleRate * nbChannels * bytesPerSample
     let blockAlign = uint16 (nbChannels * bytesPerSample)
 
@@ -42,16 +43,20 @@ let write stream (data: byte []) =
     writer.Write("data"B)
     writer.Write(data.Length)
     writer.Write(data)
-    (*
+    let m = new SoundBuffer(stream)
+    let n = new Sound(m)
+    n.Play()
+    ignore (System.Console.ReadLine())
+    
 let generate func =
     let size = int (duration * float sampleRate)
     let toBytes x =
         let unitary = (x + 2. ** (float bytesPerSample - 1.)) / 2.
         let upscaled = round (unitary * (256. ** (float bytesPerSample))) - (if unitary = 1. then 1. else 0.)
-        [ for k in 0..(bytesPerSample-1) do byte (upscaled/(256.**k)) ]
+        [ for k in 0..(bytesPerSample-1) do byte (upscaled/(256.**(float(k)))) ]
 
     let getData = float >> (fun x -> (x / float sampleRate)) >> func freq amplitude >> overD.makeOverdrive overdrive >> toBytes
-    [ for i in 0 .. (size - 1) do yield! getData i ] |> Array.ofList *)
+    [ for i in 0 .. (size - 1) do yield! getData i ] |> Array.ofList 
 
 let pi = Math.PI
 let sinWave frequence amplitude t  =
@@ -69,9 +74,11 @@ let triangleWave frequence amplitude t =
 // write (File.Create("toneSin.wav")) (generate fourWaves.sinWave)
 // write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)
 // write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
-// write (File.Create("toneSaw.wav")) (generate sawWave)
+write (File.Create("toneSaw.wav")) (generate sawWave)
 
-let m = new SoundBuffer("./toneSaw.wav")
-let n = new Sound(m)
-n.Play()
+
+let x = new SoundBuffer("./f.mp3")
+let y = new Sound(x)
+y.Loop <- true
+y.Play()
 ignore (System.Console.ReadLine())

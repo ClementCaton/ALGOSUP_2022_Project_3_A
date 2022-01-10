@@ -20,12 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="csfml" Version="2.5.1" />
-    <PackageReference Include="sfml.system" Version="2.5.0" />
-    <PackageReference Include="sfml.window" Version="2.5.0" />
-    <PackageReference Include="sfml.graphics" Version="2.5.0" />
     <PackageReference Include="sfml.audio" Version="2.5.0" />
-    <PackageReference Include="sfml.net" Version="2.5.0" />
     <PackageReference Include="XPlot.Plotly" Version="4.0.6" />
   </ItemGroup>
 
