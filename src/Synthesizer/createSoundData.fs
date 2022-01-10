@@ -24,12 +24,11 @@ module createSoundData =
 
 
         //https://www.geogebra.org/m/NS9DJf4S
-        member x.Output = Array.init arraySize (fun i -> amplitude * sin (angularFrequency * float i - phaseShift) + verticalShift |> toByte)
 
-        member x.sin  = Array.init arraySize (fun i -> fourWaves.sinWave angularFrequency amplitude verticalShift phaseShift i |> toByte)
+        member x.sin  = Array.init arraySize (fun i -> fourWaves.sinWave angularFrequency amplitude verticalShift phaseShift (float i) |> toByte)
 
-        member x.sawWave = Array.init arraySize (fun i -> fourWaves.sawWave angularFrequency amplitude verticalShift phaseShift i |> toByte)
+        member x.sawWave = Array.init arraySize (fun i -> fourWaves.sawWave angularFrequency amplitude verticalShift phaseShift (float i) |> toByte)
 
-        member x.squareWave = Array.init arraySize (fun i -> fourWaves.squareWave angularFrequency amplitude verticalShift phaseShift i |> toByte)
+        member x.squareWave = Array.init arraySize (fun i -> fourWaves.squareWave angularFrequency amplitude verticalShift phaseShift (float i) |> toByte)
 
-        member x.triangleWave = Array.init arraySize (fun i -> fourWaves.triangleWave angularFrequency amplitude verticalShift phaseShift i |> toByte)
+        member x.triangleWave = Array.init arraySize (fun i -> fourWaves.triangleWave angularFrequency amplitude verticalShift phaseShift (float i) |> toByte)
