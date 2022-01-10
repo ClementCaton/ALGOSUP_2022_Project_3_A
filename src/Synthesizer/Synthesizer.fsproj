@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+  	<Reference Include="netstandard" />
+
+    <Compile Include="getNote.fs" />
+    <Compile Include="API.fs" />
+    <Compile Include="createSoundData.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
