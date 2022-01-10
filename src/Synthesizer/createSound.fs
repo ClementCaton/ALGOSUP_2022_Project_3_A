@@ -30,7 +30,7 @@ let soundMetaData = {
 /// Write WAVE PCM soundfile (8KHz Mono 8-bit)
 type createSound stream (metaData:soundMetaData) =
     let sample x = (x + 1.)/2. * 255. |> byte 
-    let data:byte[] = Array.init 16000 (fun i -> sin (float i/float 4 ) |> sample)
+    let data:byte[] = Array.init 10000 (fun i -> sin (float i/float 4 ) |> sample)
 
     use writer = new BinaryWriter(stream)
     // RIFF
