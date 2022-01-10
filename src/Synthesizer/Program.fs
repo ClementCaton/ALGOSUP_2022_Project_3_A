@@ -1,10 +1,4 @@
-﻿// namespace Synthesizer
-
-// module Program =
-//     let t = API.getNoteOffset 4 "C" 330
-//     printfn $"test= {t}" 
-    /////////////////////////////////////////////////////////////////////////////////
-open System
+﻿open System
 open System.IO
 open SFML.Audio
 
@@ -48,7 +42,7 @@ let write stream (data: byte []) =
     writer.Write("data"B)
     writer.Write(data.Length)
     writer.Write(data)
-
+    (*
 let generate func =
     let size = int (duration * float sampleRate)
     let toBytes x =
@@ -57,9 +51,27 @@ let generate func =
         [ for k in 0..(bytesPerSample-1) do byte (upscaled/(256.**k)) ]
 
     let getData = float >> (fun x -> (x / float sampleRate)) >> func freq amplitude >> overD.makeOverdrive overdrive >> toBytes
-    [ for i in 0 .. (size - 1) do yield! getData i ] |> Array.ofList
+    [ for i in 0 .. (size - 1) do yield! getData i ] |> Array.ofList *)
 
-write (File.Create("toneSin.wav")) (generate fourWaves.sinWave)
-write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)
-write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
-write (File.Create("toneSaw.wav")) (generate fourWaves.sawWave)
+let pi = Math.PI
+let sinWave frequence amplitude t  =
+    amplitude * sin (2. * pi * t * frequence)
+
+let sawWave frequence amplitude  t =
+    2. * amplitude * (t * frequence - floor (0.5 +  t * frequence))
+
+let squareWave frequence amplitude t =
+    amplitude * float (sign (sin (2. * pi * t * frequence)))
+
+let triangleWave frequence amplitude t =
+    2. * amplitude * asin (sin (2. * pi * t * frequence)) / pi
+
+// write (File.Create("toneSin.wav")) (generate fourWaves.sinWave)
+// write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)
+// write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
+// write (File.Create("toneSaw.wav")) (generate sawWave)
+
+let m = new SoundBuffer("./toneSaw.wav")
+let n = new Sound(m)
+n.Play()
+ignore (System.Console.ReadLine())
