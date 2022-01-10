@@ -73,5 +73,6 @@ let triangleWave frequence amplitude t =
 
 let m = new SoundBuffer("./toneSaw.wav")
 let n = new Sound(m)
+n.Loop <- true
 n.Play()
 ignore (System.Console.ReadLine())
