@@ -7,20 +7,7 @@ module Program =
     printfn $"test= {t}"
     API.writeToWav "toneSin.wav" (API.createSound)
 
-
-    /////////////////////////////////////////////////////////////////////////////////
-
-module overD =
-    let makeOverdrive multiplicator x =
-        if x < (-1. * multiplicator) then (-1. * multiplicator) else
-        if x > 1. * multiplicator then 1. * multiplicator else
-        x
-
-
-
 /// Write WAVE PCM soundfile
-
-
 
 
 //write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)

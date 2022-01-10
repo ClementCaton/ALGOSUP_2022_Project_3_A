@@ -14,8 +14,8 @@ module API =
         output.Output
 
     let createSound =
-        let creator = createSoundData()
-        creator.sin
+        let creator = createSoundData(overdrive0 = 0.5, duration0 = 3.)
+        creator.sawWave
 
     let writeToWav path data =
         let writer = writeWav()

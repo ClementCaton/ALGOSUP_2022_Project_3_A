@@ -1,6 +1,7 @@
 module fourWaves
     open System
     let pi = Math.PI
+    
     let sinWave frequence amplitude verticalShift phaseShift t  =
         amplitude * sin (2. * pi * t * frequence - phaseShift) + verticalShift
 
