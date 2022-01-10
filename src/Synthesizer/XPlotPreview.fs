@@ -1,3 +1,4 @@
+namespace Synthesizer
 // module preview
 //     open XPlot.Plotly
 //     let chart1 sampleRate freq amplitude overdrive =

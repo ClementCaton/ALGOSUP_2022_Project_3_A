@@ -13,6 +13,9 @@ module API =
         let output = CalcNoteFreq(octav, note, aFourFreq)
         output.Output
 
+    let createSound =
+        let creator = createSoundData()
+        creator.sin
 
     let writeToWav path data =
         let writer = writeWav()
