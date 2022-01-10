@@ -7,11 +7,19 @@
 
   <ItemGroup>
   	<Reference Include="netstandard" />
-
+    
+    <Compile Include="fourWaves.fs" />
+    <Compile Include="XPlotPreview.fs" />
+    
     <Compile Include="getNote.fs" />
     <Compile Include="API.fs" />
     <Compile Include="createSoundData.fs" />
+
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="XPlot.Plotly" Version="4.0.6" />
   </ItemGroup>
 
 </Project>
