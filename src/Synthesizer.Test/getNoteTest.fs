@@ -1,4 +1,4 @@
-module Synthesizer.Test
+module Synthesizer.getNoteTest
 
 open NUnit.Framework
 
@@ -21,3 +21,4 @@ let getNoteChangeDefaultFreq () =
 
     Assert.That(val1, Is.EqualTo(436.))
     Assert.That(val2, Is.EqualTo(996.75))
+
