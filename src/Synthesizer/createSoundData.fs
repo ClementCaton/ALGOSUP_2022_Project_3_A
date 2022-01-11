@@ -17,9 +17,10 @@ module createSoundData =
         let amplitude = (defaultArg amplitude0 1.)
         let phaseShift = (defaultArg phaseShift0 0.) * Math.PI
         let varticalShift = (defaultArg varticalShift0 0.)
-        let angularFrequency = match (defaultArg fromAngularFreqency0 false) with
-        | true -> (defaultArg angularFrequency0 (880. * Math.PI))
-        | false -> float (defaultArg frequency0 440) * 2. * Math.PI
+        let angularFrequency = 
+            match (defaultArg fromAngularFreqency0 false) with
+            | true -> (defaultArg angularFrequency0 (880. * Math.PI))
+            | false -> float (defaultArg frequency0 440) * 2. * Math.PI
 
              
 
