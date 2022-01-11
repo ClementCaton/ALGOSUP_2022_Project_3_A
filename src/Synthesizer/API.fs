@@ -4,19 +4,20 @@ open System
 open System.IO
 
 module API = 
-    
-    let getNote octav note =
-        let output = CalcNoteFreq(octav, note)
-        output.Output
 
-    let getNoteOffset octav note aFourFreq =
-        let output = CalcNoteFreq(octav, note, aFourFreq)
-        output.Output
+    //let note =
+
+    ////////////////////////////////////////////////////////////////////////
+    
+    let getNoteFreq octav note =
+        CalcNoteFreq(octav, note).Output
+
+    let getNoteFreqOffset octav note aFourFreq =
+        CalcNoteFreq(octav, note, aFourFreq).Output
 
     let createSound =
-        let creator = createSoundData(overdrive0 = 0.5, duration0 = 3.)
+        let creator = createSoundData(overdrive0 = 0.8, duration0 = 3.)
         creator.sawWave
 
     let writeToWav path data =
-        let writer = writeWav()
-        writer.Write (File.Create(path)) (data)
+        writeWav().Write (File.Create(path)) (data)
