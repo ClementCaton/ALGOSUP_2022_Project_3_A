@@ -4,10 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-  	<Reference Include="netstandard" />
-    
+  <ItemGroup>    
     <Compile Include="fourWaves.fs" />
     <Compile Include="XPlotPreview.fs" />
     
