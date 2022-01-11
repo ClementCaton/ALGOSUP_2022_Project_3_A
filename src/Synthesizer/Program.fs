@@ -1,6 +1,7 @@
 ﻿open System
 open System.IO
 open SFML.Audio
+open SFML.System
 
 let freq = 440. // In Hertz
 let sampleRate = 44100 // In Hertz
@@ -20,12 +21,12 @@ module overD =
 let bitsPerSample = bytesPerSample * 8
 
 /// Write WAVE PCM soundfile
-let write s (data: byte []) =
-    let stream = new MemoryStream()
+let write stream (data: byte []) =
+    
     let byteRate = sampleRate * nbChannels * bytesPerSample
     let blockAlign = uint16 (nbChannels * bytesPerSample)
 
-    use writer = new BinaryWriter(stream)
+    let writer = new BinaryWriter(stream)   // Do not use a "use" instead of the let because it will close the stream
     // RIFF
     writer.Write("RIFF"B)
     writer.Write(36 + data.Length) // File size
@@ -43,10 +44,6 @@ let write s (data: byte []) =
     writer.Write("data"B)
     writer.Write(data.Length)
     writer.Write(data)
-    let m = new SoundBuffer(stream)
-    let n = new Sound(m)
-    n.Play()
-    ignore (System.Console.ReadLine())
     
 let generate func =
     let size = int (duration * float sampleRate)
@@ -74,11 +71,32 @@ let triangleWave frequence amplitude t =
 // write (File.Create("toneSin.wav")) (generate fourWaves.sinWave)
 // write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)
 // write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
-write (File.Create("toneSaw.wav")) (generate sawWave)
+// write (File.Create("toneSaw.wav")) (generate sawWave)
 
 
-let m = new SoundBuffer("./f.mp3")
-let n = new Sound(m)
-n.Loop <- true
-n.Play()
-ignore (System.Console.ReadLine())
+
+let playWithOffset stream offset =
+    let soundBuffer = new SoundBuffer(stream:MemoryStream)
+    let sound = new Sound(soundBuffer)
+    let timeOffset = Time.FromSeconds(offset)
+    sound.PlayingOffset <- timeOffset
+    sound.Play()
+    ignore (System.Console.ReadLine())
+
+let play stream =
+    playWithOffset stream (float32(0.))
+
+using (new MemoryStream()) (fun stream ->
+    write stream (generate sawWave)
+    playWithOffset stream (float32(0.9))
+    )
+
+using (new MemoryStream()) (fun stream ->
+    write stream (generate sawWave)
+    playWithOffset stream (float32(0.5))
+    )
+
+using (new MemoryStream()) (fun stream ->
+    write stream (generate sawWave)
+    play stream
+    )
