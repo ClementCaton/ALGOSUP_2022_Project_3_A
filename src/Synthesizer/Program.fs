@@ -2,6 +2,18 @@
 open System.IO
 open SFML.Audio
 open SFML.System
+open System.Diagnostics // needed to play song on MAC OS
+
+type OS =
+        | OSX            
+        | Windows
+        | Linux
+
+let getOS = 
+        match int Environment.OSVersion.Platform with
+        | 4 | 128 -> Linux // 4 is the reference for Unix
+        | 6       -> OSX // 6 for OSX
+        | 2       -> Windows // 2 for Windows 
 
 let freq = 440. // In Hertz
 let sampleRate = 44100 // In Hertz
@@ -100,3 +112,5 @@ using (new MemoryStream()) (fun stream ->
     write stream (generate sawWave)
     play stream
     )
+
+// Process.Start("afplay", "toneDouble.wav") //use this to play sound in OSX
