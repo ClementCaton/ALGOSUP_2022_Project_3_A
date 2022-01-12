@@ -15,7 +15,7 @@ module playSound
         playWithOffset stream (float32(0.))
 
     let playWithOffsetFromPath (filePath:string) offset =
-        let stream = read.readAndReturnStream(File.Open (filePath, FileMode.Open))
+        let stream = File.Open (filePath, FileMode.Open)
         playWithOffset stream offset 
         
     

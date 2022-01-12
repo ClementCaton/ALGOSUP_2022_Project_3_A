@@ -12,11 +12,11 @@ type OS =
         | Windows
         | Linux
 
-// let getOS = 
-//     match int Environment.OSVersion.Platform with
-//     | 4 | 128 -> Linux // 4 is the reference for Unix
-//     | 6       -> OSX // 6 for OSX
-//     | 2       -> Windows // 2 for Windows 
+let getOS = 
+    match int Environment.OSVersion.Platform with
+    | 4 | 128 -> Linux // 4 is the reference for Unix
+    | 6       -> OSX // 6 for OSX
+    | 2       -> Windows // 2 for Windows 
 
 let freq = 440. // In Hertz
 let sampleRate = 44100 // In Hertz
@@ -39,7 +39,7 @@ let bitsPerSample = bytesPerSample * 8
 // write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)
 // write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
 // write (File.Create("toneSaw.wav")) (generate sawWave)
-let writer = new writeWav()
+// let writer = new writeWav()
 // writer.Write (File.Create("toneSin.wav")) (writer.generate fourWaves.sinWave)
 // using (new MemoryStream()) (fun stream ->
 //     writer.Write stream (writer.generate fourWaves.sawWave)
