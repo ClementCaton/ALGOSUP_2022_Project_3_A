@@ -1,8 +1,8 @@
 namespace Synthesizer
 
-type CalcNoteFreq(octav:int, note:string, ?a4Freq0:int) =
+type CalcNoteFreq(octav:int, note:string, ?a4Freq0:float) =
     //setting default A4 frequency * octav level
-    let startingFreq = float (defaultArg a4Freq0 440) * (2. ** (float octav - 4.))
+    let startingFreq = (defaultArg a4Freq0 440.) * (2. ** (float octav - 4.))
 
     //changing to the right note
     let calcNote step = System.Math.Round((startingFreq * (1.05946309436 ** step)), 2)

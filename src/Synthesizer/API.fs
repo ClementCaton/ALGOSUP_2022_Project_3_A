@@ -4,10 +4,6 @@ open System
 open System.IO
 
 module API = 
-
-    //let note =
-
-    ////////////////////////////////////////////////////////////////////////
     
     let getNoteFreq octav note =
         CalcNoteFreq(octav, note).Output
@@ -15,9 +11,21 @@ module API =
     let getNoteFreqOffset octav note aFourFreq =
         CalcNoteFreq(octav, note, aFourFreq).Output
 
-    let createSound =
-        let creator = createSoundData(overdrive0 = 0.8, duration0 = 3.)
-        creator.sawWave
+
+    let createSound freq duration waveType=
+        let creator = createSoundData(frequency0 = freq, duration0 = duration)
+        match waveType with
+        | "sin" -> creator.sinWave
+        | "square" -> creator.squareWave
+        | "triangular" -> creator.triangleWave
+        | "saw" -> creator.sawWave
+        | _ -> creator.sinWave
 
     let writeToWav path data =
         writeWav().Write (File.Create(path)) (data)
+
+
+    let note octav note = 
+        let freq = getNoteFreq octav note
+        let soundData = createSound 440. 3. ""
+        writeToWav "wave.wav" soundData

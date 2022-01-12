@@ -3,9 +3,7 @@ namespace Synthesizer
 open System.IO
 
 module Program =
-    let t = API.getNoteFreqOffset 4 "C" 330
-    printfn $"test= {t}"
-    API.writeToWav "toneSin.wav" (API.createSound)
+    API.note 6 "A"
 
 /// Write WAVE PCM soundfile
 

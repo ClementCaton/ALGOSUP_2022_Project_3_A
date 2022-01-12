@@ -20,7 +20,7 @@ type createSoundData(
     let amplitude = defaultArg amplitude0 1.
     let phaseShift = (defaultArg phaseShift0 0.) * Math.PI
     let verticalShift = defaultArg verticalShift0 0.
-    let frequency = (defaultArg frequency0 1.) /2.
+    let frequency = (defaultArg frequency0 440.) /2.
 
     let toByte x = x/2. * 255. |> byte
     //https://www.geogebra.org/m/NS9DJf4S

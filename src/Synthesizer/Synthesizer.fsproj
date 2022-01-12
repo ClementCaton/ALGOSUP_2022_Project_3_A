@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-  	<Reference Include="netstandard" />
+  	<!-- <Reference Include="netstandard" /> -->
     
     <Compile Include="fourWaves.fs" />
     <Compile Include="XPlotPreview.fs" />
