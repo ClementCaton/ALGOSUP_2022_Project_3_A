@@ -3,8 +3,8 @@ module playSound
     open SFML.Audio
     open SFML.System
 
-    let playWithOffset stream offset =
-        let soundBuffer = new SoundBuffer(stream:MemoryStream)
+    let playWithOffset (stream:Stream) offset =
+        let soundBuffer = new SoundBuffer(stream:Stream)
         let sound = new Sound(soundBuffer)
         let timeOffset = Time.FromSeconds(offset)
         sound.PlayingOffset <- timeOffset
@@ -14,4 +14,8 @@ module playSound
     let play stream =
         playWithOffset stream (float32(0.))
 
+    let playWithOffsetFromPath (filePath:string) offset =
+        let stream = read.readAndReturnStream(File.Open (filePath, FileMode.Open))
+        playWithOffset stream offset 
+        
     
