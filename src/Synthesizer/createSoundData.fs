@@ -10,6 +10,7 @@ type Duration =
     | Eighth
     | Sixteenth
     | Custom of float
+    | Seconds of float
     
 type BaseWaves =
     | Sin
@@ -28,18 +29,18 @@ type createSoundData(
         ?sampleRate0:float,
         ?bpm0:float) =
 
-    let getDuration durationType =
-        60. / (defaultArg bpm0 90.) * 
+    let getDuration durationType bpm =
         match durationType with
-        | Whole -> 4.
-        | Half -> 2.
-        | Quarter -> 1.
-        | Eighth -> 0.5
-        | Sixteenth -> 0.25
-        | Custom value -> value * 4.
+        | Whole ->  4.                  * 60./bpm
+        | Half -> 2.                    * 60./bpm
+        | Quarter -> 1.                 * 60./bpm
+        | Eighth -> 0.5                 * 60./bpm
+        | Sixteenth -> 0.25             * 60./bpm
+        | Custom value -> value * 4.    * 60./bpm
+        | Seconds value -> value
 
     let overdrive = defaultArg overdrive0 1.
-    let duration = getDuration (defaultArg duration0 Whole) // In seconds
+    let duration = getDuration (defaultArg duration0 Whole) (defaultArg bpm0 90.) // In seconds
     let sampleRate = defaultArg sampleRate0 44100.
     let arraySize = int ((defaultArg arraySize0 44100.) * duration * 2.) 
     let amplitude = defaultArg amplitude0 1.
