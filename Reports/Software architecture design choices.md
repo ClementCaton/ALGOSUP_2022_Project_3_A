@@ -35,4 +35,6 @@ While the API will possess a variety of functions to simplify the developpement 
   - Returns a complex sound from a list of notes (music)
 - API.ApplyFilterX
   - Applies a filter to a given sound (X replaces with the filter in question)
+- API.Preview
+  - Gives a visual display of the soundwaves generated using Xplot
 
