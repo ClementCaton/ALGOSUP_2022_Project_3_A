@@ -20,5 +20,11 @@ module API =
 
     let note duration note octave =
         let freq = getNoteFreq note octave
-        let soundData = createSound freq duration Sin
-        writeToWav "wave.wav" soundData
+        createSound freq duration Sin
+    
+    let silence duration =
+        createSound 0 duration Silence
+    
+    let compose =
+        Array.concat
+

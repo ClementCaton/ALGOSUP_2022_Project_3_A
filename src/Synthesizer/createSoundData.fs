@@ -17,6 +17,7 @@ type BaseWaves =
     | Square
     | Triangular
     | Saw
+    | Silence
 
 type createSoundData(
         ?overdrive0:float,
@@ -58,5 +59,6 @@ type createSoundData(
             | Square -> fourWaves.sawWave
             | Triangular -> fourWaves.triangleWave
             | Saw -> fourWaves.sawWave
+            | Silence -> (fun freq amp vShift phaseShift t -> 0)
         
-        Array.init arraySize (fun i -> Filter.makeOverdrive overdrive (waveFunc frequency amplitude verticalShift phaseShift (float i/sampleRate)) |> toByte)
+        Array.init arraySize (fun i -> Filter.makeOverdrive overdrive (waveFunc frequency amplitude verticalShift phaseShift (float i/sampleRate)))

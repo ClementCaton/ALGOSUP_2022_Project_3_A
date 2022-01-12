@@ -3,7 +3,12 @@ namespace Synthesizer
 open System.IO
 
 module Program =
-    API.note Whole "A" 4
+    let melody = API.compose [
+        API.note Whole Note.A 4
+        API.silence Quarter
+        API.note Half Note.C 4
+    ]
+    //API.writeToWav "wave.wav" melody
 
 /// Write WAVE PCM soundfile
 
