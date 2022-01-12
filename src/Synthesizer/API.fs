@@ -28,3 +28,6 @@ module API =
     let compose =
         Array.concat
 
+    let preview sound =
+        previewarr.chart sound
+        sound
