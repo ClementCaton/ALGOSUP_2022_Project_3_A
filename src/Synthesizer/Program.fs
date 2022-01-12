@@ -1,9 +1,12 @@
-﻿open System
+﻿// namespace Synthesizer
+
+open System
 open System.IO
 open SFML.Audio
 open SFML.System
 open System.Diagnostics // needed to play song on MAC OS
 
+// module program = 
 type OS =
         | OSX            
         | Windows
@@ -67,50 +70,25 @@ let generate func =
     let getData = float >> (fun x -> (x / float sampleRate)) >> func freq amplitude >> overD.makeOverdrive overdrive >> toBytes
     [ for i in 0 .. (size - 1) do yield! getData i ] |> Array.ofList 
 
-let pi = Math.PI
-let sinWave frequence amplitude t  =
-    amplitude * sin (2. * pi * t * frequence)
-
-let sawWave frequence amplitude  t =
-    2. * amplitude * (t * frequence - floor (0.5 +  t * frequence))
-
-let squareWave frequence amplitude t =
-    amplitude * float (sign (sin (2. * pi * t * frequence)))
-
-let triangleWave frequence amplitude t =
-    2. * amplitude * asin (sin (2. * pi * t * frequence)) / pi
 
 // write (File.Create("toneSin.wav")) (generate fourWaves.sinWave)
 // write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)
 // write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
 // write (File.Create("toneSaw.wav")) (generate sawWave)
 
-
-
-let playWithOffset stream offset =
-    let soundBuffer = new SoundBuffer(stream:MemoryStream)
-    let sound = new Sound(soundBuffer)
-    let timeOffset = Time.FromSeconds(offset)
-    sound.PlayingOffset <- timeOffset
-    sound.Play()
-    ignore (System.Console.ReadLine())
-
-let play stream =
-    playWithOffset stream (float32(0.))
-
 using (new MemoryStream()) (fun stream ->
-    write stream (generate sawWave)
-    playWithOffset stream (float32(0.9))
+    write stream (generate fourWaves.sawWave)
+    playSound.playWithOffset stream (float32(0.9))
     )
 
 using (new MemoryStream()) (fun stream ->
-    write stream (generate sawWave)
-    playWithOffset stream (float32(0.5))
+    write stream (generate fourWaves.sawWave)
+    playSound.playWithOffset stream (float32(0.5))
     )
 
 using (new MemoryStream()) (fun stream ->
-    write stream (generate sawWave)
-    play stream
+    write stream (generate fourWaves.sawWave)
+    playSound.play stream
     )
 
 // Process.Start("afplay", "toneDouble.wav") //use this to play sound in OSX
