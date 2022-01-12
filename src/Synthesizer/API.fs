@@ -22,3 +22,5 @@ module API =
         let freq = getNoteFreq note octave
         let soundData = createSound freq duration Sin
         writeToWav "wave.wav" soundData
+
+    
