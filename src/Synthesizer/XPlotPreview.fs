@@ -1,3 +1,5 @@
+namespace Synthesizer
+
 // module preview
 //     open XPlot.Plotly
 //     let chart (array:float[]) =
