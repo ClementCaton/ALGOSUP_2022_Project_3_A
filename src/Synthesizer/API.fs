@@ -18,13 +18,6 @@ module API =
     let writeToWav path data =
         writeWav().Write (File.Create(path)) (data)
 
-    type NoteDurations =
-    | double = 2.
-    | full = 1.
-    | half = 0.5
-    | quarter = 0.25
-    | eigth = 0.125
-
     let note duration note octave =
         let freq = getNoteFreq note octave
         let soundData = createSound freq duration Sin
