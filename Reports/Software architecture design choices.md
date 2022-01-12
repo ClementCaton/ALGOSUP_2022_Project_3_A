@@ -33,6 +33,8 @@ While the API will possess a variety of functions to simplify the developpement 
   - Returns the sound of a given musical note from a duration, note and octav
 - API.Compose
   - Returns a complex sound from a list of notes (music)
+- API.Add
+  - Addition notes (with a possible temporal offset) to allow for multiple notes to be played at the same time
 - API.ApplyFilterX
   - Applies a filter to a given sound (X replaces with the filter in question)
 - API.Preview
