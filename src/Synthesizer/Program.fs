@@ -3,7 +3,7 @@ namespace Synthesizer
 open System.IO
 
 module Program =
-    API.note 6 "A"
+    API.note Whole "A" 4
 
 /// Write WAVE PCM soundfile
 

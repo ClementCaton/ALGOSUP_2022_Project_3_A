@@ -1,6 +1,6 @@
 namespace Synthesizer
 
-type CalcNoteFreq(octav:int, note:string, ?a4Freq0:float) =
+type CalcNoteFreq(note:string, octav:int, ?a4Freq0:float) =
     //setting default A4 frequency * octav level
     let startingFreq = (defaultArg a4Freq0 440.) * (2. ** (float octav - 4.))
 
