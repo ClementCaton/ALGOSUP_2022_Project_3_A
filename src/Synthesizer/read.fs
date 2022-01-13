@@ -11,6 +11,7 @@ module read
         let byteRate = reader.ReadInt32()
         let blockAlign = reader.ReadInt16()
         let bitsPerSample = reader.ReadUInt16()
+        
         // data
         reader.ReadBytes(4) |> ignore
         let dataLength = reader.ReadInt32()

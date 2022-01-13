@@ -17,5 +17,13 @@ module playSound
     let playWithOffsetFromPath (filePath:string) offset =
         let stream = read.readAndReturnStream(File.Open (filePath, FileMode.Open))
         playWithOffset stream offset 
+
+
         
+    // let cutStart (data:float[]) (sampleRate:float) time = 
+    //     data[sampleRate * time - ..]
+
+    // let cutEnd (data:float[]) (sampleRate:float) time = 
+    //     data[.. - sampleRate * time]
+    
     

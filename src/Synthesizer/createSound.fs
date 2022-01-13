@@ -13,6 +13,8 @@ type soundMetaData = {
     byteRate: int;
     blockAlign: int16;
     bitsPerSample: int16;
+    // cutStart: int16;
+    // cutEnd: int16;
 }
 
 let soundMetaData = {
@@ -25,6 +27,9 @@ let soundMetaData = {
     byteRate = 10000;
     blockAlign = 1s;
     bitsPerSample = 8s;
+    
+    // cutStart = 5s;
+    // cutEnd = 5s;
 }
 
 /// Write WAVE PCM soundfile (8KHz Mono 8-bit)
@@ -46,6 +51,9 @@ type createSound stream (metaData:soundMetaData) =
     let byteRate = metaData.byteRate in writer.Write(byteRate)
     let blockAlign = metaData.blockAlign in writer.Write(blockAlign)
     let bitsPerSample = metaData.bitsPerSample in writer.Write(bitsPerSample)
+
+    // let cutStart = metaData.cutStart in writer.Write(cutStart)
+    // let cutEnd = metaData.cutEnd in writer.write(cutEnd)
     // data
     writer.Write("data"B)
     writer.Write(data.Length)

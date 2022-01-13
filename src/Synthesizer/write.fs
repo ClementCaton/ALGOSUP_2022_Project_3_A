@@ -27,6 +27,9 @@ type writeWav(
     let nbChannels = (defaultArg nbChannels0 1)
     let bytesPerSample = (defaultArg bytesPerSample0 2)
 
+    // let cutStart = (defaultArg cutStart 0s)
+    // let cutEnd = (defaultArg cutEnd 0s)
+
     let bitsPerSample = bytesPerSample * 8
 
 
