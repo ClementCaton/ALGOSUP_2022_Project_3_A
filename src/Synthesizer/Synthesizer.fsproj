@@ -13,7 +13,7 @@
     <!-- <Compile Include="XPlotPreview.fs" /> -->
     <Compile Include="write.fs" />
     <Compile Include="read.fs" />
-    <Compile Include="playSound.fs" />
+    <Compile Include="playMusic.fs" />
     
     <Compile Include="getNote.fs" />
     <Compile Include="API.fs" />
