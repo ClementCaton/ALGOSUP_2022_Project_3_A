@@ -25,8 +25,9 @@ module API =
     let silence duration =
         createSound 0 duration Silence
     
-    let compose =
-        Array.concat
+    let compose sounds =
+        //this is to be revisited
+        sounds |> List.map(fun x -> Filter.cutCorners x 3500) |> Array.concat
     
 (*    let add (jaggedArray: float[] list) =
         let size = jaggedArray |> List.map Array.length |> List.max
