@@ -25,8 +25,9 @@ module API =
     let silence duration =
         createSound 0 duration Silence
     
-    let compose =
-        Array.concat
+    let compose inputs =
+        //this is to be revisited
+        inputs |> List.map(fun x -> Filter.cutCorners x 3500) |> Array.concat
 
     let preview sound =
         previewarr.chart sound

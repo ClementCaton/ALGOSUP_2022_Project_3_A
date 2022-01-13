@@ -3,6 +3,7 @@ namespace Synthesizer
 open System.IO
 
 module Program =
+
     // Custom duration
     let DottedEighth = Custom (3./16.)
     let DottedHalf = Custom (5./8.)
@@ -27,6 +28,7 @@ module Program =
     // Superpose the melodies and write to file
     //let music = API.add [mainMelody; secondMelody]
     API.writeToWav "wave.wav" mainMelody //music
+
 
 /// Write WAVE PCM soundfile
 
