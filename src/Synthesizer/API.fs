@@ -13,10 +13,10 @@ module API =
 
 
     let createSound freq duration waveType =
-        createSoundData(frequency0 = freq, duration0 = duration).create(waveType)
+        createSoundData(frequency0 = freq, duration0 = duration, bpm0 = 114).create(waveType) // TEMP: Remove bpm
 
-    let writeToWav path data =
-        writeWav().Write (File.Create(path)) (data)
+    let writeToWav path music =
+        writeWav().Write (File.Create(path)) (music)
 
     let note duration note octave =
         let freq = getNoteFreq note octave
