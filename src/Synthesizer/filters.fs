@@ -76,10 +76,12 @@ module Filter =
         fData
 
     
-    let createFlanger (data:List<float>) (start:float) (ending:float) (delay:float) (rate:float) sampleRate = 
+    let createFlanger (data:List<float>) (start:float) (ending:float) (delay:float) (rate:float) repNumber sampleRate = 
         let mutable dela = delay
+        let mutable rep = repNumber
         let mutable actualData = data
-        while dela > 0.005 do
-            actualData <- createDelay data start ending delay sampleRate
-            dela <- dela/rate
+        while rep > 0 do
+            actualData <- createDelay data start ending dela sampleRate
+            dela <- dela + dela/rate
+            rep <- rep - 1
         actualData
