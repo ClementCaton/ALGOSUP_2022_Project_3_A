@@ -59,6 +59,7 @@ let bitsPerSample = bytesPerSample * 8
 // using (new MemoryStream()) (fun stream ->
     // writer.Write stream (writer.generate fourWaves.sawWave)
     // )
-playSound.playWithOffsetFromPath "./toneSaw.wav" (float32 0.)
+
+playMusic.playWithOffsetFromPath "./sound.wav" (float32 0.)
 
 // Process.Start("afplay", "toneDouble.wav") //use this to play sound in OSX
