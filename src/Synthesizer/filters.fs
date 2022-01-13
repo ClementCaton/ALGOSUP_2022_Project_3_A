@@ -49,10 +49,28 @@ module Filter =
         
         returnValue
 
-
     let cutCorners (data:float[]) limit =
         let step = 1. / float limit
         let startVals = Array.map2(fun x i -> x * step * i) data[..limit-1] [|1. .. float limit|]
         let endVals = Array.map2(fun x i -> x * step * i) data[data.Length-limit..] [|float limit .. -1. .. 1.|]
 
         Array.append (Array.append startVals data[limit .. data.Length-limit-1]) endVals
+
+    let createDelay (data:float[]) (start:float) (ending:float) (delay:float) sampleRate=
+        let (newData) = [|
+            for i in (int (start*float sampleRate)) .. (int(ending*float sampleRate)) do 
+                if i < data.Length then
+                    yield data.[i]
+        |]
+        // printfn "%A %A %A" (int (delay * float sampleRate)) delay sampleRate
+        let mutable inc = 0
+        let fData = [|
+            for i in 0 .. data.Length-1 do
+                if i > (int (start * float sampleRate)+(int (delay * float sampleRate))) && i < (int (ending*float sampleRate)+(int (delay * float sampleRate))) then
+                    // printfn "%A %A %A %A" newData.Length inc  i data.Length
+                    yield (newData.[inc] + data.[i])/2.
+                    inc <- inc + 1
+                else
+                    yield data.[i]
+        |]
+        fData
