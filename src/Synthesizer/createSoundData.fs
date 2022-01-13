@@ -61,4 +61,5 @@ type createSoundData(
             | Saw -> fourWaves.sawWave
             | Silence -> (fun freq amp vShift phaseShift t -> 0)
         
-        Array.init arraySize (fun i -> Filter.makeOverdrive overdrive (waveFunc frequency amplitude verticalShift phaseShift (float i/sampleRate)))
+        let a = List.init arraySize (fun i -> (waveFunc frequency amplitude verticalShift phaseShift (float i/sampleRate)))
+        Filter.makeOverdrive overdrive a

@@ -19,7 +19,7 @@ type writeWav(
 
 
 
-    member x.Write stream (data: float []) =
+    member x.Write stream (data: List<float>) =
         let byteRate = sampleRate * nbChannels * bytesPerSample
         let blockAlign = uint16 (nbChannels * bytesPerSample)
 

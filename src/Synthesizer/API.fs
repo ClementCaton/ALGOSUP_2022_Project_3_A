@@ -30,7 +30,7 @@ module API =
     
     let compose sounds =
         //this is to be revisited
-        sounds |> List.map(fun x -> Filter.cutCorners x 3500) |> Array.concat
+        sounds |> List.map(fun x -> Filter.cutCorners x 3500) |> List.concat
     
 (*    let add (jaggedArray: float[] list) =
         let size = jaggedArray |> List.map Array.length |> List.max
@@ -39,17 +39,17 @@ module API =
         Array.init size (fun j -> Array.init nTracks (fun i -> matrix.[i].[j]) |> Array.sum |> (/) (float nTracks))*)
     
     let add sounds =
-        let size = sounds |> List.map Array.length |> List.max
+        let size = sounds |> List.map List.length |> List.max
         let mean = 1. / (float (List.length sounds))
         let expand sound =
-            Array.append sound (Array.replicate (size - Array.length sound) 0.)
-        let rec addTwo (sounds: float[] list) =
+            List.append sound (Array.toList(Array.replicate (size - List.length sound) 0.))
+        let rec addTwo (sounds: List<float> list) =
             match sounds with
-            | a::b::rest -> addTwo ((Array.map2 (+) a b)::rest)
+            | a::b::rest -> addTwo ((List.map2 (+) a b)::rest)
             | [a] -> a
-            | [] -> Array.empty
+            | [] -> List.empty
 
-        sounds |> List.map expand |> addTwo |> Array.map ((*) mean)
+        sounds |> List.map expand |> addTwo |> List.map ((*) mean)
 
     let preview sound =
         previewarr.chart sound
