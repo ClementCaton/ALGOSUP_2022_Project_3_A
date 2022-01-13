@@ -48,3 +48,11 @@ module Filter =
             returnValue <- addTwoWaves returnValue output[i] 0.66
         
         returnValue
+
+
+    let cutCorners (data:float[]) limit =
+        let step = 1. / float limit
+        let startVals = Array.map2(fun x i -> x * step * i) data[..limit-1] [|1. .. float limit|]
+        let endVals = Array.map2(fun x i -> x * step * i) data[data.Length-limit..] [|float limit .. -1. .. 1.|]
+
+        Array.append (Array.append startVals data[limit .. data.Length-limit-1]) endVals
