@@ -85,3 +85,11 @@ module Filter =
             dela <- dela + dela/rate
             rep <- rep - 1
         actualData
+
+            
+    let cutStart (data:float[]) (sampleRate:float) time = 
+        data[int (sampleRate * time) .. data.Length]
+
+
+    let cutEnd (data:float[]) (sampleRate:float) time = 
+        data[0 .. data.Length - int (sampleRate * time)-1] //need to add another time for the end

@@ -1,7 +1,6 @@
 ﻿namespace Synthesizer
 open System
 
-
     
 type Duration =
     | Whole
