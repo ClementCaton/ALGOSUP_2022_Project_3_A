@@ -39,5 +39,5 @@ While the API will possess a variety of functions to ease the developpement proc
   - Applies a filter to a given sound (X replaces with the filter in question)
 <br><br>
 - API.Preview
-  - Gives a visual display of the soundwaves generated using Xplot
+  - Gives a visual display of the sound waves generated using Xplot
 

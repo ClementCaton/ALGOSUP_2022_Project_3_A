@@ -13,7 +13,7 @@ Clement Caton, Louis de Choulot, Ivan Molnar, Mathieu Chaput, Leo Chartier, Theo
 Franck Jeannin, Robert Pickering
 
 ### Context : 
-The context of the project is to create a library that could be used by a developper/artist to create, modify, listen to and save sounds usable for musical purposes as well as do the same to an entire list of said sounds.  
+The context of the project is to create a library that could be used by a developer/artist to create, modify, listen to and save sounds used for musical purposes as well as do the same to an entire list of said sounds.  
 [Project file](./Files/FsProject.pdf)
 
 ### Language :
