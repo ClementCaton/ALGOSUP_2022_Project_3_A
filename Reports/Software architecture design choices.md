@@ -1,6 +1,6 @@
 # Software architecture design choices
 ## Architecture tree
-![tree](./design.png)
+![tree](./Files/design.png)
 
 The architecture of the application is planned to posess three main parts:
 - program.fs :
@@ -18,25 +18,3 @@ The architecture of the application is planned to posess three main parts:
     > 
     > The architecture behind this (rather more robust) part of the application focuses on separating files from the raw data.
     > The only times we touch actual files is when we read and write said files. In any other situation we work with raw information.
-
-## API access architecture
-
-While the API will possess a variety of functions to simplify the developpement process the ones that are supposed to be used by the users are rather simplified:
-
-- API.Read
-  - Reads a file (.wav or .mp3 formats)
-- API.Write
-  - Writes a file (.wav or .mp3 formats)
-- API.Play
-  - PLays sound data
-- API.GetNote
-  - Returns the sound of a given musical note from a duration, note and octav
-- API.Compose
-  - Returns a complex sound from a list of notes (music)
-- API.Add
-  - Addition notes (with a possible temporal offset) to allow for multiple notes to be played at the same time
-- API.ApplyFilterX
-  - Applies a filter to a given sound (X replaces with the filter in question)
-- API.Preview
-  - Gives a visual display of the soundwaves generated using Xplot
-
