@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.810.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Synthesizer", "Synthesizer.fsproj", "{30E89E8F-5657-4237-BD4D-C2D9B02DEC58}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Synthesizer", "Synthesizer/Synthesizer.fsproj", "{30E89E8F-5657-4237-BD4D-C2D9B02DEC58}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Synthesizer.Tests", "Synthesizer.Tests\Synthesizer.Tests.fsproj", "{E58043E4-254B-411E-83D8-23974C34171A}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Synthesizer.Test", "Synthesizer.Test\Synthesizer.Test.fsproj", "{E58043E4-254B-411E-83D8-23974C34171A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
