@@ -3,13 +3,14 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
-
-  <ItemGroup>
-  	<!-- <Reference Include="netstandard" /> -->
-    
+  <ItemGroup>    
     <Compile Include="fourWaves.fs" />
-    <Compile Include="XPlotPreview.fs" />
+    <!-- <Compile Include="XPlotPreview.fs" /> -->
+    <Compile Include="write.fs" />
+    <Compile Include="read.fs" />
+    <Compile Include="playMusic.fs" />
     
     <Compile Include="read.fs" />
     <Compile Include="write.fs" />
@@ -17,12 +18,13 @@
 
     <Compile Include="getNote.fs" />
     <Compile Include="createSoundData.fs" />
-    <Compile Include="API.fs" />
 
+    <Compile Include="API.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="sfml.audio" Version="2.5.0" />
     <PackageReference Include="XPlot.Plotly" Version="4.0.6" />
   </ItemGroup>
 
