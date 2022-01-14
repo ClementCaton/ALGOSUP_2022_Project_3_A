@@ -7,12 +7,12 @@ module Filter =
         let mutable output = List.empty
         if not (x.Length = y.Length) then
             let diff = Math.Abs(x.Length - y.Length)
-            let endArray = [for i in [0 .. diff] do 0.0]
+            let endList = [for i in [0 .. diff] do 0.0]
             if x.Length > y.Length then
-                let newY = List.append y endArray
+                let newY = List.append y endList
                 output <- List.init x.Length (fun i -> (x[i] * ratio) + (newY[i] * (1.-ratio)))
             else 
-                let newX = List.append x endArray
+                let newX = List.append x endList
                 output <- List.init y.Length (fun i -> (newX[i] * ratio) + (y[i] * (1.-ratio)))
         else 
             output <- List.init x.Length (fun i -> (x[i] * ratio) + (y[i] * (1.-ratio)))
@@ -87,9 +87,9 @@ module Filter =
         actualData
 
             
-    let cutStart (data:float[]) (sampleRate:float) time = 
+    let cutStart (data:List<float>) (sampleRate:float) time = 
         data[int (sampleRate * time) .. data.Length]
 
 
-    let cutEnd (data:float[]) (sampleRate:float) time = 
+    let cutEnd (data:List<float>) (sampleRate:float) time = 
         data[0 .. data.Length - int (sampleRate * time)-1] //need to add another time for the end
