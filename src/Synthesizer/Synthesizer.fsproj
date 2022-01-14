@@ -5,10 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
-
-  <ItemGroup>
- 	  <!-- <Reference Include="netstandard" /> -->
-     
+  <ItemGroup>    
     <Compile Include="fourWaves.fs" />
     <!-- <Compile Include="XPlotPreview.fs" /> -->
     <Compile Include="write.fs" />
