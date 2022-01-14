@@ -12,10 +12,14 @@
     <Compile Include="read.fs" />
     <Compile Include="playMusic.fs" />
     
-    <Compile Include="getNote.fs" />
-    <Compile Include="API.fs" />
-    <!-- <Compile Include="createSoundData.fs" /> -->
+    <Compile Include="read.fs" />
+    <Compile Include="write.fs" />
+    <Compile Include="filters.fs" />
 
+    <Compile Include="getNote.fs" />
+    <Compile Include="createSoundData.fs" />
+
+    <Compile Include="API.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

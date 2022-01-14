@@ -1,12 +1,6 @@
-namespace Synthesizer
+﻿namespace Synthesizer
 
 open System.IO
-
-module overD =
-    let makeOverdrive multiplicator x =
-        if x < (-1. * multiplicator) then (-1. * multiplicator) else
-        if x > 1. * multiplicator then 1. * multiplicator else
-        x
 
 
 type writeWav( 
@@ -15,12 +9,6 @@ type writeWav(
         ?nbChannels0:int,
         ?bytesPerSample0:int
         ) =
-
-    
-    let freq = 440. // In Hertz
-    let amplitude = 0.8
-    let duration = 1. // In seconds
-    let overdrive = 0.9
 
     let sampleRate = (defaultArg sampleRate0 44100) 
     let pcmFormat = (defaultArg pcmFormat0 1s)
@@ -34,14 +22,27 @@ type writeWav(
 
 
 
-    member x.Write stream (data: byte []) =
+    member x.Write stream (data: List<float>) =
         let byteRate = sampleRate * nbChannels * bytesPerSample
         let blockAlign = uint16 (nbChannels * bytesPerSample)
+
+        let toBytes x =
+            match bytesPerSample with
+            | 1 ->
+                let upscaled = round ((x + 1.) * 128.)
+                [ byte (upscaled - if upscaled = 255. then 1. else 0.) ]
+            | 2 | 3 | 4 ->
+                let maxSize = 256. ** (float bytesPerSample) / 2.
+                let upscaled = round (x * maxSize)
+                let corrected = upscaled - (if upscaled = maxSize then 1. else 0.)
+                [ for k in 0..(bytesPerSample-1) do byte (corrected/(256.**k)) ]
+            | _ -> failwithf "Invalid number of bytes per sample: %i. Valid values: 1, 2, 3, 4" bytesPerSample
+        let byteData = [ for x in data do yield! toBytes x ] |> Array.ofList
         
-        let writer = new BinaryWriter(stream)  // Do not use a "use" instead of the let because it will close the stream
+        use writer = new BinaryWriter(stream)
         // RIFF
         writer.Write("RIFF"B)
-        writer.Write(36 + data.Length) // File size
+        writer.Write(36 + byteData.Length) // File size
         writer.Write("WAVE"B)
         // fmt
         writer.Write("fmt "B)
@@ -54,18 +55,6 @@ type writeWav(
         writer.Write(uint16 bitsPerSample)
         // data
         writer.Write("data"B)
-        writer.Write(data.Length)
-        writer.Write(data)
-
-    
-    member x.generate func =
-        let size = int (duration * float sampleRate)
-        let toBytes x =
-            let unitary = (x + 2. ** (float bytesPerSample - 1.)) / 2.
-            let upscaled = round (unitary * (256. ** (float bytesPerSample))) - (if unitary = 1. then 1. else 0.)
-            [ for k in 0..(bytesPerSample-1) do byte (upscaled/(256.**k)) ]
-        
-        let getData = float >> (fun x -> (x / float sampleRate)) >> func freq amplitude >> overD.makeOverdrive overdrive >> toBytes
-        [ for i in 0 .. (size - 1) do yield! getData i ] |> Array.ofList
-    
+        writer.Write(byteData.Length)
+        writer.Write(byteData)
     

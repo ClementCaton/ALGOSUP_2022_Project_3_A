@@ -1,10 +1,4 @@
 
-// namespace Synthesizer
-
-// module Program =
-//     let t = API.getNoteOffset 4 "C" 330
-//     printfn $"test= {t}" 
-    /////////////////////////////////////////////////////////////////////////////////
 open System
 open System.IO
 open SFML.Audio
@@ -23,23 +17,50 @@ let getOS =
     | 6       -> OSX // 6 for OSX
     | 2       -> Windows // 2 for Windows 
 
-let freq = 440. // In Hertz
-let sampleRate = 44100 // In Hertz
-let amplitude = 0.8
-let overdrive = 0.9
-let duration = 1. // In seconds
-let pcmFormat = 1s
-let nbChannels = 1
-let bytesPerSample = 2
+module Program =
 
-module overD =
-    let makeOverdrive multiplicator x =
-        if x < (-1. * multiplicator) then (-1. * multiplicator) else
-        if x > 1. * multiplicator then 1. * multiplicator else
-        x
+    // Custom duration
+    let DottedEighth = Custom (1./8. * 1.5)
+    let EighthAndHalf = Custom (1./8. + 1./2.)
 
-let bitsPerSample = bytesPerSample * 8
+    let mainMelody = API.compose [
+        API.note Eighth Note.D 4
+        API.note Eighth Note.E 4
+        API.note Eighth Note.F 4
+        API.note Eighth Note.F 4
+        API.note Eighth Note.G 4
+        API.note DottedEighth Note.E 4
+        API.note Sixteenth Note.D 4
+        API.note EighthAndHalf Note.C 4
+    ]
 
+    let secondMelody = API.compose [
+        API.note Half Note.Bb 3
+        API.silence Eighth
+        API.note DottedEighth Note.C 4
+    ]
+
+    let secondHandHigh = API.compose [
+        API.note EighthAndHalf Note.Bb 2
+        API.note Half Note.C 3
+    ]
+
+    let secondHandLow = API.compose [
+        API.note EighthAndHalf Note.Bb 1
+        API.note Half Note.C 2
+    ]
+
+    // Superpose the melodies and write to file
+    let music = API.add [mainMelody; secondMelody; secondHandHigh; secondHandLow]
+    API.writeToWav "wave.wav" music
+
+
+/// Write WAVE PCM soundfile
+
+
+//write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)
+//write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
+//write (File.Create("toneSaw.wav")) (generate fourWaves.sawWave)
 
 // write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)
 // write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
@@ -65,6 +86,7 @@ let bitsPerSample = bytesPerSample * 8
     // writer.Write stream (writer.generate fourWaves.sawWave)
     // )
 
-playMusic.playWithOffsetFromPath "./sound.wav" (float32 0.)
 
 // Process.Start("afplay", "toneDouble.wav") //use this to play sound in OSX
+
+//playMusic.playWithOffsetFromPath "./sound.wav" (float32 0.)
