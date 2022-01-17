@@ -46,8 +46,9 @@ module Filter =
         let mutable returnValue = output[0]
         for i in [(output.Length - 1).. -1 ..1] do 
             returnValue <- addTwoWaves returnValue output[i] 0.66
-        
-        returnValue
+        let silence = [for i in 0 .. (startIndex - 1) do 0.]
+        returnValue <- List.append silence returnValue
+        addTwoWaves x returnValue
 
     let cutCorners (data:List<float>) limit =
         let step = 1. / float limit
