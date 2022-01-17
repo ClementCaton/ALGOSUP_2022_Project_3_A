@@ -93,3 +93,5 @@ module Filter =
 
     let cutEnd (data:List<float>) (sampleRate:float) time = 
         data[0 .. data.Length - int (sampleRate * time)-1] //need to add another time for the end
+
+    

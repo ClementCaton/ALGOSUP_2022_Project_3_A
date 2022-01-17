@@ -75,11 +75,16 @@ type createSoundData(
             let step = (toAmp - fromAmp) / (toTime - fromTime)
             List.mapi(fun i flatPoint -> (flatPoint * (fromAmp + (float step * float i)))) flatSoundData[int fromTime .. int toTime]
 
-        printfn $"{snd dataPoints[1]}"
         let output = List.map2(fun fromT toT -> calcSegment (secTobyte (fst fromT)) (secTobyte (fst toT)) (snd fromT) (snd toT)) dataPoints[ .. dataPoints.Length-2] dataPoints[1 ..]
 
         output |> List.concat
 
+    member x.creteWithEnvelope waveType sustain attack hold0 decay0 release0 =  // time, time, time, amp, time
+        let hold = hold0 + attack
+        let decay = hold + decay0
+        let release = duration + release0
+
+        x.createFromDataPoints waveType [(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (duration, sustain); (release, 0.)]
 
 
 

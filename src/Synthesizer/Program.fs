@@ -5,7 +5,8 @@ open System.IO
 module Program =
 
     let test = createSoundData(frequency0 = (API.getNoteFreq Note.A 4), duration0 = Half, bpm0 = 114).createFromDataPoints Sin [(0., 0.); (1., 1.); (3., 0.5); (5, 0.2)]
-    API.writeToWav "wave.wav" test
+    let test2 = createSoundData(frequency0 = (API.getNoteFreq Note.A 4), duration0 = Custom 3, bpm0 = 114).creteWithEnvelope Sin 0.5 0.5 0.1 1. 0.3
+    API.writeToWav "wave.wav" test2
 
 
 /// Write WAVE PCM soundfile
