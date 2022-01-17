@@ -3,8 +3,20 @@ namespace Synthesizer
 module Filter =
     open System
 
+    let makeOverdrive multiplicator (x:List<float>) =
+        [for i in x do 
+            if i < (-1. * multiplicator * 256.) then (-1. * multiplicator * 256.) else
+            if i > (1. * multiplicator  * 256.) then (1. * multiplicator * 256.) else
+            i]
+
+    let changeAmplitude multiplicator (x:List<float>) =
+        x |> List.map (( * ) multiplicator)
+
     let addTwoWaves (x:List<float>) (y:List<float>) ratio = 
         let mutable output = List.empty
+        let mutable oldMax = x |> List.max
+        if (oldMax < (y |> List.max)) then (oldMax <- (y |> List.max))
+
         if not (x.Length = y.Length) then
             let diff = Math.Abs(x.Length - y.Length)
             let endArray = [for i in [0 .. diff] do 0.0]
@@ -16,16 +28,9 @@ module Filter =
                 output <- List.init y.Length (fun i -> (newX[i] * ratio) + (y[i] * (1.-ratio)))
         else 
             output <- List.init x.Length (fun i -> (x[i] * ratio) + (y[i] * (1.-ratio)))
-        output
-
-    let makeOverdrive multiplicator (x:List<float>) =
-        [for i in x do 
-            if i < (-1. * multiplicator * 256.) then (-1. * multiplicator * 256.) else
-            if i > (1. * multiplicator  * 256.) then (1. * multiplicator * 256.) else
-            i]
-
-    let changeAmplitude multiplicator (x:List<float>) =
-        x |> List.map (( * ) multiplicator)
+        output <- changeAmplitude (1./(output|>List.max)) output
+        output <- changeAmplitude oldMax output
+        makeOverdrive 1. output
 
     let createEcho (x:List<float>) (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) = //takes the whole sound and echoes it
         let silenceDelay = [for i in 0. .. delay do 0.]
