@@ -50,15 +50,43 @@ type createSoundData(
 
     let toByte x = x/2. * 255. |> byte
     //https://www.geogebra.org/m/NS9DJf4S
+
+    let secTobyte (sec:float) =
+        sec * sampleRate
     
-    member x.create waveType =
-        let waveFunc = 
+    let waveFunc waveType = 
             match waveType with
             | Sin -> fourWaves.sinWave
             | Square -> fourWaves.squareWave
             | Triangular -> fourWaves.triangleWave
             | Saw -> fourWaves.sawWave
             | Silence -> (fun freq amp vShift phaseShift t -> 0)
-        
-        let a = List.init arraySize (fun i -> (waveFunc frequency amplitude verticalShift phaseShift (float i/sampleRate)))
+
+
+    member x.create waveType =
+        let a = List.init arraySize (fun i -> ((waveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate)))
         Filter.makeOverdrive overdrive a
+
+    member x.createFromDataPoints waveType (dataPoints0: List<float * float>) = // (time, amp)
+        let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
+        let flatSoundData = Filter.makeOverdrive 1. (List.init (int (secTobyte (fst dataPoints[dataPoints.Length-1])))  (fun i -> ((waveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate))))
+
+        let calcSegment (fromTime:float) (toTime:float) fromAmp toAmp =
+            let step = (toAmp - fromAmp) / (toTime - fromTime)
+            List.mapi(fun i flatPoint -> (flatPoint * (fromAmp + (float step * float i)))) flatSoundData[int fromTime .. int toTime]
+
+        printfn $"{snd dataPoints[1]}"
+        let output = List.map2(fun fromT toT -> calcSegment (secTobyte (fst fromT)) (secTobyte (fst toT)) (snd fromT) (snd toT)) dataPoints[ .. dataPoints.Length-2] dataPoints[1 ..]
+
+        output |> List.concat
+
+
+
+
+
+    // let cutCorners (data:List<float>) limit =
+        // let step = 1. / float limit
+        // let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
+        // let endVals = List.map2(fun x i -> x * step * i) data[data.Length-limit..] [float limit .. -1. .. 1.]
+
+        // List.append (List.append startVals data[limit .. data.Length-limit-1]) endVals
