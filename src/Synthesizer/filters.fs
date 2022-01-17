@@ -27,7 +27,7 @@ module Filter =
     let changeAmplitude multiplicator (x:List<float>) =
         x |> List.map (( * ) multiplicator)
 
-    let createEcho (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
+    let createEcho (x:List<float>) (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) = //takes the whole sound and echoes it
         let silenceDelay = [for i in 0. .. delay do 0.]
         //let silenceEcho = [for i in 0 .. ( endIndex - startIndex ) do 0.]
         let echoSample = x[startIndex..endIndex]
@@ -50,6 +50,16 @@ module Filter =
         returnValue <- List.append silence returnValue
         addTwoWaves x returnValue 0.66
 
+    let createFlanger (data:List<float>) start ending delay (rate:float) repNumber = 
+        let mutable dela = delay
+        let mutable rep = repNumber
+        let mutable actualData = data
+        while rep > 0 do
+            actualData <- createEcho actualData start ending dela 1
+            dela <- dela + delay/rate
+            rep <- rep - 1
+        actualData
+
     let cutCorners (data:List<float>) limit =
         let step = 1. / float limit
         let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
@@ -57,37 +67,6 @@ module Filter =
 
         List.append (List.append startVals data[limit .. data.Length-limit-1]) endVals
 
-    let createDelay (data:List<float>) (start:float) (ending:float) (delay:float) sampleRate=
-        let (newData) = [
-            for i in (int (start*float sampleRate)) .. (int(ending*float sampleRate)) do 
-                if i < data.Length then
-                    yield data.[i]
-        ]
-        // printfn "%A %A %A" (int (delay * float sampleRate)) delay sampleRate
-        let mutable inc = 0
-        let fData = [
-            for i in 0 .. data.Length-1 do
-                if i > (int (start * float sampleRate)+(int (delay * float sampleRate))) && i < (int (ending*float sampleRate)+(int (delay * float sampleRate))) then
-                    // printfn "%A %A %A %A" newData.Length inc  i data.Length
-                    yield (newData.[inc] + data.[i])/2.
-                    inc <- inc + 1
-                else
-                    yield data.[i]
-        ]
-        fData
-
-    
-    let createFlanger (data:List<float>) (start:float) (ending:float) (delay:float) (rate:float) repNumber sampleRate = 
-        let mutable dela = delay
-        let mutable rep = repNumber
-        let mutable actualData = data
-        while rep > 0 do
-            actualData <- createDelay data start ending dela sampleRate
-            dela <- dela + dela/rate
-            rep <- rep - 1
-        actualData
-
-            
     let cutStart (data:float[]) (sampleRate:float) time = 
         data[int (sampleRate * time) .. data.Length]
 
