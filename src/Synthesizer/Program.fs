@@ -6,7 +6,10 @@ module Program =
 
     let test = createSoundData(frequency0 = (API.getNoteFreq Note.A 4), duration0 = Half, bpm0 = 114).createFromDataPoints Sin [(0., 0.); (1., 1.); (3., 0.5); (5, 0.2)]
     let test2 = createSoundData(frequency0 = (API.getNoteFreq Note.A 4), duration0 = Custom 3, bpm0 = 114).creteWithEnvelope Sin 0.5 0.5 0.1 1. 0.3
-    API.writeToWav "wave.wav" test2
+    let test3 = API.note (Custom 2) Note.A 4
+    let test4 = Filter.enveloppe test3 44100. 0.5 0.1 0. 0.3 0.5
+    API.writeToWav "wave3.wav" test3
+    //API.writeToWav "wave4.wav" test4
 
 
 /// Write WAVE PCM soundfile
