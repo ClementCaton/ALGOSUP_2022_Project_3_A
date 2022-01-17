@@ -36,7 +36,10 @@ module Program =
     // ]
     API.preview secondHandHigh
     // Superpose the melodies and write to file
-    let music = Filter.createFlanger secondHandHigh 0 5000 5000 1 4
+    let mutable music = Filter.createEcho secondHandHigh 0 5000 5000 1
+    music <- Filter.createEcho music 0 5000 10000 1
+    music <- Filter.createEcho music 0 5000 15000 1
+    music <- Filter.createEcho music 0 5000 20000 1
 
     API.preview music
     API.writeToWav "wave.wav" music
