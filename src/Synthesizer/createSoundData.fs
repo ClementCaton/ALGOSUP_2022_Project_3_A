@@ -20,7 +20,7 @@ type BaseWaves =
     | Silence
 
 type createSoundData(
-        ?overdrive0:float,
+        ?overDrive0:float,
         ?duration0:Duration, // In seconds
         ?arraySize0:float,
         ?amplitude0:float,
@@ -40,7 +40,6 @@ type createSoundData(
         | Custom value -> value * 4.    * 60./bpm
         | Seconds value -> value
 
-    let overdrive = defaultArg overdrive0 1.
     let duration = getDuration (defaultArg duration0 Quarter) (defaultArg bpm0 90.) // In seconds
     let sampleRate = defaultArg sampleRate0 44100.
     let arraySize = int ((defaultArg arraySize0 44100.) * duration) 
@@ -52,6 +51,9 @@ type createSoundData(
     let toByte x = x/2. * 255. |> byte
     //https://www.geogebra.org/m/NS9DJf4S
     
+    member x.overDrive = defaultArg overDrive0 1.
+
+
     member x.create waveType =
         let waveFunc = 
             match waveType with
@@ -61,5 +63,5 @@ type createSoundData(
             | Saw -> fourWaves.sawWave
             | Silence -> (fun freq amp vShift phaseShift t -> 0)
         
-        let a = List.init arraySize (fun i -> (waveFunc frequency amplitude verticalShift phaseShift (float i/sampleRate)))
-        Filter.makeOverdrive overdrive a
+        List.init arraySize (fun i -> (waveFunc frequency amplitude verticalShift phaseShift (float i/sampleRate)))
+        
