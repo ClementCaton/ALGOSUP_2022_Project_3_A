@@ -1,7 +1,6 @@
 Adapted from (idea2ic)[http://www.idea2ic.com/File_Formats/MPEG%20Audio%20Frame%20Header.pdf].
 
 
-
 # MP3 File
 
 An MP3 file is composed of independent "frames". This means that you can cut the file and add random information in between the frames and it will not affect the playback.
@@ -110,3 +109,8 @@ EFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFG
 | E   | 4      | Year        |
 | F   | 30     | Comment     |
 | G   | 1      | Genre id    |
+
+# Compression
+Those two links explains how the compression of the audio is made for mp3 files. The first one is really complete and explains a lot of things about mp3 files.
+http://digitalsoundandmusic.com/5-3-8-algorithms-for-audio-companding-and-compression/ 
+https://ledgernote.com/blog/q-and-a/how-does-mp3-compression-work/
