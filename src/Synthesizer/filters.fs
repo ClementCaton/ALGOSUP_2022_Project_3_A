@@ -49,13 +49,6 @@ module Filter =
         
         returnValue
 
-    let cutCorners (data:List<float>) limit =
-        let step = 1. / float limit
-        let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
-        let endVals = List.map2(fun x i -> x * step * i) data[data.Length-limit..] [float limit .. -1. .. 1.]
-
-        List.append (List.append startVals data[limit .. data.Length-limit-1]) endVals
-
     let createDelay (data:List<float>) (start:float) (ending:float) (delay:float) sampleRate=
         let (newData) = [
             for i in (int (start*float sampleRate)) .. (int(ending*float sampleRate)) do 
