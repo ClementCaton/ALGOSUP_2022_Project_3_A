@@ -64,17 +64,3 @@ module Filter =
             dela <- dela + delay/rate
             rep <- rep - 1
         actualData
-
-    let cutCorners (data:List<float>) limit =
-        let step = 1. / float limit
-        let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
-        let endVals = List.map2(fun x i -> x * step * i) data[data.Length-limit..] [float limit .. -1. .. 1.]
-
-        List.append (List.append startVals data[limit .. data.Length-limit-1]) endVals
-
-    let cutStart (data:float[]) (sampleRate:float) time = 
-        data[int (sampleRate * time) .. data.Length]
-
-
-    let cutEnd (data:float[]) (sampleRate:float) time = 
-        data[0 .. data.Length - int (sampleRate * time)-1] //need to add another time for the end
