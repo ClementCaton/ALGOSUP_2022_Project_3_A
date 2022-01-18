@@ -27,27 +27,35 @@ module Filter =
     let changeAmplitude multiplicator (x:List<float>) =
         x |> List.map (( * ) multiplicator)
 
-    let createEcho (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
-        let silenceDelay = [for i in 0. .. delay do 0.]
-        //let silenceEcho = [for i in 0 .. ( endIndex - startIndex ) do 0.]
-        let echoSample = x[startIndex..endIndex]
+    // let createEcho (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
+    //     let silenceDelay = [for i in 0. .. delay do 0.]
+    //     //let silenceEcho = [for i in 0 .. ( endIndex - startIndex ) do 0.]
+    //     let echoSample = x[startIndex..endIndex]
 
-        let mutable (output:List<List<float>>) = List.empty
-        let mutable buffer = List.empty
+    //     let mutable (output:List<List<float>>) = List.empty
+    //     let mutable buffer = List.empty
 
-        for i in [0 .. nbEcho] do
-            buffer <- List.empty
-            for a in [0 .. i] do
-                buffer <- buffer |> List.append silenceDelay
-                //buffer <- buffer |> List.append silenceEcho
-            buffer <- List.append buffer echoSample
-            output <- output @ [buffer]
+    //     for i in [0 .. nbEcho] do
+    //         buffer <- List.empty
+    //         for a in [0 .. i] do
+    //             buffer <- buffer |> List.append silenceDelay
+    //             //buffer <- buffer |> List.append silenceEcho
+    //         buffer <- List.append buffer echoSample
+    //         output <- output @ [buffer]
 
-        let mutable returnValue = output[0]
-        for i in [(output.Length - 1).. -1 ..1] do 
-            returnValue <- addTwoWaves returnValue output[i] 0.66
-        
-        returnValue
+    //     let mutable returnValue = output[0]
+    //     for i in [(output.Length - 1).. -1 ..1] do 
+    //         returnValue <- addTwoWaves returnValue output[i] 0.66
+    //     let silence = [for i in 0 .. (startIndex - 1) do 0.]
+    //     returnValue <- List.append silence returnValue
+    //     addTwoWaves x returnValue
+
+    let cutCorners (data:List<float>) limit =
+        let step = 1. / float limit
+        let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
+        let endVals = List.map2(fun x i -> x * step * i) data[data.Length-limit..] [float limit .. -1. .. 1.]
+
+        List.append (List.append startVals data[limit .. data.Length-limit-1]) endVals
 
     let createDelay (data:List<float>) (start:float) (ending:float) (delay:float) sampleRate=
         let (newData) = [
@@ -78,3 +86,12 @@ module Filter =
             dela <- dela + dela/rate
             rep <- rep - 1
         actualData
+
+
+    let rec reverb (dryData:List<float>) (wetData:List<float>) (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) =    // This is also echo
+        if nbEcho=0 then
+            Utility.add [dryData; wetData]
+        else
+            let silence = createSoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
+            let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
+            reverb dryData updatedWetData (nbEcho-1) decay delay sampleRate
