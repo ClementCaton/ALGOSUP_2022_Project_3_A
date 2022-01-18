@@ -95,3 +95,34 @@ module Filter =
             let silence = createSoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
             let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
             reverb (nbEcho-1) decay delay sampleRate updatedWetData dryData
+
+    let lowPass sampleRate cutoffFreq (data:List<float>) =
+        let RC = 1. / (2. * Math.PI * cutoffFreq)
+        let dt = 1. / sampleRate
+        let alpha = dt / (RC + dt)
+        let alpha2 = 1. - alpha
+
+        // TODO: Refactorize and make faster
+        let mutable y = [alpha * data.[0]]
+        let mutable y' = [alpha * data.[0]]
+        for x in List.tail data do
+            y' <- y' @ [ alpha * x + alpha2 * (List.last y') ]
+            if (List.length y') = 10000 then
+                y <- y @ y'[1..]
+                y' <- [List.last y']
+        y @ y'[1..]
+
+    let highPass sampleRate cutoffFreq (data:List<float>) =
+        let RC = 1. / (2. * Math.PI * cutoffFreq)
+        let dt = 1. / sampleRate
+        let alpha = dt / (RC + dt)
+
+        // TODO: Refactorize and make faster
+        let mutable y = [data.[0]]
+        let mutable y' = [data.[0]]
+        for i in 1..(List.length data - 1) do
+            y' <- y' @ [ alpha * (List.last y' + data.[i] - data.[i-1]) ]
+            if (List.length y') = 10000 then
+                y <- y @ y'[1..]
+                y' <- [List.last y']
+        y @ y'[1..]
