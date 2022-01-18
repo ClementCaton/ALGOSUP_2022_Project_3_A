@@ -1,25 +1,7 @@
-namespace Synthesizer
-
-open System
-open System.IO
-open SFML.Audio
-open SFML.System
-open System.Diagnostics // needed to play song on MAC OS
-
-module playMusic =
-
-    type OS =
-        | OSX            
-        | Windows
-        | Linux
-        | Other
-
-    let getOS = 
-        match int Environment.OSVersion.Platform with
-        | 4 | 128 -> Linux // 4 is the reference for Unix
-        | 6       -> OSX // 6 for OSX
-        | 2       -> Windows // 2 for Windows 
-        | _       -> Other
+module playMusic
+    open System.IO
+    open SFML.Audio
+    open SFML.System
 
     let playWithOffset (stream:Stream) offset =     //if the offset is > to the length of the music it will start from the beginning
         let music = new Music(stream)
@@ -36,6 +18,12 @@ module playMusic =
         playWithOffset stream offset 
 
 
+        
+    let cutStart (data:float[]) (sampleRate:float) time = 
+        data[int (sampleRate * time) .. data.Length]
 
+
+    let cutEnd (data:float[]) (sampleRate:float) time = 
+        data[0 .. data.Length - int (sampleRate * time)-1] //need to add another time for the end
     
     

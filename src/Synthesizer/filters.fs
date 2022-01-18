@@ -7,12 +7,12 @@ module Filter =
         let mutable output = List.empty
         if not (x.Length = y.Length) then
             let diff = Math.Abs(x.Length - y.Length)
-            let endList = [for i in [0 .. diff] do 0.0]
+            let endArray = [for i in [0 .. diff] do 0.0]
             if x.Length > y.Length then
-                let newY = List.append y endList
+                let newY = List.append y endArray
                 output <- List.init x.Length (fun i -> (x[i] * ratio) + (newY[i] * (1.-ratio)))
             else 
-                let newX = List.append x endList
+                let newX = List.append x endArray
                 output <- List.init y.Length (fun i -> (newX[i] * ratio) + (y[i] * (1.-ratio)))
         else 
             output <- List.init x.Length (fun i -> (x[i] * ratio) + (y[i] * (1.-ratio)))
@@ -46,9 +46,8 @@ module Filter =
         let mutable returnValue = output[0]
         for i in [(output.Length - 1).. -1 ..1] do 
             returnValue <- addTwoWaves returnValue output[i] 0.66
-        let silence = [for i in 0 .. (startIndex - 1) do 0.]
-        returnValue <- List.append silence returnValue
-        addTwoWaves x returnValue
+        
+        returnValue
 
     let cutCorners (data:List<float>) limit =
         let step = 1. / float limit
@@ -86,11 +85,3 @@ module Filter =
             dela <- dela + dela/rate
             rep <- rep - 1
         actualData
-
-            
-    let cutStart (data:List<float>) (sampleRate:float) time = 
-        data[int (sampleRate * time) .. data.Length]
-
-
-    let cutEnd (data:List<float>) (sampleRate:float) time = 
-        data[0 .. data.Length - int (sampleRate * time)-1] //need to add another time for the end

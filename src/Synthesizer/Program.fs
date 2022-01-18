@@ -1,6 +1,21 @@
-namespace Synthesizer
 
+open System
 open System.IO
+open SFML.Audio
+open SFML.System
+open System.Diagnostics // needed to play song on MAC OS
+open Synthesizer
+
+type OS =
+        | OSX            
+        | Windows
+        | Linux
+
+let getOS = 
+    match int Environment.OSVersion.Platform with
+    | 4 | 128 -> Linux // 4 is the reference for Unix
+    | 6       -> OSX // 6 for OSX
+    | 2       -> Windows // 2 for Windows 
 
 module Program =
 
@@ -20,14 +35,14 @@ module Program =
     ]
 
     let secondMelody = API.compose [
-        //API.note Half Note.Bb 3
+        API.note Half Note.Bb 3
         API.silence Eighth
         API.note DottedEighth Note.C 4
     ]
 
     let secondHandHigh = API.compose [
         API.note EighthAndHalf Note.Bb 2
-        //API.note Half Note.C 3
+        API.note Half Note.C 3
     ]
 
     let secondHandLow = API.compose [

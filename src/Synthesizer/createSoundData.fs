@@ -1,6 +1,7 @@
 ﻿namespace Synthesizer
 open System
 
+
     
 type Duration =
     | Whole
@@ -55,7 +56,7 @@ type createSoundData(
         let waveFunc = 
             match waveType with
             | Sin -> fourWaves.sinWave
-            | Square -> fourWaves.squareWave
+            | Square -> fourWaves.sawWave
             | Triangular -> fourWaves.triangleWave
             | Saw -> fourWaves.sawWave
             | Silence -> (fun freq amp vShift phaseShift t -> 0)

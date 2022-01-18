@@ -21,8 +21,8 @@ module API =
     let readFromWav path =
         readWav().Read (File.Open(path, FileMode.Open))
 
-    let note duration mNote octave =
-        let freq = getNoteFreq mNote octave
+    let note duration note octave =
+        let freq = getNoteFreq note octave
         createSound freq duration Sin
     
     let silence duration =
