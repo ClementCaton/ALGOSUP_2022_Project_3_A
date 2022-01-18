@@ -1,11 +1,11 @@
 namespace Synthesizer
 
     module Utility = 
-        let cutStart (data:float[]) (sampleRate:float) time = 
+        let cutStart (sampleRate:float) time (data:float[]) = 
             data[int (sampleRate * time) .. data.Length]
     
     
-        let cutEnd (data:float[]) (sampleRate:float) time = 
+        let cutEnd (sampleRate:float) time (data:float[]) = 
             data[0 .. data.Length - int (sampleRate * time)-1] //need to add another time for the end
     
         let add sounds =
@@ -21,7 +21,7 @@ namespace Synthesizer
     
             sounds |> List.map expand |> addTwo |> List.map ((*) mean)
     
-        let cutCorners (data:List<float>) limit =
+        let cutCorners limit (data:List<float>) =
             let step = 1. / float limit
             let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
             let endVals = List.map2(fun x i -> x * step * i) data[data.Length-limit..] [float limit .. -1. .. 1.]

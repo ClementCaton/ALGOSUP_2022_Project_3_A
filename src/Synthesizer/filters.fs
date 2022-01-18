@@ -3,25 +3,25 @@ namespace Synthesizer
 module Filter =
     open System
 
-    let addTwoWaves (x:List<float>) (y:List<float>) ratio = 
-        let mutable output = List.empty
-        if not (x.Length = y.Length) then
-            let diff = Math.Abs(x.Length - y.Length)
-            let endArray = [for i in [0 .. diff] do 0.0]
-            if x.Length > y.Length then
-                let newY = List.append y endArray
-                output <- List.init x.Length (fun i -> (x[i] * ratio) + (newY[i] * (1.-ratio)))
-            else 
-                let newX = List.append x endArray
-                output <- List.init y.Length (fun i -> (newX[i] * ratio) + (y[i] * (1.-ratio)))
-        else 
-            output <- List.init x.Length (fun i -> (x[i] * ratio) + (y[i] * (1.-ratio)))
-        output
+    //let addTwoWaves ratio (x:List<float>) (y:List<float>) = 
+    //    let mutable output = List.empty
+    //    if not (x.Length = y.Length) then
+    //        let diff = Math.Abs(x.Length - y.Length)
+    //        let endArray = [for i in [0 .. diff] do 0.0]
+    //        if x.Length > y.Length then
+    //            let newY = List.append y endArray
+    //            output <- List.init x.Length (fun i -> (x[i] * ratio) + (newY[i] * (1.-ratio)))
+    //        else 
+    //            let newX = List.append x endArray
+    //            output <- List.init y.Length (fun i -> (newX[i] * ratio) + (y[i] * (1.-ratio)))
+    //    else 
+    //        output <- List.init x.Length (fun i -> (x[i] * ratio) + (y[i] * (1.-ratio)))
+    //    output
 
     let makeOverdrive multiplicator (x:List<float>) =
         [for i in x do 
-            if i < (-1. * multiplicator * 256.) then (-1. * multiplicator * 256.) else
-            if i > (1. * multiplicator  * 256.) then (1. * multiplicator * 256.) else
+            if i < (-1. * multiplicator) then (-1. * multiplicator) else
+            if i > (1. * multiplicator) then (1. * multiplicator) else
             i]
 
     let changeAmplitude multiplicator (x:List<float>) =
@@ -50,14 +50,14 @@ module Filter =
     //     returnValue <- List.append silence returnValue
     //     addTwoWaves x returnValue
 
-    let cutCorners (data:List<float>) limit =
+    let cutCorners limit (data:List<float>) =
         let step = 1. / float limit
         let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
         let endVals = List.map2(fun x i -> x * step * i) data[data.Length-limit..] [float limit .. -1. .. 1.]
 
         List.append (List.append startVals data[limit .. data.Length-limit-1]) endVals
 
-    let createDelay (data:List<float>) (start:float) (ending:float) (delay:float) sampleRate=
+    let createDelay (start:float) (ending:float) (delay:float) sampleRate (data:List<float>) =
         let (newData) = [
             for i in (int (start*float sampleRate)) .. (int(ending*float sampleRate)) do 
                 if i < data.Length then
@@ -77,21 +77,21 @@ module Filter =
         fData
 
     
-    let createFlanger (data:List<float>) (start:float) (ending:float) (delay:float) (rate:float) repNumber sampleRate = 
+    let createFlanger (start:float) (ending:float) (delay:float) (rate:float) repNumber sampleRate (data:List<float>) = 
         let mutable dela = delay
         let mutable rep = repNumber
         let mutable actualData = data
         while rep > 0 do
-            actualData <- createDelay data start ending dela sampleRate
+            actualData <- createDelay start ending dela sampleRate data
             dela <- dela + dela/rate
             rep <- rep - 1
         actualData
 
 
-    let rec reverb (dryData:List<float>) (wetData:List<float>) (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) =    // This is also echo
+    let rec reverb (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =    // This is also echo
         if nbEcho=0 then
             Utility.add [dryData; wetData]
         else
             let silence = createSoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
             let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
-            reverb dryData updatedWetData (nbEcho-1) decay delay sampleRate
+            reverb (nbEcho-1) decay delay sampleRate updatedWetData dryData
