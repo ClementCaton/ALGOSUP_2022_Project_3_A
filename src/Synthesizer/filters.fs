@@ -105,3 +105,21 @@ module Filter =
             let t = float i / float sampleRate
             x * (oscillator frequency amplitude verticalShift 0. t)
         )
+
+    let LFO_FM frequency deltaFreq sampleRate (data:List<float>) =
+        failwith "Not working yet"
+        let Ac = 1. // Carrier's amplitude
+        let fc = frequency // Carrier's frequency
+        let fd = deltaFreq // Frequency deviation = frequency modulator's sensitivity * data's amplitude
+
+        let integrate N (Xs:List<float>) =
+            Xs
+            |> List.take (N+1)
+            |> List.sum
+            |> (*) (float N) // (float N / float sampleRate)
+
+        List.init (List.length data) (fun i ->
+            let t = float i / sampleRate
+            Ac * cos ( 2. * Math.PI * (fc * t + fd * integrate i data))
+            // https://en.wikipedia.org/wiki/Frequency_modulation#Theory
+        )
