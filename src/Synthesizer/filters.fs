@@ -95,3 +95,13 @@ module Filter =
             let silence = createSoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
             let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
             reverb dryData updatedWetData (nbEcho-1) decay delay sampleRate
+
+    let LFO_AM frequency minAmplitude maxAmplitude sampleRate data =
+        let oscillator = fourWaves.sinWave
+        let amplitude = (maxAmplitude - minAmplitude) / 2.
+        let verticalShift = (maxAmplitude + minAmplitude) / 2.
+        data
+        |> List.mapi (fun i x ->
+            let t = float i / float sampleRate
+            x * (oscillator frequency amplitude verticalShift 0. t)
+        )
