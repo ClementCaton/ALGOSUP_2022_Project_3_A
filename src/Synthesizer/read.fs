@@ -34,4 +34,4 @@ type readWav() =
         let data = byteData |> fromBytes (bitsPerSample/8)
         let duration = float (Array.length data) / float sampleRate
 
-        data, duration, nbChannels, sampleRate, bitsPerSample
+        (data |> Array.toList), duration, nbChannels, sampleRate, bitsPerSample
