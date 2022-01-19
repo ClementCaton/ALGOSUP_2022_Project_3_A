@@ -1,6 +1,6 @@
 # Software architecture design choices
 ## Architecture tree :
-![tree](./Files/Design.png)
+![tree](./Files/design.png)
 
 <br>
 
