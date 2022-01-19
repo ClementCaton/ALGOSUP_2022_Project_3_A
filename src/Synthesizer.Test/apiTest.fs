@@ -21,3 +21,25 @@ let getNoteWithOffsetApiTest() =
 
     Assert.That(val1, Is.EqualTo(436.))
     Assert.That(val2, Is.EqualTo(996.75))
+
+
+let one = Seconds 1.
+[<Test>]
+let createSoundApiTest() =
+    let final = API.createSound 440. one Sin
+
+    Assert.That(final, Is.TypeOf<List<float>>()) 
+    Assert.That(final |> List.max, Is.LessThan(1))
+    Assert.That(final.Length, Is.EqualTo(44100))
+    // default sample rate
+
+open System.IO
+[<Test>]
+let writeToWavApiTest() =
+    API.writeToWav "wave.wav" (API.createSound 440. one Sin)
+    Assert.IsTrue(File.Exists("./wave.wav"))
+
+[<Test>]
+let readFromWavApiTest() =
+    let theFile = API.readFromWav "wave.wav"
+    Assert.That(theFile.GetType(), Is.TypeOf<float array * float * int * int * int>())
