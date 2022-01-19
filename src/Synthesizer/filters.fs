@@ -77,15 +77,15 @@ module Filter =
         fData
 
     
-    let createFlanger (data:List<float>) (start:float) (ending:float) (delay:float) (rate:float) repNumber sampleRate = 
-        let mutable dela = delay
-        let mutable rep = repNumber
-        let mutable actualData = data
-        while rep > 0 do
-            actualData <- createDelay data start ending dela sampleRate
-            dela <- dela + dela/rate
-            rep <- rep - 1
-        actualData
+    // let createFlanger (data:List<float>) (start:float) (ending:float) (delay:float) (rate:float) repNumber sampleRate = 
+    //     let mutable dela = delay
+    //     let mutable rep = repNumber
+    //     let mutable actualData = data
+    //     while rep > 0 do
+    //         actualData <- createDelay data start ending dela sampleRate
+    //         dela <- dela + dela/rate
+    //         rep <- rep - 1
+    //     actualData
 
 
     let reverb (dryData:List<float>) (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) = 
@@ -100,4 +100,17 @@ module Filter =
         revebInner dryData [] nbEcho decay delay sampleRate
 
 
+
+    let primitiveFlanger (speed:float) (sampleRate:float) (dryData:List<float>) =
+        let step = speed/1000.*sampleRate
+        let rec primitiveFlangerInner (step:float) current (dry:List<float>) wet =
+            if current = dry.Length then wet
+            elif Math.Floor(float current%step) = 0 then 
+                printfn $"{(string current)}"
+                primitiveFlangerInner step (current+1) dry (wet @ [dry[current]] @ [dry[current]])
+            else primitiveFlangerInner step (current+1) dry (wet @ [dry[current]])
+        
+        let wetData = primitiveFlangerInner step 0 dryData []
+
+        Utility.add [dryData; wetData]
     
