@@ -4,18 +4,23 @@ open System.IO
 open SFML.Audio
 open SFML.System
 open System.Diagnostics // needed to play song on MAC OS
+open System.Numerics
 open Synthesizer
+
+
 
 type OS =
         | OSX            
         | Windows
         | Linux
+        | Other
 
 let getOS = 
     match int Environment.OSVersion.Platform with
     | 4 | 128 -> Linux // 4 is the reference for Unix
     | 6       -> OSX // 6 for OSX
     | 2       -> Windows // 2 for Windows 
+    | _       -> Other // default
 
 module Program =
 
@@ -53,6 +58,18 @@ module Program =
     // Superpose the melodies and write to file
     let music = API.add [mainMelody; secondMelody; secondHandHigh; secondHandLow]
     API.writeToWav "wave.wav" music
+
+
+
+    let input = API.note Whole Note.A 4 //[for x in 0. .. 15. -> cos(x)  + cos(4.0 * x)]
+        
+    let output = 
+        input[2048+1..2048+4096]
+        |> List.map (fun r -> Complex(r, 0.)) 
+        |> frequencyAnalysis.fft
+        |> List.map (fun c -> c.Real)
+    
+    API.preview output |> ignore
 
 
 /// Write WAVE PCM soundfile
