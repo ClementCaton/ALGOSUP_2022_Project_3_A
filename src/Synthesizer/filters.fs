@@ -88,10 +88,16 @@ module Filter =
         actualData
 
 
-    let rec reverb (dryData:List<float>) (wetData:List<float>) (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) =    // This is also echo
-        if nbEcho=0 then
-            Utility.add [dryData; wetData]
-        else
-            let silence = createSoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
-            let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
-            reverb dryData updatedWetData (nbEcho-1) decay delay sampleRate
+    let reverb (dryData:List<float>) (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) = 
+        let rec revebInner (dryData:List<float>) (wetData:List<float>) (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) =   // This is also echo
+            if nbEcho=0 then
+                Utility.add [dryData; wetData]
+            else
+                let silence = createSoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
+                let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
+                revebInner dryData updatedWetData (nbEcho-1) decay delay sampleRate
+
+        revebInner dryData [] nbEcho decay delay sampleRate
+
+
+    
