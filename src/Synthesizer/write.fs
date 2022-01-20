@@ -39,7 +39,7 @@ type writeWav(
             | _ -> failwithf "Invalid number of bytes per sample: %i. Valid values: 1, 2, 3, 4" bytesPerSample
         let byteData = [ for x in data do yield! toBytes x ] |> Array.ofList
         
-        use writer = new BinaryWriter(stream)
+        let writer = new BinaryWriter(stream)
         // RIFF
         writer.Write("RIFF"B)
         writer.Write(36 + byteData.Length) // File size

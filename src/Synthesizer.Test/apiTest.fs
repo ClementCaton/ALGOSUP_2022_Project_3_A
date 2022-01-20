@@ -32,6 +32,14 @@ let createSoundApiTest() =
     Assert.That(final |> List.max, Is.LessThan(1))
     Assert.That(final.Length, Is.EqualTo(44100))
     // default sample rate
+[<Test>]
+let apiSilenceTest() =
+    let data = API.silence Quarter
+
+    let mockData = List.init (int(44100.*60./114.)) (fun i -> 0.)
+
+    Assert.That (data, Is.EqualTo mockData)
+    Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 open System.IO
 [<Test>]
@@ -42,4 +50,4 @@ let writeToWavApiTest() =
 [<Test>]
 let readFromWavApiTest() =
     let theFile = API.readFromWav "wave.wav"
-    Assert.That(theFile.GetType(), Is.TypeOf<float array * float * int * int * int>())
+    Assert.That(theFile, Is.InstanceOf<List<float> * float * int * int * int>())

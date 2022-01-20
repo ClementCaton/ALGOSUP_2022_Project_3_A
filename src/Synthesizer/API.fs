@@ -39,6 +39,6 @@ module API =
         Array.init size (fun j -> Array.init nTracks (fun i -> matrix.[i].[j]) |> Array.sum |> (/) (float nTracks))*)
     let add sounds = Utility.add sounds
 
-    let preview sound =
-        previewarr.chart sound
+    let preview title sound =
+        previewarr.chart title sound
         sound
