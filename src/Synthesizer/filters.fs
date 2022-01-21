@@ -27,29 +27,6 @@ module Filter =
     let changeAmplitude multiplicator (x:List<float>) =
         x |> List.map (( * ) multiplicator)
 
-    // let createEcho (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
-    //     let silenceDelay = [for i in 0. .. delay do 0.]
-    //     //let silenceEcho = [for i in 0 .. ( endIndex - startIndex ) do 0.]
-    //     let echoSample = x[startIndex..endIndex]
-
-    //     let mutable (output:List<List<float>>) = List.empty
-    //     let mutable buffer = List.empty
-
-    //     for i in [0 .. nbEcho] do
-    //         buffer <- List.empty
-    //         for a in [0 .. i] do
-    //             buffer <- buffer |> List.append silenceDelay
-    //             //buffer <- buffer |> List.append silenceEcho
-    //         buffer <- List.append buffer echoSample
-    //         output <- output @ [buffer]
-
-    //     let mutable returnValue = output[0]
-    //     for i in [(output.Length - 1).. -1 ..1] do 
-    //         returnValue <- addTwoWaves returnValue output[i] 0.66
-    //     let silence = [for i in 0 .. (startIndex - 1) do 0.]
-    //     returnValue <- List.append silence returnValue
-    //     addTwoWaves x returnValue
-
     let cutCorners (data:List<float>) limit =
         let step = 1. / float limit
         let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
@@ -87,6 +64,26 @@ module Filter =
             rep <- rep - 1
         actualData
 
+    // enveloppe stuff
+    let pinchAmp (data:List<float>) (dataPoints0: List<float * float>) (sampleRate:float)=
+        let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
+
+        let calcSegment (fromTime:float) (toTime:float) fromAmp toAmp =
+            let step = (toAmp - fromAmp) / (toTime - fromTime)
+            List.mapi(fun i flatPoint -> (flatPoint * (fromAmp + (float step * float i)))) data[int fromTime .. int toTime]
+
+        let output = List.map2(fun fromT toT -> calcSegment (sampleRate * (fst fromT)) (sampleRate * (fst toT)) (snd fromT) (snd toT)) dataPoints[ .. dataPoints.Length-2] dataPoints[1 ..]
+
+        output |> List.concat
+
+
+    let enveloppe (data:List<float>) (sampleRate:float) sustain attack hold0 decay0 release0 = //release substracts from hold because I don't have the data for the release periode
+        let hold = hold0 + attack
+        let decay = hold + decay0
+        let release = (float data.Length/float sampleRate) - release0
+
+        pinchAmp data ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (release, sustain); ((float data.Length/float sampleRate), 0.)]) sampleRate  //error here
+        //pinchAmp data ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); ((float data.Length/float sampleRate), sustain); (release, 0.)]) sampleRate  //error here
 
     let rec reverb (dryData:List<float>) (wetData:List<float>) (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) =    // This is also echo
         if nbEcho=0 then
