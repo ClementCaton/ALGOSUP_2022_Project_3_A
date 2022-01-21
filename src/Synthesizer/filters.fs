@@ -12,7 +12,7 @@ module Filter =
     let changeAmplitude multiplicator (x:List<float>) =
         x |> List.map (( * ) multiplicator)
 
-    let addTwoWaves (x:List<float>) (y:List<float>) ratio = 
+    let addTwoWaves ratio (y:List<float>) (x:List<float>) = 
         let mutable output = List.empty
         let mutable oldMax = x |> List.max
         if (oldMax < (y |> List.max)) then (oldMax <- (y |> List.max))
@@ -32,7 +32,7 @@ module Filter =
         output <- changeAmplitude oldMax output
         makeOverdrive 1. output
 
-    let createEcho (x:List<float>) (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) = //takes the whole sound and echoes it
+    let createEcho (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
         let silenceDelay = [for i in 0. .. delay do 0.]
         //let silenceEcho = [for i in 0 .. ( endIndex - startIndex ) do 0.]
         let echoSample = x[startIndex..endIndex]
@@ -50,7 +50,7 @@ module Filter =
 
         let mutable returnValue = output[0]
         for i in [(output.Length - 1).. -1 ..1] do 
-            returnValue <- addTwoWaves returnValue output[i] 0.66
+            returnValue <- addTwoWaves 0.66 output[i] returnValue
         let silence = [for i in 0 .. (startIndex - 1) do 0.]
         returnValue <- List.append silence returnValue
-        addTwoWaves x returnValue 0.66
+        addTwoWaves 0.66 returnValue x
