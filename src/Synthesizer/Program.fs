@@ -59,17 +59,11 @@ module Program =
     let music = API.add [mainMelody; secondMelody; secondHandHigh; secondHandLow]
     API.writeToWav "wave.wav" music
 
-
-
-    let input = API.note Whole Note.A 4 //[for x in 0. .. 15. -> cos(x)  + cos(4.0 * x)]
-        
-    let output = 
-        input[2048+1..2048+4096]
-        |> List.map (fun r -> Complex(r, 0.)) 
-        |> frequencyAnalysis.fft
-        |> List.map (fun c -> c.Real)
-    
-    API.preview output |> ignore
+//frequence amplitude verticalShift phaseShift t
+    let input = API.add [API.note Whole Note.A 3;API.note Whole Note.A 4;API.note Whole Note.A 5]
+    API.writeToWav "A345.wav" input
+    let output = frequencyAnalysis.fourier input
+    previewarr.chart output |> ignore
 
 
 /// Write WAVE PCM soundfile

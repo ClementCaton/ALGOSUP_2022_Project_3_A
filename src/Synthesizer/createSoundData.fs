@@ -56,7 +56,7 @@ type createSoundData(
         let waveFunc = 
             match waveType with
             | Sin -> fourWaves.sinWave
-            | Square -> fourWaves.sawWave
+            | Square -> fourWaves.squareWave
             | Triangular -> fourWaves.triangleWave
             | Saw -> fourWaves.sawWave
             | Silence -> (fun freq amp vShift phaseShift t -> 0)
