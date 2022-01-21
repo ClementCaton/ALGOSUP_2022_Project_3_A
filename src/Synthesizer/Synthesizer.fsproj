@@ -12,6 +12,7 @@
     <Compile Include="write.fs" />
     <Compile Include="read.fs" />
     <Compile Include="playMusic.fs" />
+    <Compile Include="Utility.fs" />
     
     <Compile Include="Utility.fs" />
     <Compile Include="read.fs" />

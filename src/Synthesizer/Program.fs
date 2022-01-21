@@ -1,6 +1,21 @@
-namespace Synthesizer
 
+open System
 open System.IO
+open SFML.Audio
+open SFML.System
+open System.Diagnostics // needed to play song on MAC OS
+open Synthesizer
+
+type OS =
+        | OSX            
+        | Windows
+        | Linux
+
+let getOS = 
+    match int Environment.OSVersion.Platform with
+    | 4 | 128 -> Linux // 4 is the reference for Unix
+    | 6       -> OSX // 6 for OSX
+    | 2       -> Windows // 2 for Windows 
 
 module Program =
 
@@ -8,26 +23,26 @@ module Program =
     let DottedEighth = Custom (1./8. * 1.5)
     let EighthAndHalf = Custom (1./8. + 1./2.)
 
-    // let mainMelody = API.compose [
-    //     API.note Eighth Note.D 4
-    //     API.note Eighth Note.E 4
-    //     API.note Eighth Note.F 4
-    //     API.note Eighth Note.F 4
-    //     API.note Eighth Note.G 4
-    //     API.note DottedEighth Note.E 4
-    //     API.note Sixteenth Note.D 4
-    //     API.note EighthAndHalf Note.C 4
-    // ]
+    let mainMelody = API.compose [
+        API.note Eighth Note.D 4
+        API.note Eighth Note.E 4
+        API.note Eighth Note.F 4
+        API.note Eighth Note.F 4
+        API.note Eighth Note.G 4
+        API.note DottedEighth Note.E 4
+        API.note Sixteenth Note.D 4
+        API.note EighthAndHalf Note.C 4
+    ]
 
-    // let secondMelody = API.compose [
-    //     //API.note Half Note.Bb 3
-    //     API.silence Eighth
-    //     API.note DottedEighth Note.C 4
-    // ]
+    let secondMelody = API.compose [
+        API.note Half Note.Bb 3
+        API.silence Eighth
+        API.note DottedEighth Note.C 4
+    ]
 
     let secondHandHigh = API.compose [
-        API.note Whole Note.C 4
-        //API.note Half Note.C 3
+        API.note EighthAndHalf Note.Bb 2
+        API.note Half Note.C 3
     ]
 
     // let secondHandLow = API.compose [
