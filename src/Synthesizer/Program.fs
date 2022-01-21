@@ -9,8 +9,7 @@ module Program =
     let test3 = API.note (Custom 2) Note.A 4
     let test4 = Filter.enveloppe test3 44100. 0.5 0.1 0. 0.3 0.5
     API.writeToWav "wave3.wav" test3
-    //API.writeToWav "wave4.wav" test4
-
+    API.writeToWav "wave4.wav" test4
 
 /// Write WAVE PCM soundfile
 

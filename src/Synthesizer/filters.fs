@@ -107,9 +107,10 @@ module Filter =
         output |> List.concat
 
 
-    let enveloppe (data:List<float>) (sampleRate:float) sustain attack hold0 decay0 release0 =
+    let enveloppe (data:List<float>) (sampleRate:float) sustain attack hold0 decay0 release0 = //release substracts from hold because I don't have the data for the release periode
         let hold = hold0 + attack
         let decay = hold + decay0
-        let release = (float data.Length/float sampleRate) + release0
+        let release = (float data.Length/float sampleRate) - release0
 
-        pinchAmp data [(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); ((float data.Length/float sampleRate), sustain); (release, 0.)]  //error here
+        pinchAmp data ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (release, sustain); ((float data.Length/float sampleRate), 0.)]) sampleRate  //error here
+        //pinchAmp data ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); ((float data.Length/float sampleRate), sustain); (release, 0.)]) sampleRate  //error here
