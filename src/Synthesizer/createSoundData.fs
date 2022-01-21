@@ -47,6 +47,7 @@ type createSoundData(
     let phaseShift = (defaultArg phaseShift0 0.) * Math.PI
     let verticalShift = defaultArg verticalShift0 0.
     let frequency = defaultArg frequency0 440.
+    let overDrive = defaultArg overDrive0 1.
 
     let toByte x = x/2. * 255. |> byte
     //https://www.geogebra.org/m/NS9DJf4S
@@ -64,11 +65,11 @@ type createSoundData(
 
     member x.create waveType =
         let a = List.init arraySize (fun i -> ((waveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate)))
-        Filter.makeOverdrive overdrive a
+        Utility.makeOverdrive overDrive a
 
     member x.createFromDataPoints waveType (dataPoints0: List<float * float>) = // (time, amp)
         let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
-        let flatSoundData = Filter.makeOverdrive 1. (List.init (int (secTobyte (fst dataPoints[dataPoints.Length-1])))  (fun i -> ((waveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate))))
+        let flatSoundData = Utility.makeOverdrive 1. (List.init (int (secTobyte (fst dataPoints[dataPoints.Length-1])))  (fun i -> ((waveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate))))
 
         let calcSegment (fromTime:float) (toTime:float) fromAmp toAmp =
             let step = (toAmp - fromAmp) / (toTime - fromTime)
