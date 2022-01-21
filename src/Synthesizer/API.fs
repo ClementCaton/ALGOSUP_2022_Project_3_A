@@ -30,7 +30,7 @@ module API =
     
     let compose sounds =
         //this is to be revisited
-        sounds |> List.map(fun x -> Utility.cutCorners x 3500) |> List.concat
+        sounds |> List.map(fun x -> Utility.cutCorners 3500 x) |> List.concat
     
 (*    let add (jaggedArray: float[] list) =
         let size = jaggedArray |> List.map Array.length |> List.max

@@ -26,7 +26,7 @@ module Program =
     // ]
 
     let secondHandHigh = API.compose [
-        API.note Whole Note.Bb 4
+        API.note Whole Note.C 4
         //API.note Half Note.C 3
     ]
 
