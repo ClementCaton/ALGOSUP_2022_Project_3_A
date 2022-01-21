@@ -1,7 +1,6 @@
 Adapted from (idea2ic)[http://www.idea2ic.com/File_Formats/MPEG%20Audio%20Frame%20Header.pdf].
 
 
-
 # MP3 File
 
 An MP3 file is composed of independent "frames". This means that you can cut the file and add random information in between the frames and it will not affect the playback.
@@ -110,3 +109,33 @@ EFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFG
 | E   | 4      | Year        |
 | F   | 30     | Comment     |
 | G   | 1      | Genre id    |
+
+# Compression
+Those two links explains how the compression of the audio is made for mp3 files. The first one is really complete and explains a lot of things about mp3 files.
+http://digitalsoundandmusic.com/5-3-8-algorithms-for-audio-companding-and-compression/ 
+https://ledgernote.com/blog/q-and-a/how-does-mp3-compression-work/
+
+    algorithm MP3 {
+    /*Input:  An audio signal in the time domain
+    Output:  The same audio signal, compressed
+    /*
+    Process the audio signal in frames
+    For each frame {
+    Use the Fourier transform to transform the time domain data to the frequency domain, sending
+        the results to the psychoacoustical analyzer {
+            Based on masking tones and masked frequencies, determine the signal-to-masking noise
+                ratios (SMR) in areas across the frequency spectrum
+            Analyze the presence and interactions of transients
+        }
+    Divide the frame into 32 frequency bands
+    For each frequency band {
+        Use the modified discrete cosine transform (MDCT) to divide each of the 32 frequency bands
+            into 18 subbands, for a total of 576 frequency subbands
+        Sort the subbands into 22 groups, called scale factor bands, and based on the SMR, determine
+            a scaling factor for each scale factor band
+        Use nonuniform quantization combined with scaling factors to quantize
+        Encode side information
+        Use Huffman encoding on the resulting 576 quantized MDCT coefficients
+        Put the encoded data into a properly formatted frame in the bit stream
+    }
+    }

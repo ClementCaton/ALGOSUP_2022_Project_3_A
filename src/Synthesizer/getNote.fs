@@ -22,6 +22,6 @@ type CalcNoteFreq(note:Note, octav:int, ?a4Freq0:float) =
     let calcNote step = startingFreq * (1.05946309436 ** step)
 
     member x.Output = 
-        System.Math.Round(calcNote (float note), 2)
+        calcNote (float note)
 
 

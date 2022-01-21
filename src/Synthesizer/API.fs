@@ -13,7 +13,9 @@ module API =
 
 
     let createSound freq duration waveType =
-        createSoundData(frequency0 = freq, duration0 = duration, bpm0 = 114).create(waveType) // TEMP: Remove bpm
+        let data = createSoundData(frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
+        Filter.makeOverdrive (data.overDrive) (data.create(waveType))
+        
 
     let writeToWav path music =
         writeWav().Write (File.Create(path)) (music)
@@ -30,26 +32,14 @@ module API =
     
     let compose sounds =
         //this is to be revisited
-        sounds |> List.map(fun x -> Filter.cutCorners x 3500) |> List.concat
+        sounds |> List.map(fun x -> Utility.cutCorners x 3500) |> List.concat
     
 (*    let add (jaggedArray: float[] list) =
         let size = jaggedArray |> List.map Array.length |> List.max
         let nTracks = List.length jaggedArray
         let matrix = jaggedArray |> List.map (fun L -> (List.ofArray L) @ (List.replicate (size - Array.length L) 0.))
         Array.init size (fun j -> Array.init nTracks (fun i -> matrix.[i].[j]) |> Array.sum |> (/) (float nTracks))*)
-    
-    let add sounds =
-        let size = sounds |> List.map List.length |> List.max
-        let mean = 1. / (float (List.length sounds))
-        let expand sound =
-            List.append sound (Array.toList(Array.replicate (size - List.length sound) 0.))
-        let rec addTwo (sounds: List<float> list) =
-            match sounds with
-            | a::b::rest -> addTwo ((List.map2 (+) a b)::rest)
-            | [a] -> a
-            | [] -> List.empty
-
-        sounds |> List.map expand |> addTwo |> List.map ((*) mean)
+    let add sounds = Utility.add sounds
 
     let preview sound =
         previewarr.chart sound
