@@ -39,7 +39,7 @@ module Program =
 
     let mutable music = Filter.createEcho 0 5000 5000 1 secondHandHigh
 
-    API.preview "" music
+    API.preview "" music |> ignore
     API.writeToWav "wave.wav" music
 
 
