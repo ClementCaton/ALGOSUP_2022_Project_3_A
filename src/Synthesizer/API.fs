@@ -14,8 +14,8 @@ module API =
 
     let createSound freq duration waveType =
         let data = createSoundData(frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
-        Filter.makeOverdrive (data.overDrive) (data.create(waveType))
-        
+        //! The "1." was supposed to be "(data.overDrive)"
+        Utility.makeOverdrive 1. (data.create(waveType))
 
     let writeToWav path music =
         writeWav().Write (File.Create(path)) (music)
