@@ -1,4 +1,4 @@
-namespace Synthesizer
+﻿namespace Synthesizer
 
 open System.IO
 
@@ -8,6 +8,7 @@ module Program =
     let DottedEighth = Custom (1./8. * 1.5)
     let EighthAndHalf = Custom (1./8. + 1./2.)
 
+    // Create the melodies
     let mainMelody = API.compose [
         API.note Eighth Note.D 4
         API.note Eighth Note.E 4
@@ -30,51 +31,13 @@ module Program =
         API.note Half Note.C 3
     ]
 
-    // let secondHandLow = API.compose [
-    //     API.note EighthAndHalf Note.Bb 1
-    //     API.note Half Note.C 2
-    // ]
-    // API.preview secondHandHigh
+    let secondHandLow = API.compose [
+        API.note EighthAndHalf Note.Bb 1
+        API.note Half Note.C 2
+    ]
+
     // Superpose the melodies and write to file
-
-    let mutable music = Filter.createEcho 0 5000 5000 1 secondHandHigh
-
-    API.preview "" music |> ignore
-    API.writeToWav "wave.wav" music
-
-
-/// Write WAVE PCM soundfile
-
-
-//write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)
-//write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
-//write (File.Create("toneSaw.wav")) (generate fourWaves.sawWave)
-
-// write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)
-// write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
-// write (File.Create("toneSaw.wav")) (generate sawWave)
-// let writer = new writeWav()
-// writer.Write (File.Create("toneSin.wav")) (writer.generate fourWaves.sinWave)
-// using (new MemoryStream()) (fun stream ->
-//     writer.Write stream (writer.generate fourWaves.sawWave)
-//     playSound.playWithOffset stream (float32(0.9))
-//     )
-
-// using (new MemoryStream()) (fun stream ->
-//     writer.Write stream (writer.generate fourWaves.sawWave)
-//     playSound.playWithOffset stream (float32(0.5))
-//     )
-
-// using (new MemoryStream()) (fun stream ->
-//     writer.Write stream (writer.generate fourWaves.sawWave)
-//     playSound.play stream
-//     )
-
-// using (new MemoryStream()) (fun stream ->
-    // writer.Write stream (writer.generate fourWaves.sawWave)
-    // )
-
-
-// Process.Start("afplay", "toneDouble.wav") //use this to play sound in OSX
-
-//playMusic.playWithOffsetFromPath "./sound.wav" (float32 0.)
+    let music = API.add [mainMelody; secondMelody; secondHandHigh; secondHandLow]
+    //API.preview "" music |> ignore
+    let mono = [music]
+    API.writeToWav "rickroll.wav" mono

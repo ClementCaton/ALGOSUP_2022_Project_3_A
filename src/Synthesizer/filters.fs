@@ -26,6 +26,20 @@ module Filter =
         output <- changeAmplitude oldMax output
         Utility.makeOverdrive 1. output
 
+
+    let makeOverdrive multiplicator (x:List<float>) =
+        [for i in x do 
+            if i < (-1. * multiplicator) then (-1. * multiplicator) else
+            if i > (1. * multiplicator) then (1. * multiplicator) else
+            i]
+
+    let cutCorners limit (data:List<float>) =
+        let step = 1. / float limit
+        let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
+        let endVals = List.map2(fun x i -> x * step * i) data[data.Length-limit..] [float limit .. -1. .. 1.]
+
+        List.append (List.append startVals data[limit .. data.Length-limit-1]) endVals
+
     let createDelay (start:float) (ending:float) (delay:float) sampleRate (data:List<float>) =
         let (newData) = [
             for i in (int (start*float sampleRate)) .. (int(ending*float sampleRate)) do 
@@ -75,13 +89,13 @@ module Filter =
         pinchAmp ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (release, sustain); ((float data.Length/float sampleRate), 0.)]) sampleRate data //error here
         //pinchAmp data ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); ((float data.Length/float sampleRate), sustain); (release, 0.)]) sampleRate  //error here
 
-    let rec reverb (wetData:List<float>) (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)=    // This is also echo
+    let rec reverb (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =    // This is also echo
         if nbEcho=0 then
             Utility.add [dryData; wetData]
         else
             let silence = createSoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
             let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
-            reverb updatedWetData (nbEcho-1) decay delay sampleRate dryData
+            reverb (nbEcho-1) decay delay sampleRate updatedWetData dryData
     
     let createEcho (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
         let silenceDelay = [for i in 0. .. delay do 0.]
@@ -105,3 +119,34 @@ module Filter =
         let silence = [for i in 0 .. (startIndex - 1) do 0.]
         returnValue <- List.append silence returnValue
         addTwoWaves 0.66 returnValue x
+
+    let lowPass sampleRate cutoffFreq (data:List<float>) =
+        let RC = 1. / (2. * Math.PI * cutoffFreq)
+        let dt = 1. / sampleRate
+        let alpha = dt / (RC + dt)
+        let alpha2 = 1. - alpha
+
+        // TODO: Refactorize and make faster
+        let mutable y = [alpha * data.[0]]
+        let mutable y' = [alpha * data.[0]]
+        for x in List.tail data do
+            y' <- y' @ [ alpha * x + alpha2 * (List.last y') ]
+            if (List.length y') = 10000 then
+                y <- y @ y'[1..]
+                y' <- [List.last y']
+        y @ y'[1..]
+
+    let highPass sampleRate cutoffFreq (data:List<float>) =
+        let RC = 1. / (2. * Math.PI * cutoffFreq)
+        let dt = 1. / sampleRate
+        let alpha = dt / (RC + dt)
+
+        // TODO: Refactorize and make faster
+        let mutable y = [data.[0]]
+        let mutable y' = [data.[0]]
+        for i in 1..(List.length data - 1) do
+            y' <- y' @ [ alpha * (List.last y' + data.[i] - data.[i-1]) ]
+            if (List.length y') = 10000 then
+                y <- y @ y'[1..]
+                y' <- [List.last y']
+        y @ y'[1..]

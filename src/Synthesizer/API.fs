@@ -44,3 +44,6 @@ module API =
     let preview title sound =
         previewarr.chart title sound
         sound
+    
+    let forAllChannels func channels =
+        channels |> List.map func

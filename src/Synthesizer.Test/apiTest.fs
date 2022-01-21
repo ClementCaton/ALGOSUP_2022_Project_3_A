@@ -1,5 +1,6 @@
 module Synthesizer.apiTest
 
+open System
 open NUnit.Framework
 
 [<SetUp>]
@@ -8,16 +9,16 @@ let Setup () =
 
 [<Test>]
 let getNoteFreqTest() =
-    let val1 = API.getNoteFreq Note.A 4
-    let val2 = API.getNoteFreq Note.B 5
+    let val1 = Math.Round( API.getNoteFreq Note.A 4, 2)
+    let val2 = Math.Round( API.getNoteFreq Note.B 5, 2)
 
     Assert.That(val1, Is.EqualTo 440.)
     Assert.That(val2, Is.EqualTo 987.77)
 
 [<Test>]
 let getNoteFreqWithOffsetApiTest() =
-    let val1 = API.getNoteFreqOffset Note.A 4 436
-    let val2 = API.getNoteFreqOffset Note.B 5 444
+    let val1 = Math.Round( API.getNoteFreqOffset Note.A 4 436, 2)
+    let val2 = Math.Round( API.getNoteFreqOffset Note.B 5 444, 2)
 
     Assert.That(val1, Is.EqualTo 436.)
     Assert.That(val2, Is.EqualTo 996.75)
@@ -37,13 +38,13 @@ let createSoundApiTest() =
 open System.IO
 [<Test>]
 let writeToWavApiTest() =
-    API.writeToWav "wave.wav" (API.createSound 440. one Sin)
+    API.writeToWav "wave.wav" [API.createSound 440. one Sin]
     Assert.IsTrue(File.Exists("./wave.wav"))
 
 [<Test>]
 let readFromWavApiTest() =
     let theFile = API.readFromWav "wave.wav"
-    Assert.That(theFile, Is.InstanceOf<List<float> * float * int * int * int>())
+    Assert.That(theFile, Is.InstanceOf<List<List<float>> * float * int * int * int>())
 
 [<Test>]
 let noteApiTest() =
