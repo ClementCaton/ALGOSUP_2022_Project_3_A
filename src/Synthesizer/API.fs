@@ -13,7 +13,9 @@ module API =
 
 
     let createSound freq duration waveType =
-        createSoundData(frequency0 = freq, duration0 = duration, bpm0 = 114).create(waveType) // TEMP: Remove bpm
+        let data = createSoundData(frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
+        //! The "1." was supposed to be "(data.overDrive)"
+        Utility.makeOverdrive 1. (data.create(waveType))
 
     let writeToWav path music =
         writeWav().Write (File.Create(path)) (music)
@@ -30,7 +32,7 @@ module API =
     
     let compose sounds =
         //this is to be revisited
-        sounds |> List.map(fun x -> Utility.cutCorners x 3500) |> List.concat
+        sounds |> List.map(fun x -> Utility.cutCorners 3500 x) |> List.concat
     
 (*    let add (jaggedArray: float[] list) =
         let size = jaggedArray |> List.map Array.length |> List.max
@@ -39,6 +41,9 @@ module API =
         Array.init size (fun j -> Array.init nTracks (fun i -> matrix.[i].[j]) |> Array.sum |> (/) (float nTracks))*)
     let add sounds = Utility.add sounds
 
-    let preview sound =
-        previewarr.chart sound
+    let preview title sound =
+        previewarr.chart title sound
         sound
+    
+    let forAllChannels func channels =
+        channels |> List.map func

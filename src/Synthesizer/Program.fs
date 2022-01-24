@@ -1,8 +1,8 @@
+﻿namespace Synthesizer
 
-open System
 open System.IO
-open SFML.Audio
-open SFML.System
+//open SFML.Audio
+//open SFML.System
 open System.Diagnostics // needed to play song on MAC OS
 open System.Numerics
 open Synthesizer
@@ -28,6 +28,7 @@ module Program =
     let DottedEighth = Custom (1./8. * 1.5)
     let EighthAndHalf = Custom (1./8. + 1./2.)
 
+    // Create the melodies
     let mainMelody = API.compose [
         API.note Eighth Note.D 4
         API.note Eighth Note.E 4
@@ -57,7 +58,9 @@ module Program =
 
     // Superpose the melodies and write to file
     let music = API.add [mainMelody; secondMelody; secondHandHigh; secondHandLow]
-    API.writeToWav "wave.wav" music
+
+
+API.writeToWav "wave.wav" music
 
 //frequence amplitude verticalShift phaseShift t
     let input = API.add [API.note Whole Note.A 3;API.note Whole Note.A 4;API.note Whole Note.A 5]
@@ -101,3 +104,6 @@ module Program =
 // Process.Start("afplay", "toneDouble.wav") //use this to play sound in OSX
 
 //playMusic.playWithOffsetFromPath "./sound.wav" (float32 0.)
+    //API.preview "" music |> ignore
+    let mono = [music]
+    API.writeToWav "rickroll.wav" mono
