@@ -9,21 +9,16 @@ open Synthesizer
 
 
 
-type OS =
-        | OSX            
-        | Windows
-        | Linux
-        | Other
-
-let getOS = 
-    match int Environment.OSVersion.Platform with
-    | 4 | 128 -> Linux // 4 is the reference for Unix
-    | 6       -> OSX // 6 for OSX
-    | 2       -> Windows // 2 for Windows 
-    | _       -> Other // default
-
 module Program =
 
+    let basicSound = API.note (Seconds 3) Note.A 4
+    let flanger = Filter.primitiveFlanger 10 44100. basicSound
+    // let reverb = Filter.reverb basicSound 50 0.8 0.2 44100.
+    // let echo = Filter.reverb basicSound 5 0.7 1. 44100.
+    API.writeToWav "basic.wav" basicSound
+    API.writeToWav "flanger.wav" flanger
+    // API.writeToWav "reverb.wav" reverb
+    // API.writeToWav "echo.wav" echo
     // Custom duration
     let DottedEighth = Custom (1./8. * 1.5)
     let EighthAndHalf = Custom (1./8. + 1./2.)
@@ -68,42 +63,6 @@ API.writeToWav "wave.wav" music
     let output = frequencyAnalysis.fourier input
     previewarr.chart output |> ignore
 
-
-/// Write WAVE PCM soundfile
-
-
-//write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)
-//write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
-//write (File.Create("toneSaw.wav")) (generate fourWaves.sawWave)
-
-// write (File.Create("toneSquare.wav")) (generate fourWaves.squareWave)
-// write (File.Create("toneTriangle.wav")) (generate fourWaves.triangleWave)
-// write (File.Create("toneSaw.wav")) (generate sawWave)
-// let writer = new writeWav()
-// writer.Write (File.Create("toneSin.wav")) (writer.generate fourWaves.sinWave)
-// using (new MemoryStream()) (fun stream ->
-//     writer.Write stream (writer.generate fourWaves.sawWave)
-//     playSound.playWithOffset stream (float32(0.9))
-//     )
-
-// using (new MemoryStream()) (fun stream ->
-//     writer.Write stream (writer.generate fourWaves.sawWave)
-//     playSound.playWithOffset stream (float32(0.5))
-//     )
-
-// using (new MemoryStream()) (fun stream ->
-//     writer.Write stream (writer.generate fourWaves.sawWave)
-//     playSound.play stream
-//     )
-
-// using (new MemoryStream()) (fun stream ->
-    // writer.Write stream (writer.generate fourWaves.sawWave)
-    // )
-
-
-// Process.Start("afplay", "toneDouble.wav") //use this to play sound in OSX
-
-//playMusic.playWithOffsetFromPath "./sound.wav" (float32 0.)
-    //API.preview "" music |> ignore
     let mono = [music]
     API.writeToWav "rickroll.wav" mono
+

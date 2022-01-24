@@ -59,6 +59,34 @@ module Filter =
         ]
         fData
 
+    let reverb (dryData:List<float>) (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) = 
+        let rec revebInner (dryData:List<float>) (wetData:List<float>) (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) =   // This is also echo
+            if nbEcho=0 then
+                Utility.add [dryData; wetData]
+            else
+                let silence = createSoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
+                let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
+                revebInner dryData updatedWetData (nbEcho-1) decay delay sampleRate
+
+        revebInner dryData [] nbEcho decay delay sampleRate
+
+
+
+    //! WIP
+    let primitiveFlanger (speed:float) (sampleRate:float) (dryData:List<float>) =
+        let step = speed/1000.*sampleRate
+        let rec primitiveFlangerInner (step:float) current (dry:List<float>) wet =
+            if current = dry.Length then wet
+            elif Math.Floor(float current%step) = 0 then 
+                printfn $"{(string current)}"
+                primitiveFlangerInner step (current+1) dry (wet @ [dry[current]] @ [dry[current]])
+            else primitiveFlangerInner step (current+1) dry (wet @ [dry[current]])
+        
+        let wetData = primitiveFlangerInner step 0 dryData []
+
+        Utility.add [dryData; wetData]
+    
+    //! WIP
     let createFlanger (start:float) (ending:float) (delay:float) (rate:float) repNumber sampleRate (data:List<float>) = 
         let mutable dela = delay
         let mutable rep = repNumber
