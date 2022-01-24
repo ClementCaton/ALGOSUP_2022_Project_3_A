@@ -15,6 +15,12 @@ module Utility =
 
         List.append (List.append startVals data[limit .. data.Length-limit-1]) endVals
 
+(*    let add (jaggedArray: float[] list) =
+        let size = jaggedArray |> List.map Array.length |> List.max
+        let nTracks = List.length jaggedArray
+        let matrix = jaggedArray |> List.map (fun L -> (List.ofArray L) @ (List.replicate (size - Array.length L) 0.))
+        Array.init size (fun j -> Array.init nTracks (fun i -> matrix.[i].[j]) |> Array.sum |> ( / ) (float nTracks))*)
+    //TODO: Choose one
     let add sounds =
         let size = sounds |> List.map List.length |> List.max
         let mean = 1. / (float (List.length sounds))
@@ -22,11 +28,11 @@ module Utility =
             List.append sound (Array.toList(Array.replicate (size - List.length sound) 0.))
         let rec addTwo (sounds: List<float> list) =
             match sounds with
-            | a::b::rest -> addTwo ((List.map2 (+) a b)::rest)
+            | a::b::rest -> addTwo ((List.map2 ( + ) a b)::rest)
             | [a] -> a
             | [] -> List.empty
 
-        sounds |> List.map expand |> addTwo |> List.map ((*) mean)
+        sounds |> List.map expand |> addTwo |> List.map (( * ) mean)
 
     let makeOverdrive multiplicator (x:List<float>) =
         [for i in x do 

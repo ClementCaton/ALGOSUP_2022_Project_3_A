@@ -3,6 +3,20 @@ namespace Synthesizer
 module Filter =
     open System
 
+    //let addTwoWaves ratio (x:List<float>) (y:List<float>) = 
+    //    let mutable output = List.empty
+    //    if not (x.Length = y.Length) then
+    //        let diff = Math.Abs(x.Length - y.Length)
+    //        let endArray = [for i in [0 .. diff] do 0.0]
+    //        if x.Length > y.Length then
+    //            let newY = List.append y endArray
+    //            output <- List.init x.Length (fun i -> (x[i] * ratio) + (newY[i] * (1.-ratio)))
+    //        else 
+    //            let newX = List.append x endArray
+    //            output <- List.init y.Length (fun i -> (newX[i] * ratio) + (y[i] * (1.-ratio)))
+    //    else 
+    //        output <- List.init x.Length (fun i -> (x[i] * ratio) + (y[i] * (1.-ratio)))
+    //    output
     let changeAmplitude multiplicator (x:List<float>) =
         x |> List.map (( * ) multiplicator)
 
@@ -32,6 +46,33 @@ module Filter =
             if i < (-1. * multiplicator) then (-1. * multiplicator) else
             if i > (1. * multiplicator) then (1. * multiplicator) else
             i]
+
+    let changeAmplitude multiplicator (x:List<float>) =
+        x |> List.map (( * ) multiplicator)
+
+    // let createEcho (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
+    //     let silenceDelay = [for i in 0. .. delay do 0.]
+    //     //let silenceEcho = [for i in 0 .. ( endIndex - startIndex ) do 0.]
+    //     let echoSample = x[startIndex..endIndex]
+
+    //     let mutable (output:List<List<float>>) = List.empty
+    //     let mutable buffer = List.empty
+
+    //     for i in [0 .. nbEcho] do
+    //         buffer <- List.empty
+    //         for a in [0 .. i] do
+    //             buffer <- buffer |> List.append silenceDelay
+    //             //buffer <- buffer |> List.append silenceEcho
+    //         buffer <- List.append buffer echoSample
+    //         output <- output @ [buffer]
+
+    //     let mutable returnValue = output[0]
+    //     for i in [(output.Length - 1).. -1 ..1] do 
+    //         returnValue <- addTwoWaves returnValue output[i] 0.66
+    //     let silence = [for i in 0 .. (startIndex - 1) do 0.]
+    //     returnValue <- List.append silence returnValue
+    //     addTwoWaves x returnValue
+
 
     let cutCorners limit (data:List<float>) =
         let step = 1. / float limit
@@ -116,6 +157,7 @@ module Filter =
 
         pinchAmp ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (release, sustain); ((float data.Length/float sampleRate), 0.)]) sampleRate data //error here
         //pinchAmp data ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); ((float data.Length/float sampleRate), sustain); (release, 0.)]) sampleRate  //error here
+
 
     let rec reverb (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =    // This is also echo
         if nbEcho=0 then

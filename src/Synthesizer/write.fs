@@ -41,6 +41,10 @@ type writeWav(
         
         let transposed = data |> List.transpose
         let byteData = [| for sample in transposed do yield! [| for channel in sample do yield! toBytes channel |] |]
+
+        
+        let transposed = data |> List.transpose
+        let byteData = [| for sample in transposed do yield! [| for channel in sample do yield! toBytes channel |] |]
         
         let writer = new BinaryWriter(stream)
         // RIFF

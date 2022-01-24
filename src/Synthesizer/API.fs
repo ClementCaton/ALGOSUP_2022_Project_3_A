@@ -33,17 +33,12 @@ module API =
     let compose sounds =
         //this is to be revisited
         sounds |> List.map(fun x -> Utility.cutCorners 3500 x) |> List.concat
-    
-(*    let add (jaggedArray: float[] list) =
-        let size = jaggedArray |> List.map Array.length |> List.max
-        let nTracks = List.length jaggedArray
-        let matrix = jaggedArray |> List.map (fun L -> (List.ofArray L) @ (List.replicate (size - Array.length L) 0.))
-        Array.init size (fun j -> Array.init nTracks (fun i -> matrix.[i].[j]) |> Array.sum |> (/) (float nTracks))*)
+            
     let add sounds = Utility.add sounds
 
     let preview title sound =
         previewarr.chart title sound
         sound
-    
+
     let forAllChannels func channels =
         channels |> List.map func
