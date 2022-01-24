@@ -96,6 +96,34 @@ module Filter =
             let silence = createSoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
             let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
             reverb (nbEcho-1) decay delay sampleRate updatedWetData dryData
+
+    let LFO_AM frequency minAmplitude maxAmplitude sampleRate data =
+        let oscillator = fourWaves.sinWave
+        let amplitude = (maxAmplitude - minAmplitude) / 2.
+        let verticalShift = (maxAmplitude + minAmplitude) / 2.
+        data
+        |> List.mapi (fun i x ->
+            let t = float i / float sampleRate
+            x * (oscillator frequency amplitude verticalShift 0. t)
+        )
+
+    let LFO_FM frequency deltaFreq sampleRate (data:List<float>) =
+        failwith "Not working yet"
+        let Ac = 1. // Carrier's amplitude
+        let fc = frequency // Carrier's frequency
+        let fd = deltaFreq // Frequency deviation = frequency modulator's sensitivity * data's amplitude
+
+        let integrate N (Xs:List<float>) =
+            Xs
+            |> List.take (N+1)
+            |> List.sum
+            |> ( * ) (float N) // (float N / float sampleRate)
+
+        List.init (List.length data) (fun i ->
+            let t = float i / sampleRate
+            Ac * cos ( 2. * Math.PI * (fc * t + fd * integrate i data))
+            // https://en.wikipedia.org/wiki/Frequency_modulation#Theory
+        )
     
     let createEcho (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
         let silenceDelay = [for i in 0. .. delay do 0.]
