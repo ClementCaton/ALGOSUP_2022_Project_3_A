@@ -47,9 +47,6 @@ module Filter =
             if i > (1. * multiplicator) then (1. * multiplicator) else
             i]
 
-    let changeAmplitude multiplicator (x:List<float>) =
-        x |> List.map (( * ) multiplicator)
-
     // let createEcho (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
     //     let silenceDelay = [for i in 0. .. delay do 0.]
     //     //let silenceEcho = [for i in 0 .. ( endIndex - startIndex ) do 0.]
@@ -100,16 +97,16 @@ module Filter =
         ]
         fData
 
-    let reverb (dryData:List<float>) (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) = 
-        let rec revebInner (dryData:List<float>) (wetData:List<float>) (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) =   // This is also echo
+    let reverb (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) = 
+        let rec revebInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
             if nbEcho=0 then
                 Utility.add [dryData; wetData]
             else
                 let silence = createSoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
                 let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
-                revebInner dryData updatedWetData (nbEcho-1) decay delay sampleRate
+                revebInner (nbEcho-1) decay delay sampleRate updatedWetData dryData
 
-        revebInner dryData [] nbEcho decay delay sampleRate
+        revebInner nbEcho decay delay sampleRate [] dryData
 
 
 
@@ -118,8 +115,7 @@ module Filter =
         let step = speed/1000.*sampleRate
         let rec primitiveFlangerInner (step:float) current (dry:List<float>) wet =
             if current = dry.Length then wet
-            elif Math.Floor(float current%step) = 0 then 
-                printfn $"{(string current)}"
+            elif Math.Floor(float current%step) = 0 then
                 primitiveFlangerInner step (current+1) dry (wet @ [dry[current]] @ [dry[current]])
             else primitiveFlangerInner step (current+1) dry (wet @ [dry[current]])
         
@@ -158,14 +154,6 @@ module Filter =
         pinchAmp ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (release, sustain); ((float data.Length/float sampleRate), 0.)]) sampleRate data //error here
         //pinchAmp data ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); ((float data.Length/float sampleRate), sustain); (release, 0.)]) sampleRate  //error here
 
-
-    let rec reverb (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =    // This is also echo
-        if nbEcho=0 then
-            Utility.add [dryData; wetData]
-        else
-            let silence = createSoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
-            let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
-            reverb (nbEcho-1) decay delay sampleRate updatedWetData dryData
 
     let LFO_AM frequency minAmplitude maxAmplitude sampleRate data =
         let oscillator = fourWaves.sinWave

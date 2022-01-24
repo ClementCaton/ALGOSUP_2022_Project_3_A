@@ -12,19 +12,13 @@ open Synthesizer
 module Program =
 
     let basicSound = API.note (Seconds 0.5) Note.A 4
-    let reverb = Filter.reverb 50 0.8 0.2 44100. [] basicSound
-    let echo = Filter.reverb 5 0.7 1. 44100. [] basicSound
+    let reverb = Filter.reverb 50 0.8 0.2 44100. basicSound
+    let echo = Filter.reverb 5 0.7 1. 44100. basicSound
     API.writeToWav "basic.wav" [basicSound]
     API.writeToWav "reverb.wav" [reverb]
     API.writeToWav "echo.wav" [echo]
-    let basicSound = API.note (Seconds 3) Note.A 4
-    let flanger = Filter.primitiveFlanger 10 44100. basicSound
-    // let reverb = Filter.reverb basicSound 50 0.8 0.2 44100.
-    // let echo = Filter.reverb basicSound 5 0.7 1. 44100.
-    API.writeToWav "basic.wav" basicSound
-    API.writeToWav "flanger.wav" flanger
-    // API.writeToWav "reverb.wav" reverb
-    // API.writeToWav "echo.wav" echo
+    API.writeToWav "basic.wav" [basicSound]
+
     // Custom duration
     let DottedEighth = Custom (1./8. * 1.5)
     let EighthAndHalf = Custom (1./8. + 1./2.)
@@ -61,13 +55,16 @@ module Program =
     let music = API.add [mainMelody; secondMelody; secondHandHigh; secondHandLow]
 
 
-API.writeToWav "wave.wav" music
+    API.writeToWav "wave.wav" [music]
 
-//frequence amplitude verticalShift phaseShift t
+    //frequence amplitude verticalShift phaseShift t
     let input = API.add [API.note Whole Note.A 3;API.note Whole Note.A 4;API.note Whole Note.A 5]
-    API.writeToWav "A345.wav" input
+    API.writeToWav "A345.wav" [input]
     let output = frequencyAnalysis.fourier input
-    previewarr.chart output |> ignore
+    API.preview "A 3,4,5 Analysis" output |> ignore
 
     let mono = [music]
     API.writeToWav "rickroll.wav" mono
+
+    let stereo = [music; mainMelody]
+    API.writeToWav "rickrollStereo.wav" stereo
