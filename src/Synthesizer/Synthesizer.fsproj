@@ -6,6 +6,7 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>    
+    <Compile Include="frequencyAnalyzer.fs" />
     <Compile Include="fourWaves.fs" />
     <Compile Include="Utility.fs" />
     <Compile Include="XPlotPreview.fs" />
@@ -25,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MathNet.Numerics" Version="4.15.0" />
     <PackageReference Include="sfml.audio" Version="2.5.0" />
     <PackageReference Include="XPlot.Plotly" Version="4.0.6" />
   </ItemGroup>
