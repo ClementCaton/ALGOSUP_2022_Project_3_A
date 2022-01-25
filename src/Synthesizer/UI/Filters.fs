@@ -111,28 +111,25 @@ module Filter =
 
 
     //! WIP
-    let primitiveFlanger (speed:float) (sampleRate:float) (dryData:List<float>) =
+    let flanger (delay:float) (speed:float) (sampleRate:float) (dryData:List<float>) =
         let step = speed/1000.*sampleRate
-        let rec primitiveFlangerInner (step:float) current (dry:List<float>) wet =
-            if current = dry.Length then wet
-            elif Math.Floor(float current%step) = 0 then
-                primitiveFlangerInner step (current+1) dry (wet @ [dry[current]] @ [dry[current]])
-            else primitiveFlangerInner step (current+1) dry (wet @ [dry[current]])
-        
-        let wetData = primitiveFlangerInner step 0 dryData []
+        let silence = createSoundData(frequency0 = 0, sampleRate0 = sampleRate,  duration0 = (Seconds (delay/1000.)), bpm0 = 114).create(Silence)
 
-        Utility.add [dryData; wetData]
-    
-    //! WIP
-    let createFlanger (start:float) (ending:float) (delay:float) (rate:float) repNumber sampleRate (data:List<float>) = 
-        let mutable dela = delay
-        let mutable rep = repNumber
-        let mutable actualData = data
-        while rep > 0 do
-            actualData <- createDelay start ending dela sampleRate data
-            dela <- dela + dela/rate
-            rep <- rep - 1
-        actualData
+
+        let rec flangerInner (step:float) (rate:int) (initialRate:int)  current (dry:List<float>) (wet:List<float>) =
+            if wet.Length >= dry.Length then wet
+
+            elif Math.Floor(float current%step) = 0 then
+                printfn $"{float wet.Length / float dry.Length}"
+
+                let addition = [for i in 0 .. (rate) -> dry[current]]
+                flangerInner step (rate+initialRate) initialRate (current+1) dry (wet @ addition)
+
+            else flangerInner step rate initialRate (current+1) dry (wet @ [dry[current]])
+        
+        let wetData = flangerInner step 1 1 0 dryData[silence.Length..] []
+
+        Utility.add [dryData; (silence @ wetData)]
 
     // enveloppe stuff
     let pinchAmp (dataPoints0: List<float * float>) (sampleRate:float) (data:List<float>) =
