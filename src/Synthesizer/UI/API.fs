@@ -17,6 +17,12 @@ module API =
         //! The "1." was supposed to be "(data.overDrive)"
         Utility.makeOverdrive 1. (data.create(waveType))
 
+    let createSoundWithEnveloppe freq duration waveType sustain attack hold decay release = // time, time, time, amp, time
+        let data = createSoundData(frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
+        //! The "1." was supposed to be "(data.overDrive)"
+        Utility.makeOverdrive 1. (data.creteWithEnvelope waveType sustain attack hold decay release)
+
+
     let writeToWav path music =
         writeWav().Write (File.Create(path)) (music)
 
