@@ -10,6 +10,7 @@
   <ItemGroup>
     <Compile Include="UtilitiesTest/UtilityTest.fs" />
     <Compile Include="UtilitiesTest/GetNoteTest.fs" />
+    <Compile Include="UITest/FiltersTest.fs" />
     <Compile Include="UITest/APITest.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
