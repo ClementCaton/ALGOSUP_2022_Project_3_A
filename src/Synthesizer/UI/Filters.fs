@@ -42,10 +42,7 @@ module Filter =
 
 
     let makeOverdrive multiplicator (x:List<float>) =
-        [for i in x do 
-            if i < (-1. * multiplicator) then (-1. * multiplicator) else
-            if i > (1. * multiplicator) then (1. * multiplicator) else
-            i]
+        Utility.makeOverdrive multiplicator x
 
     // let createEcho (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
     //     let silenceDelay = [for i in 0. .. delay do 0.]
