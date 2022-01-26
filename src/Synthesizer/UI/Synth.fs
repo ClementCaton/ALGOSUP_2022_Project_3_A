@@ -21,13 +21,13 @@ module Synth =
         //! The "1." was supposed to be "(data.overDrive)"
         Utility.Overdrive 1. (data.creteWithEnvelope waveType sustain attack hold decay release)
 
-    let writeToWav path music =
-        use stream = File.Create(path)
-        writeWav().Write (stream) (music)
+    let writeToWav name music =
+        Directory.CreateDirectory("./Output/") |> ignore
+        writeWav().Write (File.Create("./Output/" + name)) (music)
 
     let writeToWavWithPath path fileName music =
-            Directory.CreateDirectory(path) |> ignore
-            writeWav().Write (File.Create(path + fileName)) (music)
+        Directory.CreateDirectory(path) |> ignore
+        writeWav().Write (File.Create(path + fileName)) (music)
 
     let readFromWav name =
         readWav().Read (File.Open("./Output/"+name, FileMode.Open))
