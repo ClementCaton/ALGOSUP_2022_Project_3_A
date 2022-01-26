@@ -25,7 +25,10 @@ module API =
             writeWav().Write (File.Create(path + fileName)) (music)
 
 
-    let readFromWav path =
+    let readFromWav name =
+        readWav().Read (File.Open("./Output/"+name, FileMode.Open))
+
+    let readFromWavWithPath path =
         readWav().Read (File.Open(path, FileMode.Open))
 
     let note duration mNote octave =
