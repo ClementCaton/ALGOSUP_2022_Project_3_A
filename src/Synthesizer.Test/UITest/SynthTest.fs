@@ -39,7 +39,7 @@ open System.IO
 [<Test>]
 let writeToWavSynthTest() =
     Synth.writeToWav "wave.wav" [Synth.Sound 440. one Sin]
-    Assert.IsTrue(File.Exists("./wave.wav"))
+    Assert.IsTrue(File.Exists("./Output/wave.wav"))
 
 [<Test>]
 let readFromWavSynthTest() =
