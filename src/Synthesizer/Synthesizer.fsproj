@@ -10,14 +10,14 @@
     <Compile Include="Utilities/Utility.fs" />
     <Compile Include="Utilities/XPlotPreview.fs" />
     <Compile Include="Utilities/GetNote.fs" />
-    <Compile Include="Utilities/CreateSoundData.fs" />
+    <Compile Include="Utilities/SoundData.fs" />
 
     <Compile Include="FileManagement/Write.fs" />
     <Compile Include="FileManagement/Read.fs" />
     <Compile Include="FileManagement/PlayMusic.fs" />
 
     <Compile Include="UI/Filters.fs" />  
-    <Compile Include="UI/API.fs" />
+    <Compile Include="UI/Synth.fs" />
   </ItemGroup>
 
   <ItemGroup>

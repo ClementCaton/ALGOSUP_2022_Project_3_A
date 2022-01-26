@@ -10,7 +10,7 @@ let one = Seconds 1.
 
 [<Test>]
 let cutStartUtilityTest() =
-    let data = API.note one Note.C 4 |> Utility.cutStart 44100. 0.2
+    let data = Synth.note one Note.C 4 |> Utility.cutStart 44100. 0.2
 
     Assert.That(data.Length, Is.EqualTo(44100.*0.8))
     Assert.That(data |> List.max, Is.LessThan(1))
@@ -18,7 +18,7 @@ let cutStartUtilityTest() =
 
 [<Test>]
 let cutEndUtilityTest() =
-    let data = API.note one Note.C 4 |> Utility.cutEnd 44100. 0.2
+    let data = Synth.note one Note.C 4 |> Utility.cutEnd 44100. 0.2
 
     Assert.That(data.Length, Is.EqualTo(44100.*0.8))
     Assert.That(data |> List.max, Is.LessThan(1))
@@ -26,16 +26,16 @@ let cutEndUtilityTest() =
 
 [<Test>]
 let cutCornersUtilityTest() =
-    let data = API.note one Note.C 4 |> Utility.cutCorners 800 |> Utility.cutEnd 44100. 0.98
-    let mockData = API.note one Note.C 4 |> Utility.cutEnd 44100. 0.98
+    let data = Synth.note one Note.C 4 |> Utility.cutCorners 800 |> Utility.cutEnd 44100. 0.98
+    let mockData = Synth.note one Note.C 4 |> Utility.cutEnd 44100. 0.98
 
     Assert.That (data, Is.LessThan mockData)
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
 let addUtilityTest() =
-    let data = API.note one Note.C 4
-    let data2 = API.note one Note.C 7
+    let data = Synth.note one Note.C 4
+    let data2 = Synth.note one Note.C 7
 
     let finalData = Utility.add [data; data2]
 
@@ -44,7 +44,7 @@ let addUtilityTest() =
     Assert.That (finalData, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let makeOverdriveTest() =
+let OverdriveTest() =
     let duration = 90. // In seconds
     let sampleRate = 44100.
     let arraySize = int ((44100.) * duration)
@@ -55,7 +55,7 @@ let makeOverdriveTest() =
     let overDrive = 1.
 
     let a = List.init arraySize (fun i -> ((fourWaves.sinWave) frequency amplitude verticalShift phaseShift (float i/sampleRate)))
-    let data = Utility.makeOverdrive 1 a
+    let data = Utility.Overdrive 1 a
 
     Assert.That(data.Length, Is.EqualTo(arraySize))
     Assert.That(data |> List.max, Is.LessThan(1))

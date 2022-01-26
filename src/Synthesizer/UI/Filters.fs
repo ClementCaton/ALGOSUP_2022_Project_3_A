@@ -28,14 +28,14 @@ module Filter =
         let mutable output = (addTwoWaves ratio y x)
         output <- changeAmplitude (1./(output|>List.max)) output
         output <- changeAmplitude oldMax output
-        Utility.makeOverdrive 1. output
+        Utility.Overdrive 1. output
 
     let reverb (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) = 
         let rec revebInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
             if nbEcho=0 then
                 Utility.add [dryData; wetData]
             else
-                let silence = createSoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
+                let silence = SoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
                 let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
                 revebInner (nbEcho-1) decay delay sampleRate updatedWetData dryData
 
@@ -46,7 +46,7 @@ module Filter =
     //! WIP
     let flanger (delay:float) (speed:float) (sampleRate:float) (dryData:List<float>) =
         let step = speed/1000.*sampleRate
-        let silence = createSoundData(frequency0 = 0, sampleRate0 = sampleRate,  duration0 = (Seconds (delay/1000.)), bpm0 = 114).create(Silence)
+        let silence = SoundData(frequency0 = 0, sampleRate0 = sampleRate,  duration0 = (Seconds (delay/1000.)), bpm0 = 114).create(Silence)
 
 
         let rec flangerInner (step:float) (rate:int) (initialRate:int)  current (dry:List<float>) (wet:List<float>) =
@@ -113,7 +113,7 @@ module Filter =
             // https://en.wikipedia.org/wiki/Frequency_modulation#Theory
         )
     
-    let createEcho (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
+    let Echo (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
         let silenceDelay = [for i in 0. .. delay do 0.]
         //let silenceEcho = [for i in 0 .. ( endIndex - startIndex ) do 0.]
         let echoSample = x[startIndex..endIndex]
