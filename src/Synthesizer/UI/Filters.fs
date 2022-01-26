@@ -225,7 +225,7 @@ module Filter =
     let highPass sampleRate cutoffFreq (data:List<float>) =
         let RC = 1. / (2. * Math.PI * cutoffFreq)
         let dt = 1. / sampleRate
-        let alpha = dt / (RC + dt)
+        let alpha = RC / (RC + dt)
 
         // TODO: Refactorize and make faster
         let mutable y = [data.[0]]
@@ -236,3 +236,11 @@ module Filter =
                 y <- y @ y'[1..]
                 y' <- [List.last y']
         y @ y'[1..]
+
+    let bandPass sampleRate lowFreq highFreq (data:List<float>) = 
+        data |> lowPass sampleRate lowFreq |> highPass sampleRate highFreq
+
+    let rejectBand sampleRate lowFreq highFreq (data:List<float>) = 
+        let lowPassData = highPass sampleRate lowFreq data
+        let highPassData = lowPass sampleRate highFreq data
+        Utility.add [lowPassData; highPassData]
