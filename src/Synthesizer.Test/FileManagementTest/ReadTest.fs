@@ -10,7 +10,7 @@ let Setup () =
 
 [<Test>]
 let readFromWavApiTest() =
-    API.writeToWav "wav.wav" [API.createSound 440. Quarter Sin]
+    API.writeToWav "wav.wav" [API.createSound 440. Quarter 1. Sin]
     use stream = File.Open("wav.wav", FileMode.Open)
     let theFile = readWav().Read (stream)
     

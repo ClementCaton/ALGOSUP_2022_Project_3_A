@@ -11,23 +11,23 @@ module API =
     let getNoteFreqOffset octav note aFourFreq =
         CalcNoteFreq(octav, note, aFourFreq).Output
 
-    let createSound freq duration waveType =
-        let data = createSoundData(frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
+    let createSound freq duration overdrive waveType =
+        let data = createSoundData(overDrive0 = overdrive ,frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
         //! The "1." was supposed to be "(data.overDrive)"
-        Utility.makeOverdrive 1. (data.create(waveType))
+        Utility.makeOverdrive overdrive (data.create(waveType))
 
-    let createSoundWithEnveloppe freq duration waveType sustain attack hold decay release = // time, time, time, amp, time
-        let data = createSoundData(frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
+    let createSoundWithEnveloppe freq duration overdrive waveType sustain attack hold decay release = // time, time, time, amp, time
+        let data = createSoundData(overDrive0 = overdrive ,frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
         //! The "1." was supposed to be "(data.overDrive)"
-        Utility.makeOverdrive 1. (data.creteWithEnvelope waveType sustain attack hold decay release)
+        Utility.makeOverdrive overdrive (data.creteWithEnvelope waveType sustain attack hold decay release)
 
-    let writeToWav path music =
-        use stream = File.Create(path)
-        writeWav().Write (stream) (music)
+    let writeToWav name music =
+        Directory.CreateDirectory("./Output/") |> ignore
+        writeWav().Write (File.Create("./Output/" + name)) (music)
 
     let writeToWavWithPath path fileName music =
-            Directory.CreateDirectory(path) |> ignore
-            writeWav().Write (File.Create(path + fileName)) (music)
+        Directory.CreateDirectory(path) |> ignore
+        writeWav().Write (File.Create(path + fileName)) (music)
 
     let readFromWav name =
         readWav().Read (File.Open("./Output/"+name, FileMode.Open))
@@ -37,10 +37,10 @@ module API =
 
     let note duration mNote octave =
         let freq = getNoteFreq mNote octave
-        createSound freq duration Sin
+        createSound freq duration 1. Sin
     
     let silence duration =
-        createSound 0 duration Silence
+        createSound 0 duration 1. Silence
     
     let compose sounds =
         //this is to be revisited
