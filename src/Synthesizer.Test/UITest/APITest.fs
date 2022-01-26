@@ -39,7 +39,7 @@ open System.IO
 [<Test>]
 let writeToWavApiTest() =
     API.writeToWav "wave.wav" [API.createSound 440. one 1. Sin]
-    Assert.IsTrue(File.Exists("./wave.wav"))
+    Assert.IsTrue(File.Exists("./Output/wave.wav"))
 
 [<Test>]
 let readFromWavApiTest() =

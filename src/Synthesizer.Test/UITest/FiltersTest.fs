@@ -18,7 +18,7 @@ let changeAmplitudeTest() =
     Assert.That(mockData,Is.EqualTo(data))
     Assert.That(data,Is.InstanceOf<List<float>>())
 
-[<Test>]
+// [<Test>]
 let addTwoWavesTest() =
     let creater0 = new createSoundData (amplitude0 = 0.)
     let creater1 = new createSoundData (amplitude0 = 1.)
