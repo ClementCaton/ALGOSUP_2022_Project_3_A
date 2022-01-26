@@ -44,7 +44,7 @@ let writeToWavApiTest() =
 [<Test>]
 let readFromWavApiTest() =
     let theFile = API.readFromWav "wave.wav"
-    Assert.That(theFile, Is.InstanceOf<List<List<float>> * float * int * int * int>())
+    Assert.That(theFile, Is.InstanceOf<List<List<float>> * float * int * int>())
 
 [<Test>]
 let noteApiTest() =

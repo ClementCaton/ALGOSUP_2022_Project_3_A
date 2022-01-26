@@ -22,7 +22,8 @@ module API =
         Utility.makeOverdrive 1. (data.creteWithEnvelope waveType sustain attack hold decay release)
 
     let writeToWav path music =
-        writeWav().Write (File.Create(path)) (music)
+        use stream = File.Create(path)
+        writeWav().Write (stream) (music)
 
     let writeToWavWithPath path fileName music =
             writeWav().Write (File.Create(path + fileName)) (music)

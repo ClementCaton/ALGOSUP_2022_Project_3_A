@@ -9,7 +9,7 @@ let Setup () =
 let one = Seconds 1.
 
 [<Test>]
-let cutStartUtility() =
+let cutStartUtilityTest() =
     let data = API.note one Note.C 4 |> Utility.cutStart 44100. 0.2
 
     Assert.That(data.Length, Is.EqualTo(44100.*0.8))
@@ -17,7 +17,7 @@ let cutStartUtility() =
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let cutEndUtility() =
+let cutEndUtilityTest() =
     let data = API.note one Note.C 4 |> Utility.cutEnd 44100. 0.2
 
     Assert.That(data.Length, Is.EqualTo(44100.*0.8))
@@ -25,7 +25,7 @@ let cutEndUtility() =
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let cutCornersUtility() =
+let cutCornersUtilityTest() =
     let data = API.note one Note.C 4 |> Utility.cutCorners 800 |> Utility.cutEnd 44100. 0.98
     let mockData = API.note one Note.C 4 |> Utility.cutEnd 44100. 0.98
 
@@ -33,7 +33,7 @@ let cutCornersUtility() =
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let addUtility() =
+let addUtilityTest() =
     let data = API.note one Note.C 4
     let data2 = API.note one Note.C 7
 
@@ -42,3 +42,21 @@ let addUtility() =
     Assert.That(data.Length, Is.EqualTo(44100))
     Assert.That(finalData |> List.max, Is.LessThan(1))
     Assert.That (finalData, Is.InstanceOf(typeof<List<float>>))
+
+[<Test>]
+let makeOverdriveTest() =
+    let duration = 90. // In seconds
+    let sampleRate = 44100.
+    let arraySize = int ((44100.) * duration)
+    let amplitude = 1.
+    let phaseShift = 0.
+    let verticalShift = 0.
+    let frequency = 440.
+    let overDrive = 1.
+
+    let a = List.init arraySize (fun i -> ((fourWaves.sinWave) frequency amplitude verticalShift phaseShift (float i/sampleRate)))
+    let data = Utility.makeOverdrive 1 a
+
+    Assert.That(data.Length, Is.EqualTo(arraySize))
+    Assert.That(data |> List.max, Is.LessThan(1))
+    Assert.That (data, Is.InstanceOf(typeof<List<float>>))
