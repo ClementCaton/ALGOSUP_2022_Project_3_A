@@ -20,11 +20,9 @@ module Filter =
     let changeAmplitude multiplicator (x:List<float>) =
         x |> List.map (( * ) multiplicator)
 
-    let addTwoWaves ratio (y:List<float>) (x:List<float>) = 
-        let mutable output = List.empty
-        let mutable oldMax = x |> List.max
-        if (oldMax < (y |> List.max)) then (oldMax <- (y |> List.max))
 
+    let addTwoWaves ratio (y:List<float>) (x:List<float>) =
+        let mutable output = List.empty
         if not (x.Length = y.Length) then
             let diff = Math.Abs(x.Length - y.Length)
             let endArray = [for i in [0 .. diff] do 0.0]
@@ -36,6 +34,12 @@ module Filter =
                 output <- List.init y.Length (fun i -> (newX[i] * ratio) + (y[i] * (1.-ratio)))
         else 
             output <- List.init x.Length (fun i -> (x[i] * ratio) + (y[i] * (1.-ratio)))
+        output
+
+    let addModulation ratio (y:List<float>) (x:List<float>) = 
+        let mutable oldMax = x |> List.max
+        if y |> List.max > oldMax then oldMax <- y |> List.max
+        let mutable output = (addTwoWaves ratio y x)
         output <- changeAmplitude (1./(output|>List.max)) output
         output <- changeAmplitude oldMax output
         Utility.makeOverdrive 1. output
