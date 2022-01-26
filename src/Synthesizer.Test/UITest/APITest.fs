@@ -28,7 +28,7 @@ let one = Seconds 1.
 
 [<Test>]
 let createSoundApiTest() =
-    let data = API.createSound 440. one Sin
+    let data = API.createSound 440. one 1. Sin
 
     Assert.That(data, Is.TypeOf<List<float>>()) 
     Assert.That(data |> List.max, Is.LessThan 1)
@@ -38,7 +38,7 @@ let createSoundApiTest() =
 open System.IO
 [<Test>]
 let writeToWavApiTest() =
-    API.writeToWav "wave.wav" [API.createSound 440. one Sin]
+    API.writeToWav "wave.wav" [API.createSound 440. one 1. Sin]
     Assert.IsTrue(File.Exists("./wave.wav"))
 
 [<Test>]
