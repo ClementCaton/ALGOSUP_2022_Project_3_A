@@ -17,10 +17,18 @@ module API =
         //! The "1." was supposed to be "(data.overDrive)"
         Utility.makeOverdrive 1. (data.create(waveType))
 
-    let writeToWav path music =
-        writeWav().Write (File.Create(path)) (music)
+    let writeToWav fileName music =
+            Directory.CreateDirectory("./Output/") |> ignore
+            writeWav().Write (File.Create("./Output/" + fileName)) (music)
 
-    let readFromWav path =
+    let writeToWavWithPath path fileName music =
+            writeWav().Write (File.Create(path + fileName)) (music)
+
+
+    let readFromWav name =
+        readWav().Read (File.Open("./Output/"+name, FileMode.Open))
+
+    let readFromWavWithPath path =
         readWav().Read (File.Open(path, FileMode.Open))
 
     let note duration mNote octave =
