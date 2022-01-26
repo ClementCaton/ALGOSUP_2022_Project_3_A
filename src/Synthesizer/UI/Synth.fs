@@ -3,7 +3,7 @@ namespace Synthesizer
 open System
 open System.IO
 
-module API =
+module Synth =
     
     let getNoteFreq octav note =
         CalcNoteFreq(octav, note).Output
@@ -11,15 +11,15 @@ module API =
     let getNoteFreqOffset octav note aFourFreq =
         CalcNoteFreq(octav, note, aFourFreq).Output
 
-    let createSound freq duration overdrive waveType =
-        let data = createSoundData(overDrive0 = overdrive ,frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
+    let Sound freq duration waveType =
+        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
         //! The "1." was supposed to be "(data.overDrive)"
-        Utility.makeOverdrive overdrive (data.create(waveType))
+        Utility.Overdrive 1. (data.create(waveType))
 
-    let createSoundWithEnveloppe freq duration overdrive waveType sustain attack hold decay release = // time, time, time, amp, time
-        let data = createSoundData(overDrive0 = overdrive ,frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
+    let SoundWithEnveloppe freq duration waveType sustain attack hold decay release = // time, time, time, amp, time
+        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
         //! The "1." was supposed to be "(data.overDrive)"
-        Utility.makeOverdrive overdrive (data.creteWithEnvelope waveType sustain attack hold decay release)
+        Utility.Overdrive 1. (data.creteWithEnvelope waveType sustain attack hold decay release)
 
     let writeToWav name music =
         Directory.CreateDirectory("./Output/") |> ignore
@@ -37,10 +37,10 @@ module API =
 
     let note duration mNote octave =
         let freq = getNoteFreq mNote octave
-        createSound freq duration 1. Sin
+        Sound freq duration Sin
     
     let silence duration =
-        createSound 0 duration 1. Silence
+        Sound 0 duration Silence
     
     let compose sounds =
         //this is to be revisited

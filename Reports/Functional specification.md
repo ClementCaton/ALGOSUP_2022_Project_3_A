@@ -15,29 +15,29 @@ Any person interested in sound synthesis should be able to use this project.
 
 ## What can the user do 
 
-While the API will possess a variety of functions to ease the developpement process. The ones that are used by the users are rather simple:
+While the Library will possess a variety of functions to ease the developpement process. The ones that are used by the users are rather simple:
 
-- API.Read
+- Synth.Read
   - Reads a file (.wav or .mp3 formats)
 <br><br>
-- API.Write
+- Synth.Write
   - Writes a file (.wav or .mp3 formats)
 <br><br>
-- API.Play
+- Synth.Play
   - Plays sound data
 <br><br>
-- API.GetNote
+- Synth.GetNote
   - Returns the sound data of a given musical note with a given duration, note and octave
 <br><br>
-- API.Compose
+- Synth.Compose
   - Returns complex sound data from a list of notes (music)
 <br><br>
-- API.Add
+- Synth.Add
   - Superpose notes (with a possible temporal offset) to allow for multiple notes to be played at the same time
 <br><br>
-- API.ApplyFilterX
+- Synth.ApplyFilterX
   - Applies a filter to a given sound (X replaces with the filter in question)
 <br><br>
-- API.Preview
+- Synth.Preview
   - Gives a visual display of the sound waves generated using Xplot
 
