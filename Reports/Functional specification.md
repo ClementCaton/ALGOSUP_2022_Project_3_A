@@ -28,9 +28,11 @@ The saving and loading of .wav files must also be possible at this stage.
 
 
 ## Defenitions:
-[^notes]
 [^1]: Octaves: 
+> A series of eight notes occupying the interval between (and including) two notes, one having twice or half the frequency of vibration of the other.
+
 [^2]: Notes: 
+> A note is a symbol denoting a musical sound.
 
 
 
