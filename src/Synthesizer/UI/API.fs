@@ -18,6 +18,7 @@ module API =
         Utility.makeOverdrive 1. (data.create(waveType))
 
     let writeToWav fileName music =
+            Directory.CreateDirectory("./Output/") |> ignore
             writeWav().Write (File.Create("./Output/" + fileName)) (music)
 
     let writeToWavWithPath path fileName music =
