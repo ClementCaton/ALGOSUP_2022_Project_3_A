@@ -11,7 +11,7 @@
     <Compile Include="UtilitiesTest/UtilityTest.fs" />
     <Compile Include="UtilitiesTest/GetNoteTest.fs" />
     <Compile Include="UITest/FiltersTest.fs" />
-    <Compile Include="UITest/APITest.fs" />
+    <Compile Include="UITest/SynthTest.fs" />
     <Compile Include="FileManagementTest/ReadTest.fs" />
     <Compile Include="FileManagementTest/WriteTest.fs" />
     <Compile Include="Program.fs" />
