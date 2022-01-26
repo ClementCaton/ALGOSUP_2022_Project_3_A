@@ -3,28 +3,12 @@ namespace Synthesizer
 module Filter =
     open System
 
-    //let addTwoWaves ratio (x:List<float>) (y:List<float>) = 
-    //    let mutable output = List.empty
-    //    if not (x.Length = y.Length) then
-    //        let diff = Math.Abs(x.Length - y.Length)
-    //        let endArray = [for i in [0 .. diff] do 0.0]
-    //        if x.Length > y.Length then
-    //            let newY = List.append y endArray
-    //            output <- List.init x.Length (fun i -> (x[i] * ratio) + (newY[i] * (1.-ratio)))
-    //        else 
-    //            let newX = List.append x endArray
-    //            output <- List.init y.Length (fun i -> (newX[i] * ratio) + (y[i] * (1.-ratio)))
-    //    else 
-    //        output <- List.init x.Length (fun i -> (x[i] * ratio) + (y[i] * (1.-ratio)))
-    //    output
     let changeAmplitude multiplicator (x:List<float>) =
         x |> List.map (( * ) multiplicator)
 
-    let addTwoWaves ratio (y:List<float>) (x:List<float>) = 
-        let mutable output = List.empty
-        let mutable oldMax = x |> List.max
-        if (oldMax < (y |> List.max)) then (oldMax <- (y |> List.max))
 
+    let addTwoWaves ratio (y:List<float>) (x:List<float>) =
+        let mutable output = List.empty
         if not (x.Length = y.Length) then
             let diff = Math.Abs(x.Length - y.Length)
             let endArray = [for i in [0 .. diff] do 0.0]
@@ -36,33 +20,15 @@ module Filter =
                 output <- List.init y.Length (fun i -> (newX[i] * ratio) + (y[i] * (1.-ratio)))
         else 
             output <- List.init x.Length (fun i -> (x[i] * ratio) + (y[i] * (1.-ratio)))
+        output
+
+    let addModulation ratio (y:List<float>) (x:List<float>) = 
+        let mutable oldMax = x |> List.max
+        if y |> List.max > oldMax then oldMax <- y |> List.max
+        let mutable output = (addTwoWaves ratio y x)
         output <- changeAmplitude (1./(output|>List.max)) output
         output <- changeAmplitude oldMax output
         Utility.makeOverdrive 1. output
-
-
-    // let createEcho (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
-    //     let silenceDelay = [for i in 0. .. delay do 0.]
-    //     //let silenceEcho = [for i in 0 .. ( endIndex - startIndex ) do 0.]
-    //     let echoSample = x[startIndex..endIndex]
-
-    //     let mutable (output:List<List<float>>) = List.empty
-    //     let mutable buffer = List.empty
-
-    //     for i in [0 .. nbEcho] do
-    //         buffer <- List.empty
-    //         for a in [0 .. i] do
-    //             buffer <- buffer |> List.append silenceDelay
-    //             //buffer <- buffer |> List.append silenceEcho
-    //         buffer <- List.append buffer echoSample
-    //         output <- output @ [buffer]
-
-    //     let mutable returnValue = output[0]
-    //     for i in [(output.Length - 1).. -1 ..1] do 
-    //         returnValue <- addTwoWaves returnValue output[i] 0.66
-    //     let silence = [for i in 0 .. (startIndex - 1) do 0.]
-    //     returnValue <- List.append silence returnValue
-    //     addTwoWaves x returnValue
 
     let createDelay (start:float) (ending:float) (delay:float) sampleRate (data:List<float>) =
         let (newData) = [
@@ -97,28 +63,25 @@ module Filter =
 
 
     //! WIP
-    let primitiveFlanger (speed:float) (sampleRate:float) (dryData:List<float>) =
+    let flanger (delay:float) (speed:float) (sampleRate:float) (dryData:List<float>) =
         let step = speed/1000.*sampleRate
-        let rec primitiveFlangerInner (step:float) current (dry:List<float>) wet =
-            if current = dry.Length then wet
-            elif Math.Floor(float current%step) = 0 then
-                primitiveFlangerInner step (current+1) dry (wet @ [dry[current]] @ [dry[current]])
-            else primitiveFlangerInner step (current+1) dry (wet @ [dry[current]])
-        
-        let wetData = primitiveFlangerInner step 0 dryData []
+        let silence = createSoundData(frequency0 = 0, sampleRate0 = sampleRate,  duration0 = (Seconds (delay/1000.)), bpm0 = 114).create(Silence)
 
-        Utility.add [dryData; wetData]
-    
-    //! WIP
-    let createFlanger (start:float) (ending:float) (delay:float) (rate:float) repNumber sampleRate (data:List<float>) = 
-        let mutable dela = delay
-        let mutable rep = repNumber
-        let mutable actualData = data
-        while rep > 0 do
-            actualData <- createDelay start ending dela sampleRate data
-            dela <- dela + dela/rate
-            rep <- rep - 1
-        actualData
+
+        let rec flangerInner (step:float) (rate:int) (initialRate:int)  current (dry:List<float>) (wet:List<float>) =
+            if wet.Length >= dry.Length then wet
+
+            elif Math.Floor(float current%step) = 0 then
+                printfn $"{float wet.Length / float dry.Length}"
+
+                let addition = [for i in 0 .. (rate) -> dry[current]]
+                flangerInner step (rate+initialRate) initialRate (current+1) dry (wet @ addition)
+
+            else flangerInner step rate initialRate (current+1) dry (wet @ [dry[current]])
+        
+        let wetData = flangerInner step 1 1 0 dryData[silence.Length..] []
+
+        Utility.add [dryData; (silence @ wetData)]
 
     // enveloppe stuff
     let pinchAmp (dataPoints0: List<float * float>) (sampleRate:float) (data:List<float>) =
@@ -211,7 +174,7 @@ module Filter =
     let highPass sampleRate cutoffFreq (data:List<float>) =
         let RC = 1. / (2. * Math.PI * cutoffFreq)
         let dt = 1. / sampleRate
-        let alpha = dt / (RC + dt)
+        let alpha = RC / (RC + dt)
 
         // TODO: Refactorize and make faster
         let mutable y = [data.[0]]
@@ -222,3 +185,11 @@ module Filter =
                 y <- y @ y'[1..]
                 y' <- [List.last y']
         y @ y'[1..]
+
+    let bandPass sampleRate lowFreq highFreq (data:List<float>) = 
+        data |> lowPass sampleRate lowFreq |> highPass sampleRate highFreq
+
+    let rejectBand sampleRate lowFreq highFreq (data:List<float>) = 
+        let lowPassData = highPass sampleRate lowFreq data
+        let highPassData = lowPass sampleRate highFreq data
+        Utility.add [lowPassData; highPassData]
