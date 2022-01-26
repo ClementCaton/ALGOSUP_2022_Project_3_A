@@ -26,6 +26,7 @@ module API =
         writeWav().Write (stream) (music)
 
     let writeToWavWithPath path fileName music =
+            Directory.CreateDirectory(path) |> ignore
             writeWav().Write (File.Create(path + fileName)) (music)
 
     let readFromWav name =
