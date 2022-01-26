@@ -23,11 +23,13 @@ module Synth =
 
     let writeToWav name music =
         Directory.CreateDirectory("./Output/") |> ignore
-        writeWav().Write (File.Create("./Output/" + name)) (music)
+        use stream = File.Create("./Output/" + name)
+        writeWav().Write (stream) (music)
 
     let writeToWavWithPath path fileName music =
         Directory.CreateDirectory(path) |> ignore
-        writeWav().Write (File.Create(path + fileName)) (music)
+        use stream = File.Create(path + fileName)
+        writeWav().Write (stream) (music)
 
     let readFromWav name =
         readWav().Read (File.Open("./Output/"+name, FileMode.Open))

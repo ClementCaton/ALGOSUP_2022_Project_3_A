@@ -14,4 +14,4 @@ let Write () =
     use stream = new MemoryStream()
     writer.Write stream [Synth.createSound 440. Quarter Sin]
     
-    Assert.IsTrue(File.Exists("./wave.wav"))
+    Assert.IsTrue(File.Exists("./Output/wave.wav"))
