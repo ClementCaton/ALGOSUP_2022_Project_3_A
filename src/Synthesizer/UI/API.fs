@@ -56,4 +56,4 @@ module API =
         channels |> List.map func
 
     let fourier wave =
-        frequencyAnalysis.Fourier(wave)
+        frequencyAnalysis.fourier(wave)
