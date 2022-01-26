@@ -48,3 +48,6 @@ module API =
 
     let forAllChannels func channels =
         channels |> List.map func
+
+    let fourier wave =
+        frequencyAnalysis.Fourier(wave)
