@@ -18,7 +18,8 @@ module API =
         Utility.makeOverdrive 1. (data.create(waveType))
 
     let writeToWav path music =
-        writeWav().Write (File.Create(path)) (music)
+        use stream = File.Create(path)
+        writeWav().Write (stream) (music)
 
     let readFromWav path =
         readWav().Read (File.Open(path, FileMode.Open))

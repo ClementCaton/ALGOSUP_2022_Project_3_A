@@ -41,12 +41,6 @@ module Filter =
         Utility.makeOverdrive 1. output
 
 
-    let makeOverdrive multiplicator (x:List<float>) =
-        [for i in x do 
-            if i < (-1. * multiplicator) then (-1. * multiplicator) else
-            if i > (1. * multiplicator) then (1. * multiplicator) else
-            i]
-
     // let createEcho (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
     //     let silenceDelay = [for i in 0. .. delay do 0.]
     //     //let silenceEcho = [for i in 0 .. ( endIndex - startIndex ) do 0.]
@@ -69,14 +63,6 @@ module Filter =
     //     let silence = [for i in 0 .. (startIndex - 1) do 0.]
     //     returnValue <- List.append silence returnValue
     //     addTwoWaves x returnValue
-
-
-    let cutCorners limit (data:List<float>) =
-        let step = 1. / float limit
-        let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
-        let endVals = List.map2(fun x i -> x * step * i) data[data.Length-limit..] [float limit .. -1. .. 1.]
-
-        List.append (List.append startVals data[limit .. data.Length-limit-1]) endVals
 
     let createDelay (start:float) (ending:float) (delay:float) sampleRate (data:List<float>) =
         let (newData) = [
