@@ -10,7 +10,7 @@ let Setup () =
     ()
 
 [<Test>]
-let SoundDataTest() =
+let createTest() =
     let soundDataCreater = new SoundData()
     let data = soundDataCreater.create Silence
 

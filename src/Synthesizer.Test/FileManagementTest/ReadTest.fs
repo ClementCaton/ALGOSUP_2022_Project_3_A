@@ -9,7 +9,7 @@ let Setup () =
     ()
 
 [<Test>]
-let readFromWavSynthTest() =
+let readTest() =
     Synth.writeToWav "wav.wav" [Synth.Sound 440. Quarter Sin]
     use stream = File.Open("Output/wav.wav", FileMode.Open)
     let theFile = readWav().Read (stream)
