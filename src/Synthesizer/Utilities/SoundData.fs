@@ -79,7 +79,7 @@ type SoundData(
 
         output |> List.concat
 
-    member x.creteWithEnvelope waveType sustain attack hold0 decay0 release0 =  // time, time, time, amp, time
+    member x.createWithEnvelope waveType sustain attack hold0 decay0 release0 =  // time, time, time, amp, time
         let hold = hold0 + attack
         let decay = hold + decay0
         let release = duration + release0
