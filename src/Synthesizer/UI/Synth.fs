@@ -19,15 +19,17 @@ module Synth =
     let SoundWithEnveloppe freq duration waveType sustain attack hold decay release = // time, time, time, amp, time
         let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
         //! The "1." was supposed to be "(data.overDrive)"
-        Utility.Overdrive 1. (data.creteWithEnvelope waveType sustain attack hold decay release)
+        Utility.Overdrive 1. (data.createWithEnvelope waveType sustain attack hold decay release)
 
     let writeToWav name music =
         Directory.CreateDirectory("./Output/") |> ignore
-        writeWav().Write (File.Create("./Output/" + name)) (music)
+        use stream = File.Create("./Output/" + name)
+        writeWav().Write (stream) (music)
 
     let writeToWavWithPath path fileName music =
         Directory.CreateDirectory(path) |> ignore
-        writeWav().Write (File.Create(path + fileName)) (music)
+        use stream = File.Create(path + fileName)
+        writeWav().Write (stream) (music)
 
     let readFromWav name =
         readWav().Read (File.Open("./Output/"+name, FileMode.Open))
@@ -42,9 +44,9 @@ module Synth =
     let silence duration =
         Sound 0 duration Silence
     
-    let compose sounds =
+    let compose (corner:int) sounds =
         //this is to be revisited
-        sounds |> List.map(fun x -> Utility.cutCorners 3500 x) |> List.concat
+        sounds |> List.map(fun x -> Utility.cutCorners corner x) |> List.concat
             
     let add sounds = Utility.add sounds
 
