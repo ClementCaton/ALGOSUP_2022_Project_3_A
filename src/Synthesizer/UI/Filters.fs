@@ -112,29 +112,6 @@ module Filter =
             Ac * cos ( 2. * Math.PI * (fc * t + fd * integrate i data))
             // https://en.wikipedia.org/wiki/Frequency_modulation#Theory
         )
-    
-    let Echo (startIndex:int) (endIndex:int) (delay:float) (nbEcho:int) (x:List<float>) = //takes the whole sound and echoes it
-        let silenceDelay = [for i in 0. .. delay do 0.]
-        //let silenceEcho = [for i in 0 .. ( endIndex - startIndex ) do 0.]
-        let echoSample = x[startIndex..endIndex]
-
-        let mutable (output:List<List<float>>) = List.empty
-        let mutable buffer = List.empty
-
-        for i in [0 .. nbEcho] do
-            buffer <- List.empty
-            for a in [0 .. i] do
-                buffer <- buffer |> List.append silenceDelay
-                //buffer <- buffer |> List.append silenceEcho
-            buffer <- List.append buffer echoSample
-            output <- output @ [buffer]
-
-        let mutable returnValue = output[0]
-        for i in [(output.Length - 1).. -1 ..1] do 
-            returnValue <- addTwoWaves 0.66 output[i] returnValue
-        let silence = [for i in 0 .. (startIndex - 1) do 0.]
-        returnValue <- List.append silence returnValue
-        addTwoWaves 0.66 returnValue x
 
     let lowPass sampleRate cutoffFreq (data:List<float>) =
         let RC = 1. / (2. * Math.PI * cutoffFreq)
