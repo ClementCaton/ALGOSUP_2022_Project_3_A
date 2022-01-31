@@ -113,7 +113,7 @@ module Filter =
             Ac * cos ( 2. * Math.PI * (fc * t + fd * integrate i data))
             // https://en.wikipedia.org/wiki/Frequency_modulation#Theory
         )
-    
+
     let lowPass sampleRate cutoffFreq (data:List<float>) =
         let RC = 1. / (2. * Math.PI * cutoffFreq)
         let dt = 1. / sampleRate
