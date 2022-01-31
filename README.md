@@ -64,14 +64,14 @@ To call on this form of notation you'll have to use the ``Synth.getNoteFreq octa
 
 Example: 
 ```fs
-Synth.getNoteFreq Note.C 4 // This returns the frequency of the C4 note
+let note = Synth.getNoteFreq Note.C 4 // This returns the frequency of the C4 note
 ```
 
 Alternatively, you could directly create a SinWave using the ``Synth.note duration mNote octave``.
 
 Example:
 ```fs
-Synth.note Half Note.C 4 // This returns the frequency a half duration of the C4 note
+let note = Synth.note Half Note.C 4 // This returns the frequency a half duration of the C4 note
 ```
 
 ### Finding notes with a custom default frequency
@@ -82,11 +82,15 @@ This can be done using the ``Synth.getNoteFreqOffset octav note aFourFreq``
 
 Example:
 ```fs
-Synth.getNoteFreqOffset Note.C 4 444. // This returns the frequency of the C4 note calculated from the starting point 444Hz at the A4 note
+let note = Synth.getNoteFreqOffset Note.C 4 444. // This returns the frequency of the C4 note calculated from the starting point 444Hz at the A4 note
 ```
 
-
 ## Creating silence
+
+Creating silence is as simple as calling the ``Synth.silence duration`` function.
+```fs
+let note = Synth.silence (Seconds 2) // Returns 2 seconds of silence
+```
 
 ## Additioning audio data
 ### Additioning audio with a predefined ratio
