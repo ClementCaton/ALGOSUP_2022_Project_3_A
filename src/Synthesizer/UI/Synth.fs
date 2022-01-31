@@ -55,6 +55,13 @@ module Synth =
         previewarr.chart title sound
         sound
 
+    let previewMap title map =
+        map
+        |> Map.toList
+        |> List.unzip
+        ||> previewarr.chartXY title
+        map
+
     let forAllChannels func channels =
         channels |> List.map func
 
