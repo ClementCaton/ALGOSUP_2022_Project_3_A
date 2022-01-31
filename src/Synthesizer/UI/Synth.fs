@@ -40,6 +40,7 @@ module Synth =
     let note duration mNote octave =
         let freq = getNoteFreq mNote octave
         Sound freq duration Sin
+
     
     let silence duration =
         Sound 0 duration Silence
