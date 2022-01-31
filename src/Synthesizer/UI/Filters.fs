@@ -30,20 +30,19 @@ module Filter =
         output <- changeAmplitude oldMax output
         Utility.Overdrive 1. output
 
-    let reverb (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) = 
-        let rec revebInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
-            if nbEcho=0 then
-                Utility.add [dryData; wetData]
-            else
-                let silence = SoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
-                let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
-                revebInner (nbEcho-1) decay delay sampleRate updatedWetData dryData
+    let Reverb (delayRatio:float) (maxLength:float) (decay:float) (sampleRate:float) (dryData:List<float>) =
+        let delay = float dryData.length / delayRatio
+        let nbEcho = (maxLength * sampleRate - (float dryData.length)) / delay
 
-        revebInner nbEcho decay delay sampleRate [] dryData
+        Utility.repeater nbEcho decay delay sampleRate dryData
+    
+    //TODO: let Echo (length:float) (delay:float) (sampleRate:float) (dryData:List<float>)
+    //TODO: let chorus
+
+    let CustomRepeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) =
+        Utility.repeater nbEcho decay delay sampleRate dryData
 
 
-
-    //! WIP
     let flanger (delay:float) (speed:float) (sampleRate:float) (dryData:List<float>) =
         let step = speed/1000.*sampleRate
         let silence = SoundData(frequency0 = 0, sampleRate0 = sampleRate,  duration0 = (Seconds (delay/1000.)), bpm0 = 114).create(Silence)
