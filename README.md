@@ -40,13 +40,13 @@ The ``Synth`` object which is the actual sound synthesizer and the ``Filter`` ob
 
 ### Reading wav files
 ### Reading mp3 files
-<span style="color: red">WIP</style>
+<span style="color: red;">WIP</span>
 
 ## Writing to files / Saving
 
 ### Writing to wav files
 ### Writing to mp3 files
-<span style="color: red">WIP</style>
+<span style="color: red;">WIP</span>
 
 ## Dealing with stereo
 
