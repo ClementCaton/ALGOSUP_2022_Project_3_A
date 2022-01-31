@@ -16,7 +16,7 @@ let getNoteFreqTest() =
     Assert.That(val2, Is.EqualTo 987.77)
 
 [<Test>]
-let getNoteFreqWithOffsetSynthTest() =
+let getNoteFreqWithOffsetTest() =
     let val1 = Math.Round( Synth.getNoteFreqOffset Note.A 4 436, 2)
     let val2 = Math.Round( Synth.getNoteFreqOffset Note.B 5 444, 2)
 
@@ -27,7 +27,7 @@ let getNoteFreqWithOffsetSynthTest() =
 let one = Seconds 1.
 
 [<Test>]
-let SoundSynthTest() =
+let SoundTest() =
     let data = Synth.Sound 440. one Sin
 
     Assert.That(data, Is.TypeOf<List<float>>()) 
@@ -37,17 +37,28 @@ let SoundSynthTest() =
 
 open System.IO
 [<Test>]
-let writeToWavSynthTest() =
+let writeToWavTest() =
     Synth.writeToWav "wave.wav" [Synth.Sound 440. one Sin]
-    Assert.IsTrue(File.Exists("./wave.wav"))
+    Assert.IsTrue(File.Exists("./Output/wave.wav"))
 
 [<Test>]
-let readFromWavSynthTest() =
+let writeToWavWithPathTest() =
+    Synth.writeToWavWithPath "./Output" "wave.wav" [Synth.Sound 440. one Sin]
+    Assert.IsTrue(File.Exists("./Output/wave.wav"))
+
+[<Test>]
+let readFromWavTest() =
     let theFile = Synth.readFromWav "wave.wav"
     Assert.That(theFile, Is.InstanceOf<List<List<float>> * float * int * int>())
 
+    
 [<Test>]
-let noteSynthTest() =
+let readFromWavFromPathTest() =
+    let theFile = Synth.readFromWavWithPath "Output/wave.wav"
+    Assert.That(theFile, Is.InstanceOf<List<List<float>> * float * int * int>())
+
+[<Test>]
+let noteTest() =
     let data = Synth.note Quarter Note.C 4
 
     
@@ -55,7 +66,7 @@ let noteSynthTest() =
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let silenceSynthTest() =
+let silenceTest() =
     let data = Synth.silence one
 
     Assert.That (data |> List.max, Is.EqualTo 0)
@@ -63,7 +74,7 @@ let silenceSynthTest() =
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let composeSynthTest() =
+let composeTest() =
     let data = Synth.compose [
         Synth.note one Note.C 4
         Synth.note one Note.C 4
@@ -74,7 +85,7 @@ let composeSynthTest() =
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let addSynthTest() =
+let addTest() =
     let data = Synth.note one Note.C 4
     let data2 = Synth.note one Note.C 7
 
