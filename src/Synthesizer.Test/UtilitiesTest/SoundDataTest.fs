@@ -1,4 +1,4 @@
-module Synthesizer.createSoundDataTest
+module Synthesizer.SoundDataTest
 
 open System
 open System.Collections
@@ -10,8 +10,8 @@ let Setup () =
     ()
 
 [<Test>]
-let createSoundDataTest() =
-    let soundDataCreater = new createSoundData()
+let createTest() =
+    let soundDataCreater = new SoundData()
     let data = soundDataCreater.create Silence
 
     let mockData = List.init (int(44100.*60./90.)) (fun i -> 0.)

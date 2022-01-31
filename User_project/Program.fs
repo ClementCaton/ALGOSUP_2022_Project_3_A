@@ -10,61 +10,13 @@ open Synthesizer
 
 
 module Program =
-
-    let basicSound = API.note (Seconds 0.5) Note.A 4
-    let reverb = Filter.reverb 50 0.8 0.2 44100. basicSound
-    let echo = Filter.reverb 5 0.7 1. 44100. basicSound
-    API.writeToWav "basic.wav" [basicSound]
-    API.writeToWav "reverb.wav" [reverb]
-    API.writeToWav "echo.wav" [echo]
-    API.writeToWav "basic.wav" [basicSound]
-
-    // Custom duration
-    let DottedEighth = Custom (1./8. * 1.5)
-    let EighthAndHalf = Custom (1./8. + 1./2.)
-
-    // Create the melodies
-    let mainMelody = API.compose [
-        API.note Eighth Note.D 4
-        API.note Eighth Note.E 4
-        API.note Eighth Note.F 4
-        API.note Eighth Note.F 4
-        API.note Eighth Note.G 4
-        API.note DottedEighth Note.E 4
-        API.note Sixteenth Note.D 4
-        API.note EighthAndHalf Note.C 4
-    ]
-
-    let secondMelody = API.compose [
-        API.note Half Note.Bb 3
-        API.silence Eighth
-        API.note DottedEighth Note.C 4
-    ]
-
-    let secondHandHigh = API.compose [
-        API.note EighthAndHalf Note.Bb 2
-        API.note Half Note.C 3
-    ]
-
-    let secondHandLow = API.compose [
-        API.note EighthAndHalf Note.Bb 1
-        API.note Half Note.C 2
-    ]
-
-    // Superpose the melodies and write to file
-    let music = API.add [mainMelody; secondMelody; secondHandHigh; secondHandLow]
-
-
-    API.writeToWav "wave.wav" [music]
-
-    //frequence amplitude verticalShift phaseShift t
-    let input = API.add [API.note Whole Note.A 3;API.note Whole Note.A 4;API.note Whole Note.A 5]
-    API.writeToWav "A345.wav" [input]
-    let output = frequencyAnalysis.fourier input
-    API.preview "A 3,4,5 Analysis" output |> ignore
-
-    let mono = [music]
-    API.writeToWav "rickroll.wav" mono
-
-    let stereo = [music; mainMelody]
-    API.writeToWav "rickrollStereo.wav" stereo
+    let input = Synth.add [Synth.note Whole Note.A 2; Synth.note Whole Note.A 3; Synth.note Whole Note.A 4; Synth.note Whole Note.A 5]
+    printfn "Wanted:   %A" [CalcNoteFreq(Note.A, 2).Output; CalcNoteFreq(Note.A, 3).Output; CalcNoteFreq(Note.A, 4).Output; CalcNoteFreq(Note.A, 5).Output]
+    Synth.writeToWav "A345.wav" [input]
+    let output = frequencyAnalysis.fourier 44100. input
+    let freq = frequencyAnalysis.localMaxValuesIndices 0.25 output
+    let amplitudes = output |> Map.filter (fun f _ -> List.contains f freq)
+    //printfn "%f %f %f %f" (List.average input) (List.average output) (List.sum input) (List.sum output)
+    printfn "Obtained: %A" freq
+    printfn "Amplitudes: %A" amplitudes
+    Synth.previewMap "A 3,4,5 Analysis" output |> ignore

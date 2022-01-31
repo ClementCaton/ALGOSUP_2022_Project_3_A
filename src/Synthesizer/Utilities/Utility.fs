@@ -34,7 +34,7 @@ module Utility =
 
         sounds |> List.map expand |> addTwo |> List.map (( * ) mean)
 
-    let makeOverdrive multiplicator (x:List<float>) =
+    let Overdrive multiplicator (x:List<float>) =
         [for i in x do 
             if i < (-1. * multiplicator * 256.) then (-1. * multiplicator * 256.) else
             if i > (1. * multiplicator  * 256.) then (1. * multiplicator * 256.) else

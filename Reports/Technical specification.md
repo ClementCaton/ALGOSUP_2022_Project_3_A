@@ -36,8 +36,8 @@ dotnet 6.0
 [**Github**](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A)
 
 ## Terminology :
-### API :
-    An application programming interface (API) is a connection between computers or between computer programs. It is a type of software interface, offering a service to other pieces of software
+### Library :
+    An application programming interface (Library) is a connection between computers or between computer programs. It is a type of software interface, offering a service to other pieces of software
 
 #### [Synthesis / Synthesizer](https://en.wikipedia.org/wiki/Synthesizer)
 
@@ -64,4 +64,4 @@ dotnet 6.0
 We will do TDD all the way through the project
 
 ## User Access
-The client will have access to an API containing all the necessary functions to use the functionalities of a synthesizer.
+The client will have access to an Library containing all the necessary functions to use the functionalities of a synthesizer.
