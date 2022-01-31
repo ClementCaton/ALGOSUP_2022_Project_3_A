@@ -19,7 +19,7 @@ module Synth =
     let SoundWithEnveloppe freq duration waveType sustain attack hold decay release = // time, time, time, amp, time
         let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
         //! The "1." was supposed to be "(data.overDrive)"
-        Utility.Overdrive 1. (data.creteWithEnvelope waveType sustain attack hold decay release)
+        Utility.Overdrive 1. (data.createWithEnvelope waveType sustain attack hold decay release)
 
     let writeToWav name music =
         Directory.CreateDirectory("./Output/") |> ignore
@@ -40,13 +40,14 @@ module Synth =
     let note duration mNote octave =
         let freq = getNoteFreq mNote octave
         Sound freq duration Sin
+
     
     let silence duration =
         Sound 0 duration Silence
     
-    let compose sounds =
+    let compose (corner:int) sounds =
         //this is to be revisited
-        sounds |> List.map(fun x -> Utility.cutCorners 3500 x) |> List.concat
+        sounds |> List.map(fun x -> Utility.cutCorners corner x) |> List.concat
             
     let add sounds = Utility.add sounds
 
@@ -54,8 +55,35 @@ module Synth =
         previewarr.chart title sound
         sound
 
+    let previewMap title map =
+        map
+        |> Map.toList
+        |> List.unzip
+        ||> previewarr.chartXY title
+        map
+
     let forAllChannels func channels =
         channels |> List.map func
 
     let fourier wave =
         frequencyAnalysis.fourier(wave)
+
+    let cutstart (sampleRate:float) time (data:List<float>) =
+        Utility.cutStart sampleRate time data
+
+    let cutEnd (sampleRate:float) time (data:List<float>) =
+        Utility.cutEnd sampleRate time data
+
+    let cutMiddle (sampleRate:float) timeStart timeEnd (data:List<float>) =
+        Utility.cutStart sampleRate timeStart data
+        |> List.append (Utility.cutEnd sampleRate timeEnd data)
+
+    let cutEdge (sampleRate:float) timeStart timeEnd (data:List<float>) =
+        Utility.cutEnd sampleRate timeStart data
+        |> List.append (Utility.cutStart sampleRate timeEnd data)
+        
+    let cutCorners limit (data:List<float>) =
+        Utility.cutCorners limit data
+
+    
+    
