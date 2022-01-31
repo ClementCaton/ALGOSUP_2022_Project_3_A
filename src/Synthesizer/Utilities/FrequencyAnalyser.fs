@@ -16,6 +16,7 @@ module frequencyAnalysis =
         The magnitude and the phases of these waves should be changeable
     *)
 
+    // Note: The following FFT algorithm is actually used for IFFT, thus there is a static negative sign in the complex exponent
     let rec fft = function
     | []  -> []
     | [x] -> [x] 
@@ -32,7 +33,7 @@ module frequencyAnalysis =
         |> List.unzip
         ||> List.append
 
-    let fourier (x: List<float>) =
+    let fourier sampleRate (x: List<float>) =
         let n =
             x
             |> List.length
@@ -43,6 +44,8 @@ module frequencyAnalysis =
             |> int
         // n is a power of 2 greater or equal to the size of x
 
+        let increment = sampleRate / (float n - 2.) //* Given by Robert, taken from a library he uses
+
         (n - x.Length, 0.)
         ||> List.replicate
         |> List.append x
@@ -50,20 +53,25 @@ module frequencyAnalysis =
         |> List.map (fun f -> Complex(f, 0))
         |> fft
         |> List.take (x.Length / 2)
-        |> List.map (fun c -> c.Magnitude / float n)
+        |> List.mapi (fun i c -> float i * increment, c.Magnitude / float n)
+        |> Map.ofList
 
-    let localMaxIndices (threshold: float) (values: List<float>) =
+    let localMaxValuesIndices (threshold: float) (map: Map<float, float>) =
         // The threshold is the percentage between the bottom and the top where all point below are discarded to remove noise
-        match values.Length with
+        match Map.count map with
         | 0 -> []
-        | 1 -> [0]
-        | 2 -> [if values.[0] < values.[1] then 1 else 0]
         | _ ->
             if threshold < 0. || threshold > 1. then failwith "Threshold must be a float in the range [0, 1]"
-            let limit = (1. - threshold) * (List.min values) + threshold * (List.max values)
+            let limit = (1. - threshold) * (Seq.min (Map.values map)) + threshold * (Seq.max (Map.values map))
             //printfn "%f %f %f" (List.min values) (List.max values) (List.average values)
-            (-infinity :: values @ [-infinity])
+            map
+            |> Map.add -infinity -infinity
+            |> Map.add infinity -infinity
+            |> Map.toList
             |> List.windowed 3
-            |> List.indexed
-            |> List.filter (fun (_, x) -> x.[1] > limit && x.[0] <= x.[1] && x.[1] >= x.[2])
+            |> List.filter (fun items ->
+                let v = List.map snd items
+                v.[1] > limit && v.[0] <= v.[1] && v.[1] >= v.[2]
+            )
+            |> List.map (fun k -> k.[1])
             |> List.map fst
