@@ -43,11 +43,14 @@ module Synth =
     
     let silence duration =
         Sound 0 duration Silence
-    
-    let compose (corner:int) sounds =
-        //this is to be revisited
+        
+    let composeWithCutCorner (corner:int) sounds =
         sounds |> List.map(fun x -> Utility.cutCorners corner x) |> List.concat
             
+    let compose = composeWithCutCorner 100
+    
+    let composeNoCutCorner sounds = List.concat
+    
     let add sounds = Utility.add sounds
 
     let preview title sound =
