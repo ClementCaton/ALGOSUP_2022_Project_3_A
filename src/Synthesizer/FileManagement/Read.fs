@@ -1,5 +1,6 @@
 namespace Synthesizer
 
+open System
 open System.IO
 
 
@@ -31,11 +32,17 @@ type readWav() =
         let byteRate = reader.ReadInt32()
         let blockAlign = reader.ReadInt16()
         let bitsPerSample = int (reader.ReadUInt16())
+
+        // Skip unwanted chunks
+        let mutable chunkType = ""
+        let mutable byteDataLength = 0
+        while chunkType <> "data" do
+            reader.ReadBytes(byteDataLength) |> ignore
+            chunkType <- Text.Encoding.UTF8.GetString(reader.ReadBytes(4))
+            byteDataLength <- reader.ReadInt32()
+        
         // data
-        reader.ReadBytes(4) |> ignore
-        let byteDataLength = reader.ReadInt32()
         let byteData = reader.ReadBytes(byteDataLength)
-    
         let data = byteData |> List.ofArray |> fromBytes nbChannels (bitsPerSample/8)
         let duration = float (List.length data.[0]) / float sampleRate
 
