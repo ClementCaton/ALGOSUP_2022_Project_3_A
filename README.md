@@ -54,20 +54,23 @@ The ``Synth`` object which is the actual sound synthesizer and the ``Filter`` ob
 ## Dealing with stereo
 
 ## Creating basic audio data
+
+The library supports the creation
+
 ### Creating audio data with an envelope
 ### Creating audio data with a custom envelope
 
 ## Finding frequencies from notes and octaves
 
 A more simplified way to find the sound you are looking for is trought musical octaves[^1] and notes[^2].
-To call on this form of notation you'll have to use the ``Synth.getNoteFreq octav note`` function to get the right frequency.
+To call on this form of notation you'll have to use the ``Synth.getNoteFreq (octav:int) (note:Note)`` function to get the right frequency.
 
 Example: 
 ```fs
 let note = Synth.getNoteFreq Note.C 4 // This returns the frequency of the C4 note
 ```
 
-Alternatively, you could directly create a SinWave using the ``Synth.note duration mNote octave``.
+Alternatively, you could directly create a SinWave using the ``Synth.note (duration:Duration) (note:Note) (octav:int)``.
 
 Example:
 ```fs
@@ -78,7 +81,7 @@ let note = Synth.note Half Note.C 4 // This returns the frequency a half duratio
 
 In most cases, the frequency of a note is calculated from a default frequency (mostly, 440Hz for the A4 note).
 However, in some cases, you might need to find a note from a different starting frequency.
-This can be done using the ``Synth.getNoteFreqOffset octav note aFourFreq``
+This can be done using the ``Synth.getNoteFreqOffset (octav:int) (note:Note) (aFourFreq:Float)``
 
 Example:
 ```fs
@@ -87,7 +90,7 @@ let note = Synth.getNoteFreqOffset Note.C 4 444. // This returns the frequency o
 
 ## Creating silence
 
-Creating silence is as simple as calling the ``Synth.silence duration`` function.
+Creating silence is as simple as calling the ``Synth.silence (duration:Duration)`` function.
 ```fs
 let note = Synth.silence (Seconds 2) // Returns 2 seconds of silence
 ```
@@ -95,6 +98,21 @@ let note = Synth.silence (Seconds 2) // Returns 2 seconds of silence
 ## Additioning audio data
 ### Additioning audio with a predefined ratio
 ## Composing
+
+One thing you have to be aware of is the ``cutCorners`` function.
+When we first created the compose function we encounterd a strange, small sound between easch end every note.
+This sound was caused by the notes ending on a not-zero amplitude.
+
+The solution was to add in a filter that gradually lowers the amplitude of the notes start and end to 0.
+
+<!-- insert before and after image here -->
+
+To add sounds together one after the other you can use the ``Synth.compose (sounds:List<float>)``.
+
+```fs
+let note = Synth.silence (Seconds 2) // Returns 2 seconds of silence
+```
+
 
 ## Preview
 ## Frequency analysis
