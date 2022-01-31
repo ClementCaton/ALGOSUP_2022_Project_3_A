@@ -31,6 +31,9 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 
 # Project documentation
 
+## NuGet install
+<!-- KFC goes here -->
+
 ## Basic structure
 
 To interract with the library you'll have to mainly interract with two objects.
