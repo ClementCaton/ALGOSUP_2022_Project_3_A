@@ -1,43 +1,33 @@
 # Functional specification
 
 ## What is it ? 
-The synthesizer is used for musical applications. It can create and modify musical notes as well as compose melodies out of them.
 
-In our case, the objective is to create a programmable synthesizer.
+The objefctive of the project is to create a library capable of sound synthetisation.
 
-## Who is our targeted audience
+The final product must be capable of creating and modifying a large range of musical notes as well as applying a variety of filters and special effects upon them. (Details below)
 
-Any person interested in sound synthesis should be able to use this project.
+The library must also contain the functionnalities necessary to importing/exporting wav and mp3 files.
 
-## Use case :
+## Who is our targeted audience ?
 
-![Use Case](./Files/UseCase.png)
+This library is mainly meant to be used by developpers for both artistic and software developpement purposes.
 
-## What can the user do 
+## MVP:
 
-While the Library will possess a variety of functions to ease the developpement process. The ones that are used by the users are rather simple:
+The Minimum Viable Product must be capable of creating musical notes from an inputed octave[^1] and note[^2].
+The saving and loading of .wav files must also be possible at this stage.
 
-- Synth.Read
-  - Reads a file (.wav or .mp3 formats)
-<br><br>
-- Synth.Write
-  - Writes a file (.wav or .mp3 formats)
-<br><br>
-- Synth.Play
-  - Plays sound data
-<br><br>
-- Synth.GetNote
-  - Returns the sound data of a given musical note with a given duration, note and octave
-<br><br>
-- Synth.Compose
-  - Returns complex sound data from a list of notes (music)
-<br><br>
-- Synth.Add
-  - Superpose notes (with a possible temporal offset) to allow for multiple notes to be played at the same time
-<br><br>
-- Synth.ApplyFilterX
-  - Applies a filter to a given sound (X replaces with the filter in question)
-<br><br>
-- Synth.Preview
-  - Gives a visual display of the sound waves generated using Xplot
+## Detailed functionnality list:
 
+
+
+
+
+## Use cases :
+ <!-- WIP -->
+
+
+## Defenitions:
+[^1]: Octaves: A series of eight notes occupying the interval between (and including) two notes, one having twice or half the frequency of vibration of the other.
+
+[^2]: Notes: A note is a symbol denoting a musical sound.

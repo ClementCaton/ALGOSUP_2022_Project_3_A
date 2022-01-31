@@ -9,7 +9,7 @@ let Setup () =
 let one = Seconds 1.
 
 [<Test>]
-let cutStartUtilityTest() =
+let cutStartTest() =
     let data = Synth.note one Note.C 4 |> Utility.cutStart 44100. 0.2
 
     Assert.That(data.Length, Is.EqualTo(44100.*0.8))
@@ -17,7 +17,7 @@ let cutStartUtilityTest() =
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let cutEndUtilityTest() =
+let cutEndTest() =
     let data = Synth.note one Note.C 4 |> Utility.cutEnd 44100. 0.2
 
     Assert.That(data.Length, Is.EqualTo(44100.*0.8))
@@ -25,7 +25,7 @@ let cutEndUtilityTest() =
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let cutCornersUtilityTest() =
+let cutCornersTest() =
     let data = Synth.note one Note.C 4 |> Utility.cutCorners 800 |> Utility.cutEnd 44100. 0.98
     let mockData = Synth.note one Note.C 4 |> Utility.cutEnd 44100. 0.98
 
@@ -33,7 +33,7 @@ let cutCornersUtilityTest() =
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let addUtilityTest() =
+let addTest() =
     let data = Synth.note one Note.C 4
     let data2 = Synth.note one Note.C 7
 
