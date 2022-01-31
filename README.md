@@ -12,3 +12,63 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 [*Léo Chartier*](https://github.com/leo-chartier)
 
 Link to our [**Trello**](https://trello.com/b/itooTuBY/algosup2022project3a)
+
+
+# Project documentation
+
+## Basic structure
+
+To interract with the library you'll have to mainly interract with two objects.
+The ``Synth`` object which is the actual sound synthesizer and the ``Filter`` object which contains a list of function that will allow you to modify the created sounds.
+
+## Reading files
+
+### Reading wav files
+### Reading mp3 files
+<span style="color: red">WIP</style>
+
+## Writing to files / Saving
+
+### Writing to wav files
+### Writing to mp3 files
+<span style="color: red">WIP</style>
+
+## Dealing with stereo
+
+## Creating basic audio data
+### Creating audio data with an envelope
+### Creating audio data with a custom envelope
+
+## Finding frequencies from notes and octaves
+### Finding notes with a custom default frequency
+
+## Creating silence
+
+## Additioning audio data
+### Additioning audio with a predefined ratio
+## Composing
+
+## Preview
+## Frequency analysis
+
+
+## Filters
+### Apply multiple filters at once
+
+### Cutting audio
+### Changing amplitude
+
+### Reverb, Echo and chorus
+### Flanger
+
+### Envelope
+### Custom envelope
+
+### Low frequency oscillation
+#### AM
+#### FM
+
+### LowPass / HighPass / BandPass / RejectBand filters
+
+
+# Footnotes
