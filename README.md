@@ -92,7 +92,7 @@ let note = Synth.getNoteFreqOffset Note.C 4 444. // This returns the frequency o
 
 Creating silence is as simple as calling the ``Synth.silence (duration:Duration)`` function.
 ```fs
-let note = Synth.silence (Seconds 2) // Returns 2 seconds of silence
+let silence = Synth.silence (Seconds 2) // Returns 2 seconds of silence
 ```
 
 ## Additioning audio data
@@ -107,12 +107,62 @@ The solution was to add in a filter that gradually lowers the amplitude of the n
 
 <!-- insert before and after image here -->
 
-To add sounds together one after the other you can use the ``Synth.compose (sounds:List<float>)``.
+Therefore; the``Synth.compose (sounds:List<float>)`` function has a default cutCorner value of 100 (this means it cuts away from the first and last 100 bytes from each note).
 
+Example:
 ```fs
-let note = Synth.silence (Seconds 2) // Returns 2 seconds of silence
+let C4 = Synth.note Half Note.C 4   // init
+let D4 = Synth.note Half Note.D 4   //
+let silence = Synth.silence Quarter //
+let B5 = Synth.note Half Note.B 5   //
+
+let music = Synth.compose [          // Returns a single, large sound composed of the smaller sounds given to it
+    C4;
+    C4;
+    D4;
+    silence;
+    B5;
+]
 ```
 
+In certain cases, one might need to set a custom value to the cutCorner function.
+This can be done with the ``Synth.composeCutCorner (corner:int) (sounds:List<float>)``
+
+```fs
+let music = Synth.composeCutCorner 1000 [
+    C4;
+    C4;
+    D4;
+    silence;
+    B5;
+]
+```
+
+Alternatively, one might want to compose without the cutCorners filter.
+This can be done either by giving it a 0 value or by using the ``Synth.composeNoCutCorner (corner:int) (sounds:List<float>)`` function.
+
+With zero value:
+```fs
+let music = Synth.composeCutCorner 0 [
+    C4;
+    C4;
+    D4;
+    silence;
+    B5;
+]
+```
+
+Or with ``composeNoCutCorner``:
+```fs
+let music = Synth.composeNoCutCorner [
+    C4;
+    C4;
+    D4;
+    silence;
+    B5;
+]
+```
+These two are equivalents.
 
 ## Preview
 ## Frequency analysis
