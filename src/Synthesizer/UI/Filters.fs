@@ -152,3 +152,10 @@ module Filter =
         let lowPassData = highPass sampleRate lowFreq data
         let highPassData = lowPass sampleRate highFreq data
         Utility.add [lowPassData; highPassData]
+
+    let ApplyFilters filterList data =
+        let mutable output = List.empty
+        filterList |> List.map (fun func -> 
+            output <- func data
+        ) |> ignore
+        output

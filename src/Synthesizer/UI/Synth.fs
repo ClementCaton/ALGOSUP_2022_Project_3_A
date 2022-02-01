@@ -85,5 +85,3 @@ module Synth =
     let cutCorners limit (data:List<float>) =
         Utility.cutCorners limit data
 
-    
-    
