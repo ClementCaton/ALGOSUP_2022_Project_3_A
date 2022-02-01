@@ -39,14 +39,3 @@ module Utility =
             if i < (-1. * multiplicator * 256.) then (-1. * multiplicator * 256.) else
             if i > (1. * multiplicator  * 256.) then (1. * multiplicator * 256.) else
             i]
-
-    let repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) = 
-        let rec repeaterInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
-            if nbEcho=0 then
-                Utility.add [dryData; wetData]
-            else
-                let silence = SoundData(frequency0 = 0, duration0 = (Seconds (delay * sampleRate)), bpm0 = 114).create(Silence)
-                let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
-                repeaterInner (nbEcho-1) decay delay sampleRate updatedWetData dryData
-
-        repeaterInner nbEcho decay delay sampleRate [] dryData
