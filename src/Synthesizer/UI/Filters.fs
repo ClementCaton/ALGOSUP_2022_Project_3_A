@@ -69,8 +69,6 @@ module Filter =
             if wet.Length >= dry.Length then wet
 
             elif Math.Floor(float current%step) = 0 then
-                printfn $"{float wet.Length / float dry.Length}"
-
                 let addition = [for i in 0 .. (rate) -> dry[current]]
                 flangerInner step (rate+initialRate) initialRate (current+1) dry (wet @ addition)
 
@@ -168,3 +166,10 @@ module Filter =
         let lowPassData = highPass sampleRate lowFreq data
         let highPassData = lowPass sampleRate highFreq data
         Utility.add [lowPassData; highPassData]
+
+    let ApplyFilters filterList data =
+        let mutable output = List.empty
+        filterList |> List.map (fun func -> 
+            output <- func data
+        ) |> ignore
+        output
