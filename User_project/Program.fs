@@ -10,10 +10,16 @@ open Synthesizer
 
 
 module Program =
-    let basic = Synth.Sound 440. Quarter Sin
-    let cut = Utility.cutCorners 5000 basic
+    let a = Synth.note (Seconds 1) Note.A 4
+    let b = Synth.note (Seconds 1) Note.B 4
+    let c = Synth.note (Seconds 1) Note.C 4
+    let d = Synth.note (Seconds 1) Note.D 4
+    
+    let full = Synth.compose 0 [a; b; c; d;]
+    // let cut = Synth.cutEdge 44100. 1. 3. full
+    let cut = Synth.cutMiddle 44100. 1. 1. full
 
-    Synth.writeToWav "basic.wav" [basic]
+    Synth.writeToWav "full.wav" [full]
     Synth.writeToWav "cut.wav" [cut]
 
     // let input = Synth.add [Synth.note Whole Note.A 2; Synth.note Whole Note.A 3; Synth.note Whole Note.A 4; Synth.note Whole Note.A 5]
