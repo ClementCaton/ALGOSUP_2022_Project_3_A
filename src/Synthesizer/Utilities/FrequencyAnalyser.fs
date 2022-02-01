@@ -17,7 +17,7 @@ module FrequencyAnalysis =
     *)
 
     // Note: The following FFT algorithm is actually used for IFFT, thus there is a static negative sign in the complex exponent
-    let rec Fft = function
+    let rec FFT = function
     | []  -> []
     | [x] -> [x] 
     | x ->
@@ -25,7 +25,7 @@ module FrequencyAnalysis =
         x
         |> List.mapi (fun i c -> i % 2 = 0, c)
         |> List.partition fst
-        |> fun (even, odd) -> Fft (List.map snd even), Fft (List.map snd odd)
+        |> fun (even, odd) -> FFT (List.map snd even), FFT (List.map snd odd)
         ||> List.mapi2 (fun i even odd -> 
             let Btf = odd * Complex.FromPolarCoordinates(1., multiplier * float i)
             even + Btf, even - Btf
@@ -51,7 +51,7 @@ module FrequencyAnalysis =
         |> List.append x
         // Now a list with a length that is a power of two
         |> List.map (fun f -> Complex(f, 0))
-        |> Fft
+        |> FFT
         |> List.take (x.Length / 2)
         |> List.mapi (fun i c -> float i * increment, c.Magnitude / float n)
         |> Map.ofList

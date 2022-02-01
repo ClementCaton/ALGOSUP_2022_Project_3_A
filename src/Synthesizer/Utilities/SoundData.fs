@@ -18,6 +18,7 @@ type BaseWaves =
     | Triangular
     | Saw
     | Silence
+    | CustomInstrument of (float -> float -> float -> float -> float -> float)
 
 type SoundData(
         ?overDrive0:float,
@@ -56,12 +57,13 @@ type SoundData(
         sec * sampleRate
     
     let WaveFunc waveType = 
-            match waveType with
-            | Sin -> FourWaves.SinWave
-            | Square -> FourWaves.SquareWave
-            | Triangular -> FourWaves.TriangleWave
-            | Saw -> FourWaves.SawWave
-            | Silence -> (fun freq amp vShift phaseShift t -> 0)
+        match waveType with
+        | Sin -> FourWaves.SinWave
+        | Square -> FourWaves.SquareWave
+        | Triangular -> FourWaves.TriangleWave
+        | Saw -> FourWaves.SawWave
+        | Silence -> (fun freq amp vShift phaseShift t -> 0)
+        | CustomInstrument func -> func
 
     member x.Create waveType =
         let a = List.init arraySize (fun i -> ((WaveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate)))
@@ -80,18 +82,8 @@ type SoundData(
         output |> List.concat
 
     member x.CreateWithEnvelope waveType sustain attack hold0 decay0 release0 =  // time, time, time, amp, time
-        let Hold = hold0 + attack
-        let Decay = Hold + decay0
-        let Release = duration + release0
+        let hold = hold0 + attack
+        let decay = hold + decay0
+        let release = duration + release0
 
-        x.CreateFromDataPoints waveType [(0., 0.); (attack, 1.); (Hold, 1.); (Decay, sustain); (duration, sustain); (Release, 0.)]
-
-
-
-
-    // let cutCorners (data:List<float>) limit =
-        // let step = 1. / float limit
-        // let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
-        // let endVals = List.map2(fun x i -> x * step * i) data[data.Length-limit..] [float limit .. -1. .. 1.]
-
-        // List.append (List.append startVals data[limit .. data.Length-limit-1]) endVals
+        x.CreateFromDataPoints waveType [(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (duration, sustain); (release, 0.)]

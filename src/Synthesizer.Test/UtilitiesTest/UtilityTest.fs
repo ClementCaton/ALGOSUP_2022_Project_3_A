@@ -6,11 +6,12 @@ open NUnit.Framework
 let Setup () =
     ()
 
+let synth = Synth()
 let one = Seconds 1.
 
 [<Test>]
 let CutStartTest() =
-    let data = Synth.Note one Note.C 4 |> Utility.CutStart 44100. 0.2
+    let data = synth.Note one Note.C 4 |> Utility.CutStart 44100. 0.2
 
     Assert.That(data.Length, Is.EqualTo(44100.*0.8))
     Assert.That(data |> List.max, Is.LessThan(1))
@@ -18,7 +19,7 @@ let CutStartTest() =
 
 [<Test>]
 let CutEndTest() =
-    let data = Synth.Note one Note.C 4 |> Utility.CutEnd 44100. 0.2
+    let data = synth.Note one Note.C 4 |> Utility.CutEnd 44100. 0.2
 
     Assert.That(data.Length, Is.EqualTo(44100.*0.8))
     Assert.That(data |> List.max, Is.LessThan(1))
@@ -26,16 +27,16 @@ let CutEndTest() =
 
 [<Test>]
 let CutCornersTest() =
-    let data = Synth.Note one Note.C 4 |> Utility.CutCorners 800 |> Utility.CutEnd 44100. 0.98
-    let mockData = Synth.Note one Note.C 4 |> Utility.CutEnd 44100. 0.98
+    let data = synth.Note one Note.C 4 |> Utility.CutCorners 800 |> Utility.CutEnd 44100. 0.98
+    let mockData = synth.Note one Note.C 4 |> Utility.CutEnd 44100. 0.98
 
     Assert.That (data, Is.LessThan mockData)
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let addTest() =
-    let data = Synth.Note one Note.C 4
-    let data2 = Synth.Note one Note.C 7
+let AddTest() =
+    let data = synth.Note one Note.C 4
+    let data2 = synth.Note one Note.C 7
 
     let finalData = Utility.Add [data; data2]
 

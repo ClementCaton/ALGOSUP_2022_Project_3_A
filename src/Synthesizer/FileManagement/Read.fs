@@ -34,15 +34,15 @@ type ReadWav() =
         let bitsPerSample = int (reader.ReadUInt16())
 
         // Skip unwanted chunks
-        let mutable ChunkType = ""
-        let mutable ByteDataLength = 0
-        while ChunkType <> "data" do
-            reader.ReadBytes(ByteDataLength) |> ignore
-            ChunkType <- Text.Encoding.UTF8.GetString(reader.ReadBytes(4))
-            ByteDataLength <- reader.ReadInt32()
+        let mutable chunkType = ""
+        let mutable byteDataLength = 0
+        while chunkType <> "data" do
+            reader.ReadBytes(byteDataLength) |> ignore
+            chunkType <- Text.Encoding.UTF8.GetString(reader.ReadBytes(4))
+            byteDataLength <- reader.ReadInt32()
         
         // data
-        let byteData = reader.ReadBytes(ByteDataLength)
+        let byteData = reader.ReadBytes(byteDataLength)
         let data = byteData |> List.ofArray |> FromBytes nbChannels (bitsPerSample/8)
         let duration = float (List.length data.[0]) / float sampleRate
 

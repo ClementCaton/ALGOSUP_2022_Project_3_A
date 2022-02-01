@@ -23,23 +23,23 @@ module Filter =
         output
 
     //! Should be modified
-    // let Reverb (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) = 
+    // let Reverb (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (bpm:float) (dryData:List<float>) = 
     //     let rec RevebInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
     //         if nbEcho=0 then
-    //             Utility.add [dryData; wetData]
+    //             Utility.Add [dryData; wetData]
     //         else
-    //             let silence = SoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
-    //             let updatedWetData = Utility.add [wetData; List.concat [silence ; ChangeAmplitude decay dryData]]
-    //             r=RevebInner (nbEcho-1) decay delay sampleRate updatedWetData dryData
+    //             let silence = SoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = bpm).create(Silence)
+    //             let updatedWetData = Utility.Add [wetData; List.concat [silence ; ChangeAmplitude decay dryData]]
+    //             RevebInner (nbEcho-1) decay delay sampleRate updatedWetData dryData
 
     //     RevebInner nbEcho decay delay sampleRate [] dryData
 
 
 
     //! WIP
-    let Flanger (delay:float) (speed:float) (sampleRate:float) (dryData:List<float>) =
+    let Flanger (delay:float) (speed:float) (sampleRate:float) (bpm:float) (dryData:List<float>) =
         let step = speed/1000.*sampleRate
-        let silence = SoundData(frequency0 = 0, sampleRate0 = sampleRate,  duration0 = (Seconds (delay/1000.)), bpm0 = 114).Create(Silence)
+        let silence = SoundData(frequency0 = 0, sampleRate0 = sampleRate,  duration0 = (Seconds (delay/1000.)), bpm0 = bpm).Create(Silence)
 
 
         let rec FlangerInner (step:float) (rate:int) (initialRate:int)  current (dry:List<float>) (wet:List<float>) =
@@ -48,8 +48,8 @@ module Filter =
             elif Math.Floor(float current%step) = 0 then
                 // printfn $"{float wet.Length / float dry.Length}"
 
-                let Addition = [for i in 0 .. (rate) -> dry[current]]
-                FlangerInner step (rate+initialRate) initialRate (current+1) dry (wet @ Addition)
+                let addition = [for i in 0 .. (rate) -> dry[current]]
+                FlangerInner step (rate+initialRate) initialRate (current+1) dry (wet @ addition)
 
             else FlangerInner step rate initialRate (current+1) dry (wet @ [dry[current]])
         
@@ -58,26 +58,23 @@ module Filter =
         Utility.Add [dryData; (silence @ wetData)]
 
     let CustomEnvelope (dataPoints0: List<float * float>) (sampleRate:float) (data:List<float>) =
-            let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
-    
-            let CalcSegment (fromTime:float) (toTime:float) fromAmp toAmp =
-                let step = (toAmp - fromAmp) / (toTime - fromTime)
-                List.mapi(fun i flatPoint -> (flatPoint * (fromAmp + (float step * float i)))) data[int fromTime .. int toTime]
-    
-            let output = List.map2(fun fromT toT -> CalcSegment (sampleRate * (fst fromT)) (sampleRate * (fst toT)) (snd fromT) (snd toT)) dataPoints[ .. dataPoints.Length-2] dataPoints[1 ..]
-    
-            output |> List.concat
+        let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
+
+        let calcSegment (fromTime:float) (toTime:float) fromAmp toAmp =
+            let step = (toAmp - fromAmp) / (toTime - fromTime)
+            List.mapi(fun i flatPoint -> (flatPoint * (fromAmp + (float step * float i)))) data[int fromTime .. int toTime]
+
+        let output = List.map2(fun fromT toT -> calcSegment (sampleRate * (fst fromT)) (sampleRate * (fst toT)) (snd fromT) (snd toT)) dataPoints[ .. dataPoints.Length-2] dataPoints[1 ..]
+
+        output |> List.concat
     
     let Envelope sustain attack hold0 decay0 release0 (sampleRate:float) (data:List<float>) = //release substracts from hold because I don't have the data for the release periode
         let hold = hold0 + attack
         let decay = hold + decay0
         let release = (float data.Length/float sampleRate) - release0
         
-        
-
         CustomEnvelope ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (release, sustain); ((float data.Length/float sampleRate), 0.)]) sampleRate data //error here
         //PinchAmp data ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); ((float data.Length/float sampleRate), sustain); (release, 0.)]) sampleRate  //error here
-
 
     let LFO_AM frequency minAmplitude maxAmplitude sampleRate data =
         let oscillator = FourWaves.SinWave
@@ -108,9 +105,9 @@ module Filter =
         )
 
     let LowPass sampleRate cutoffFreq (data:List<float>) =
-        let rc = 1. / (2. * Math.PI * cutoffFreq)
+        let RC = 1. / (2. * Math.PI * cutoffFreq)
         let dt = 1. / sampleRate
-        let alpha = dt / (rc + dt)
+        let alpha = dt / (RC + dt)
         let alpha2 = 1. - alpha
 
         let mutable last = alpha * data.[0]
@@ -124,9 +121,9 @@ module Filter =
         )
 
     let HighPass sampleRate cutoffFreq (data:List<float>) =
-        let rc = 1. / (2. * Math.PI * cutoffFreq)
+        let RC = 1. / (2. * Math.PI * cutoffFreq)
         let dt = 1. / sampleRate
-        let alpha = rc / (rc + dt)
+        let alpha = RC / (RC + dt)
 
         let mutable last = data.[0]
         [last] @ (
