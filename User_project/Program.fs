@@ -13,7 +13,7 @@ module Program =
 
     let basicSound = Utility.cutCorners 20000 (Synth.note (Seconds 1) Note.A 4)
     let reverb = Filter.Reverb 0.4 0.5 0.9 44100. basicSound
-    let echo = Filter.Repeater 5 0.9 1.2 44100. basicSound
+    let echo = Filter.Echo 3 0.9 0.2 44100. basicSound
     Synth.writeToWav "basic.wav" [basicSound]
     Synth.writeToWav "reverb.wav" [reverb]
     Synth.writeToWav "echo.wav" [echo]

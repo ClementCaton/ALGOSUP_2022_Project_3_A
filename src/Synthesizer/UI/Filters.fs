@@ -54,7 +54,9 @@ module Filter =
 
         Repeater nbEcho decay delay sampleRate dryData
     
-    //TODO: let Echo (length:float) (delay:float) (sampleRate:float) (dryData:List<float>)
+    let Echo (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) =
+        Repeater nbEcho decay (float dryData.Length / sampleRate + delay) sampleRate dryData
+
     //TODO: let chorus
 
 
