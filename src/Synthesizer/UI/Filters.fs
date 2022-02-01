@@ -42,11 +42,17 @@ module Filter =
 
         RepeaterInner nbEcho decay delay sampleRate [] dryData
 
-    let Reverb (delayRatio:float) (maxLength:float) (decay:float) (sampleRate:float) (dryData:List<float>) =
-        let delay = float dryData.Length / delayRatio
-        let nbEcho = (maxLength * sampleRate - (float dryData.Length)) / delay
+    let Reverb (delayRatio:float) (minAmpRatio:float) (decay:float) (sampleRate:float) (dryData:List<float>) =
+        let delay = (float dryData.Length * delayRatio) / sampleRate
+        let rec calcSteps minAmp decay current step =
+            if minAmp >= current then
+                step
+            else
+                calcSteps minAmp decay (current*decay) (step+1)
 
-        Repeater (int nbEcho) decay delay sampleRate dryData
+        let nbEcho = calcSteps minAmpRatio decay 1. 0
+
+        Repeater nbEcho decay delay sampleRate dryData
     
     //TODO: let Echo (length:float) (delay:float) (sampleRate:float) (dryData:List<float>)
     //TODO: let chorus
