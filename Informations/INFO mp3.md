@@ -1,5 +1,4 @@
-Adapted from (idea2ic)[http://www.idea2ic.com/File_Formats/MPEG%20Audio%20Frame%20Header.pdf].
-
+Adapted from [idea2ic](http://www.idea2ic.com/File_Formats/MPEG%20Audio%20Frame%20Header.pdf).
 
 # MP3 File
 
@@ -7,9 +6,7 @@ An MP3 file is composed of independent "frames". This means that you can cut the
 
 Each frame starts with a 4 bytes (32 bits) header. This header can easily be detected making it easy to differentiate between frames and extra data.
 
-To find a header, just find a byte with all bits set (value 255) followed by a byte with its three most significant bits set (value >= 224). For more information see the (header details)[#frame-header] section below.
-
-
+To find a header, just find a byte with all bits set (value 255) followed by a byte with its three most significant bits set (value >= 224). For more information see the [header details](#frame-header) section below.
 
 # Frame header
 
@@ -23,8 +20,8 @@ The header consists of four bytes and is composed of 13 fields composed as follo
 | B   | 2      | MPEG version: <br> 0. V2.5 <br> 1. Reserved <br> 2. V2 <br> 3. V1                               |
 | C   | 2      | Layer description: <br> 0. Reserved <br> 1. Layer III <br> 2. Layer II <br> 3. Layer I          |
 | D   | 1      | Protection bit: <br> 0. CRC protected (16 bits after this header) <br> 1. Not protected         |
-| E   | 4      | Bitrate index cf table (here)[##bitrate-index]                                                  |
-| F   | 2      | Sampling rate frequency index cf table (here)[##sampling-rate-index]                            |
+| E   | 4      | Bitrate index cf table [here](##bitrate-index)                                                  |
+| F   | 2      | Sampling rate frequency index cf table [here](##sampling-rate-index)                            |
 | G   | 1      | Padding: <br> 0. Frame not padded <br> 1. Padded with one extra bit                             |
 | H   | 1      | Private bit                                                                                     |
 | I   | 2      | Channel mode: <br> 0. Stereo <br> 1. Joint stereo <br> 2. Dual stereo <br> 3. Mono              |
@@ -32,8 +29,6 @@ The header consists of four bytes and is composed of 13 fields composed as follo
 | K   | 1      | Copyright                                                                                       |
 | L   | 1      | Original media                                                                                  |
 | M   | 2      | Emphasis: <br> 0. None <br> 1. 50/15 ms <br> 2. Reserved <br> 3. CCIT J.17                      |
-
-
 
 ## Bitrate index
 
@@ -64,8 +59,6 @@ Special values: <br>
 `0000 (0)`: Variable bitrate <br>
 `1111 (7)`: Value not allowed
 
-
-
 ## Sampling rate index
 
 Values in hertz
@@ -77,15 +70,11 @@ Values in hertz
 | 10   | 32000    | 16000    | 8000     |
 | 11   | Reserved | Reserved | Reserved |
 
-
-
 ## Frame size
 
 The frame size can be calculated with this formula:
 
 `FrameSize = 144 * BitRate / SampleRate + Padding`
-
-
 
 # Audio tags
 
@@ -111,9 +100,10 @@ EFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFG
 | G   | 1      | Genre id    |
 
 # Compression
+
 Those two links explains how the compression of the audio is made for mp3 files. The first one is really complete and explains a lot of things about mp3 files.
-http://digitalsoundandmusic.com/5-3-8-algorithms-for-audio-companding-and-compression/ 
-https://ledgernote.com/blog/q-and-a/how-does-mp3-compression-work/
+<http://digitalsoundandmusic.com/5-3-8-algorithms-for-audio-companding-and-compression/>
+<https://ledgernote.com/blog/q-and-a/how-does-mp3-compression-work/>
 
 Here is an algorithm for mp3 compression
     algorithm MP3 {
@@ -142,11 +132,12 @@ Here is an algorithm for mp3 compression
     }
 
 And now those are the steps more detailled of the algorithm :
-### 1. Divide the audio signal in frames.
+
+### 1. Divide the audio signal in frames
 
 MP3 compression processes the original audio signal in frames of 1152 samples. Each frame is split into two granules of 576 samples each. Frames are encoded in a number of bytes consistent with the bit rate set for the compression at hand. In the example described above (with sampling rate of 44.1 kHz and requested bit rate of 128 kb/s), 1152 samples are compressed into a frame of approximately 450 bytes – 418 bytes for data and 32 bytes for the header.
 
-### 2. Use the Fourier transform to transform the time domain data to the frequency domain, sending the results to the psychoacoustical analyzer.
+### 2. Use the Fourier transform to transform the time domain data to the frequency domain, sending the results to the psychoacoustical analyzer
 
 The fast Fourier transform changes the data to the frequency domain. The frequency domain data is then sent to a psychoacoustical analyzer. One purpose of this analysis is to identify masking tones and masked frequencies in a local neighborhood of frequencies over a small window of time. The psychoacoustical analyzer outputs a set of signal-to-mask ratios (SMRs) that can be used later in quantizing the data. The SMR is the ratio between the amplitude of a masking tone and the amplitude of the minimum masked frequency in the chosen vicinity. The compressor uses these values to choose scaling factors and quantization levels such that quantization error mostly falls below the masking threshold. Step 5 explains this process further.
 
@@ -158,11 +149,11 @@ Steps 2 and 3 are independent and actually could be done in parallel. Dividing t
 
 The 32 resulting bands are still in the time domain. Note that dividing the audio signal into frequency bands increases the amount of data by a factor of 32 at this point. That is, there are 32 sets of 1152 time-domain samples, each holding just the frequencies in its band. (You can understand this better if you imagine that the audio signal is a piece of music that you decompose into 32 frequency bands. After the decomposition, you could play each band separately and hear the musical piece, but only those frequencies in the band. The segments would need to be longer than 1152 samples for you to hear any music, however, since 1152 samples at a sampling rate of 44.1 kHz is only 0.026 seconds of sound.)
 
-### 4. Use the MDCT to divide each of the 32 frequency bands into 18 subbands for a total of 576 frequency subbands.
+### 4. Use the MDCT to divide each of the 32 frequency bands into 18 subbands for a total of 576 frequency subbands
 
 The MDCT, like the Fourier transform, can be used to change audio data from the time domain to the frequency domain. Its distinction is that it is applied on overlapping windows in order to minimize the appearance of spurious frequencies that occur because of discontinuities at window boundaries. (“Spurious frequencies” are frequencies that aren’t really in the audio, but that are yielded from the transform.) The overlap between successive MDCT windows varies depending on the information that the psychoacoustical analyzer provides about the nature of the audio in the frame and band. If there are transients involved, then the window size is shorter for greater temporal resolution. Otherwise, a larger window is used for greater frequency resolution.
 
-### 5. Sort the subbands into 22 groups, called scale factor bands, and based on the SMR, determine a scaling factor for each scale factor band. Use nonuniform quantization combined with scaling factors to quantize.
+### 5. Sort the subbands into 22 groups, called scale factor bands, and based on the SMR, determine a scaling factor for each scale factor band. Use nonuniform quantization combined with scaling factors to quantize
 
 Values are raised to the ¾ power before quantization. This yields nonuniform quantization, aimed at reducing quantization noise for lower amplitude signals, where it has a more harmful impact.
 
@@ -182,11 +173,11 @@ floor(20000∗0.1128)=15
 
 An appropriate psychoacoustical analysis provides scaling factors that increase the quantization error where it doesn’t matter, in the presence of masking tones.  Scale factor bands effectively allow less precision (i.e., fewer bits) to store values if the resulting quantization error falls below the audible level. This is one way to reduce the amount of data in the compressed signal.
 
-### 6. Encode side information.
+### 6. Encode side information
 
 Side information is the information needed to decode the rest of the data, including where the main data begins, whether granule pairs can share scale factors, where scale factors and Huffman encodings begin, the Huffman table to use, the quantization step, and so forth.
 
-### 7. Use Huffman encoding on the resulting 576 quantized MDCT coefficients.
+### 7. Use Huffman encoding on the resulting 576 quantized MDCT coefficients
 
 The result of the MDCT is 576 coefficients representing the amplitudes of 576 frequency subbands. Huffman encoding is applied at this point to further compress the signal.
 
@@ -252,7 +243,7 @@ This illustrates the basic concept of Huffman encoding. However, it is realized 
 
 Steps 5, 6, and 7 can be done iteratively. After an iteration, the compressor checks that the noise level is acceptable and that the proper bit rate has been maintained. If there are more bits that could be used, the quantizer can be reduced. If the bit limit has been exceeded, quantization must be done more coarsely. The level of distortion in each band is also analyzed. If the distortion is not below the masking threshold, then the scale factor for the band can be adjusted.
 
-### 8. Put the encoded data into a properly formatted frame in the bit stream.
+### 8. Put the encoded data into a properly formatted frame in the bit stream
 
 The header of each frame is as shown in Table 5.4. The data part of each frame consists of the scaled, quantized MDCT values.
 

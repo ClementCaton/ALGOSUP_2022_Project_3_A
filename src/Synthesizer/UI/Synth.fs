@@ -68,19 +68,17 @@ module Synth =
     let fourier wave =
         frequencyAnalysis.fourier(wave)
 
-    let cutstart (sampleRate:float) time (data:List<float>) =
+    let cutStart (sampleRate:float) time (data:List<float>) =
         Utility.cutStart sampleRate time data
 
     let cutEnd (sampleRate:float) time (data:List<float>) =
         Utility.cutEnd sampleRate time data
 
     let cutMiddle (sampleRate:float) timeStart timeEnd (data:List<float>) =
-        Utility.cutStart sampleRate timeStart data
-        |> List.append (Utility.cutEnd sampleRate timeEnd data)
+        Utility.cutEnd sampleRate (float data.Length/sampleRate - timeStart) data @ Utility.cutStart sampleRate (float data.Length/sampleRate - timeEnd) data
 
     let cutEdge (sampleRate:float) timeStart timeEnd (data:List<float>) =
-        Utility.cutEnd sampleRate timeStart data
-        |> List.append (Utility.cutStart sampleRate timeEnd data)
+        Utility.cutStart sampleRate timeStart (Utility.cutEnd sampleRate timeEnd data)
         
     let cutCorners limit (data:List<float>) =
         Utility.cutCorners limit data
