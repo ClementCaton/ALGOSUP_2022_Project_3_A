@@ -3,85 +3,95 @@ namespace Synthesizer
 open System
 open System.IO
 
-module Synth =
+type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
+
+    member val bpm = defaultArg baseBpm 90.
+        with get, set
     
-    let getNoteFreq octav note =
+    member val sampleRate = defaultArg baseSampleRate 44100.
+        with get, set
+
+    member val waveType = defaultArg baseWaveType Sin
+        with get, set
+    
+    member x.GetNoteFreq octav note =
         CalcNoteFreq(octav, note).Output
 
-    let getNoteFreqOffset octav note aFourFreq =
+    member x.GetNoteFreqOffset octav note aFourFreq =
         CalcNoteFreq(octav, note, aFourFreq).Output
 
-    let Sound freq duration waveType =
-        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
+    member x.Sound freq duration waveType =
+        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = x.bpm) // TEMP: Remove bpm
         //! The "1." was supposed to be "(data.overDrive)"
-        Utility.Overdrive 1. (data.create(waveType))
+        Utility.Overdrive 1. (data.Create(waveType))
 
-    let SoundWithEnveloppe freq duration waveType sustain attack hold decay release = // time, time, time, amp, time
-        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = 114) // TEMP: Remove bpm
+    member x.SoundWithEnveloppe freq duration waveType sustain attack hold decay release = // time, time, time, amp, time
+        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = x.bpm) // TEMP: Remove bpm
         //! The "1." was supposed to be "(data.overDrive)"
-        Utility.Overdrive 1. (data.createWithEnvelope waveType sustain attack hold decay release)
+        Utility.Overdrive 1. (data.CreateWithEnvelope waveType sustain attack hold decay release)
 
-    let writeToWav name music =
+    member x.WriteToWav name music =
         Directory.CreateDirectory("./Output/") |> ignore
         use stream = File.Create("./Output/" + name)
-        writeWav().Write (stream) (music)
+        WriteWav().Write (stream) (music)
 
-    let writeToWavWithPath path fileName music =
+    member x.WriteToWavWithPath path fileName music =
         Directory.CreateDirectory(path) |> ignore
         use stream = File.Create(path + fileName)
-        writeWav().Write (stream) (music)
+        WriteWav().Write (stream) (music)
 
-    let readFromWav name =
-        readWav().Read (File.Open("./Output/"+name, FileMode.Open))
+    member x.ReadFromWav name =
+        ReadWav().Read (File.Open("./Output/"+name, FileMode.Open))
 
-    let readFromWavWithPath path =
-        readWav().Read (File.Open(path, FileMode.Open))
+    member x.ReadFromWavWithPath path =
+        ReadWav().Read (File.Open(path, FileMode.Open))
 
-    let note duration mNote octave =
-        let freq = getNoteFreq mNote octave
-        Sound freq duration Sin
+    member x.Note duration mNote octave =
+        let freq = x.GetNoteFreq mNote octave
+        x.Sound freq duration x.waveType
 
-    
-    let silence duration =
-        Sound 0 duration Silence
-    
-    let compose (corner:int) sounds =
-        //this is to be revisited
-        sounds |> List.map(fun x -> Utility.cutCorners corner x) |> List.concat
+    member x.Silence duration =
+        x.Sound 0 duration Silence
+        
+    member x.ComposeCutCorner (corner:int) sounds =
+        sounds |> List.map(fun x -> Utility.CutCorners corner x) |> List.concat
             
-    let add sounds = Utility.add sounds
+    member x.Compose = x.ComposeCutCorner 100
+    
+    member x.ComposeNoCutCorner sounds = List.concat
+    
+    member x.Add sounds = Utility.Add sounds
 
-    let preview title sound =
-        previewarr.chart title sound
+    member x.Preview title sound =
+        Preview.Chart title sound
         sound
 
-    let previewMap title map =
+    member x.PreviewMap title map =
         map
         |> Map.toList
         |> List.unzip
-        ||> previewarr.chartXY title
+        ||> Preview.ChartXY title
         map
 
-    let forAllChannels func channels =
+    member x.ForAllChannels func channels =
         channels |> List.map func
 
-    let fourier wave =
-        frequencyAnalysis.fourier(wave)
+    member x.Fourier wave =
+        FrequencyAnalysis.Fourier(wave)
 
-    let cutStart (sampleRate:float) time (data:List<float>) =
-        Utility.cutStart sampleRate time data
+    member x.Cutstart time (data:List<float>) =
+        Utility.CutStart x.sampleRate time data
 
-    let cutEnd (sampleRate:float) time (data:List<float>) =
-        Utility.cutEnd sampleRate time data
+    member x.CutEnd time (data:List<float>) =
+        Utility.CutEnd x.sampleRate time data
 
-    let cutMiddle (sampleRate:float) timeStart timeEnd (data:List<float>) =
-        Utility.cutEnd sampleRate (float data.Length/sampleRate - timeStart) data @ Utility.cutStart sampleRate (float data.Length/sampleRate - timeEnd) data
+    member x.CutMiddle timeStart timeEnd (data:List<float>) =
+        Utility.CutEnd x.sampleRate (float data.Length/x.sampleRate - timeStart) data @ Utility.CutStart x.sampleRate (float data.Length/x.sampleRate - timeEnd) data
 
-    let cutEdge (sampleRate:float) timeStart timeEnd (data:List<float>) =
-        Utility.cutStart sampleRate timeStart (Utility.cutEnd sampleRate timeEnd data)
+    member x.CutEdge timeStart timeEnd (data:List<float>) =
+        Utility.CutStart x.sampleRate timeStart (Utility.CutEnt x.sampleRate timeEnd data)
         
-    let cutCorners limit (data:List<float>) =
-        Utility.cutCorners limit data
-
+    member x.CutCorners limit (data:List<float>) =
+        Utility.CutCorners limit data
     let ApplyFilters filters data =
         Filter.ApplyFilters filters data

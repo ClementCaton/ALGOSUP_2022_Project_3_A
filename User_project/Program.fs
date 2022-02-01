@@ -10,25 +10,41 @@ open Synthesizer
 
 
 module Program =
-    let a = Synth.note (Seconds 1) Note.A 4
-    let b = Synth.note (Seconds 1) Note.B 4
-    let c = Synth.note (Seconds 1) Note.C 4
-    let d = Synth.note (Seconds 1) Note.D 4
     
-    let full = Synth.compose 0 [a; b; c; d;]
-    // let cut = Synth.cutEdge 44100. 1. 3. full
-    let cut = Synth.cutMiddle 44100. 1. 1. full
+    let synth = Synth()
 
-    Synth.writeToWav "full.wav" [full]
-    Synth.writeToWav "cut.wav" [cut]
+    (*
+    let input = synth.Add [synth.Note Whole Note.A 2; synth.Note Whole Note.A 3; synth.Note Whole Note.A 4; synth.Note Whole Note.A 5]
+    printfn "Wanted:   %A" [CalcNoteFreq(Note.A, 2).Output; CalcNoteFreq(Note.A, 3).Output; CalcNoteFreq(Note.A, 4).Output; CalcNoteFreq(Note.A, 5).Output]
+    synth.WriteToWav "A345.wav" [input]
+    let output = synth.Fourier 44100. input
+    let freq = FrequencyAnalysis.LocalMaxValuesIndices 0.25 output
+    let amplitudes = output |> Map.filter (fun f _ -> List.contains f freq)
+    //printfn "%f %f %f %f" (List.average input) (List.average output) (List.sum input) (List.sum output)
+    printfn "Obtained: %A" freq
+    printfn "Amplitudes: %A" amplitudes
+    synth.PreviewMap "A 3,4,5 Analysis" output |> ignore
+    *)
 
-    // let input = Synth.add [Synth.note Whole Note.A 2; Synth.note Whole Note.A 3; Synth.note Whole Note.A 4; Synth.note Whole Note.A 5]
-    // printfn "Wanted:   %A" [CalcNoteFreq(Note.A, 2).Output; CalcNoteFreq(Note.A, 3).Output; CalcNoteFreq(Note.A, 4).Output; CalcNoteFreq(Note.A, 5).Output]
-    // Synth.writeToWav "A345.wav" [input]
-    // let output = frequencyAnalysis.fourier 44100. input
-    // let freq = frequencyAnalysis.localMaxValuesIndices 0.25 output
-    // let amplitudes = output |> Map.filter (fun f _ -> List.contains f freq)
-    // //printfn "%f %f %f %f" (List.average input) (List.average output) (List.sum input) (List.sum output)
-    // printfn "Obtained: %A" freq
-    // printfn "Amplitudes: %A" amplitudes
-    // Synth.previewMap "A 3,4,5 Analysis" output |> ignore
+
+    // Among Us Drip
+    // https://musescore.com/user/5032516/scores/6519100
+    let DottedQuarter = Custom (1./4. * 1.5)
+    let TripletEighth = Custom (1./8. * 2./3.)
+    synth.bpm <- 94.
+    synth.waveType <- Triangular
+
+    let music = synth.Compose [
+        synth.Note Eighth Note.C 5
+        synth.Note Eighth Note.Eb 5
+        synth.Note Eighth Note.F 5
+        synth.Note Eighth Note.Gb 5
+        synth.Note Eighth Note.F 5
+        synth.Note Eighth Note.Eb 5
+        synth.Note DottedQuarter Note.C 5
+        synth.Note Sixteenth Note.Bb 4
+        synth.Note Sixteenth Note.D 5
+        synth.Note Quarter Note.C 5
+    ]
+
+    synth.WriteToWav "amogus.wav" [music]

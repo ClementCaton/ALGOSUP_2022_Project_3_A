@@ -79,7 +79,7 @@ To call on this form of notation you'll have to use the ``Synth.getNoteFreq (oct
 Example:
 
 ```fs
-let note = Synth.getNoteFreq Note.C 4 // This returns the frequency of the C4 note
+let Note = Synth.GetNoteFreq Note.C 4 // This returns the frequency of the C4 note
 ```
 
 Alternatively, you could directly create a SinWave using the ``Synth.note (duration:Duration) (note:Note) (octav:int)``.
@@ -87,7 +87,7 @@ Alternatively, you could directly create a SinWave using the ``Synth.note (durat
 Example:
 
 ```fs
-let note = Synth.note Half Note.C 4 // This returns the frequency a half duration of the C4 note
+let Note = Synth.Note Half Note.C 4 // This returns the frequency a half duration of the C4 note
 ```
 
 ## Finding notes with a custom default frequency
@@ -99,7 +99,7 @@ This can be done using the ``Synth.getNoteFreqOffset (octav:int) (note:Note) (aF
 Example:
 
 ```fs
-let note = Synth.getNoteFreqOffset Note.C 4 444. // This returns the frequency of the C4 note calculated from the starting point 444Hz at the A4 note
+let Note = Synth.GetNoteFreqOffset Note.C 4 444. // This returns the frequency of the C4 note calculated from the starting point 444Hz at the A4 note
 ```
 
 ## **Creating silence**
@@ -107,7 +107,7 @@ let note = Synth.getNoteFreqOffset Note.C 4 444. // This returns the frequency o
 Creating silence is as simple as calling the ``Synth.silence (duration:Duration)`` function.
 
 ```fs
-let silence = Synth.silence (Seconds 2) // Returns 2 seconds of silence
+let Silence = Synth.Silence (Seconds 2) // Returns 2 seconds of silence
 ```
 
 ## **Additioning audio data**
@@ -132,29 +132,29 @@ Therefore; the``Synth.compose (sounds:List<float>)`` function has a default cutC
 Example:
 
 ```fs
-let C4 = Synth.note Half Note.C 4   // init
-let D4 = Synth.note Half Note.D 4   //
-let silence = Synth.silence Quarter //
-let B5 = Synth.note Half Note.B 5   //
+let C4 = Synth.Note Half Note.C 4   // init
+let D4 = Synth.Note Half Note.D 4   //
+let Silence = Synth.Nilence Quarter //
+let B5 = Synth.Note Half Note.B 5   //
 
-let music = Synth.compose [          // Returns a single, large sound composed of the smaller sounds given to it
+let Music = Synth.Compose [          // Returns a single, large sound composed of the smaller sounds given to it
     C4;
     C4;
     D4;
-    silence;
+    Silence;
     B5;
 ]
 ```
 
 In certain cases, one might need to set a custom value to the cutCorner function.
-This can be done with the ``Synth.composeCutCorner (corner:int) (sounds:List<float>)``
+This can be done with the ``Synth.ComposeCutCorner (Corner:int) (Sounds:List<float>)``
 
 ```fs
-let music = Synth.composeCutCorner 1000 [
+let Music = Synth.ComposeCutCorner 1000 [
     C4;
     C4;
     D4;
-    silence;
+    Silence;
     B5;
 ]
 ```
@@ -165,23 +165,22 @@ This can be done either by giving it a 0 value or by using the ``Synth.composeNo
 With zero value:
 
 ```fs
-let music = Synth.composeCutCorner 0 [
+let Music = Synth.ComposeCutCorner 0 [
     C4;
     C4;
     D4;
-    silence;
+    Silence;
     B5;
 ]
 ```
 
 Or with ``composeNoCutCorner``:
-
 ```fs
-let music = Synth.composeNoCutCorner [
+let Music = Synth.ComposeNoCutCorner [
     C4;
     C4;
     D4;
-    silence;
+    Silence;
     B5;
 ]
 ```

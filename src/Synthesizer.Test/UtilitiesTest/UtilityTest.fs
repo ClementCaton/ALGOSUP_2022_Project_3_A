@@ -6,38 +6,39 @@ open NUnit.Framework
 let Setup () =
     ()
 
+let synth = Synth()
 let one = Seconds 1.
 
 [<Test>]
-let cutStartTest() =
-    let data = Synth.note one Note.C 4 |> Utility.cutStart 44100. 0.2
+let CutStartTest() =
+    let data = synth.Note one Note.C 4 |> Utility.CutStart 44100. 0.2
 
     Assert.That(data.Length, Is.EqualTo(44100.*0.8))
     Assert.That(data |> List.max, Is.LessThan(1))
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let cutEndTest() =
-    let data = Synth.note one Note.C 4 |> Utility.cutEnd 44100. 0.2
+let CutEndTest() =
+    let data = synth.Note one Note.C 4 |> Utility.CutEnd 44100. 0.2
 
     Assert.That(data.Length, Is.EqualTo(44100.*0.8))
     Assert.That(data |> List.max, Is.LessThan(1))
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let cutCornersTest() =
-    let data = Synth.note one Note.C 4 |> Utility.cutCorners 800 |> Utility.cutEnd 44100. 0.98
-    let mockData = Synth.note one Note.C 4 |> Utility.cutEnd 44100. 0.98
+let CutCornersTest() =
+    let data = synth.Note one Note.C 4 |> Utility.CutCorners 800 |> Utility.CutEnd 44100. 0.98
+    let mockData = synth.Note one Note.C 4 |> Utility.CutEnd 44100. 0.98
 
     Assert.That (data, Is.LessThan mockData)
     Assert.That (data, Is.InstanceOf(typeof<List<float>>))
 
 [<Test>]
-let addTest() =
-    let data = Synth.note one Note.C 4
-    let data2 = Synth.note one Note.C 7
+let AddTest() =
+    let data = synth.Note one Note.C 4
+    let data2 = synth.Note one Note.C 7
 
-    let finalData = Utility.add [data; data2]
+    let finalData = Utility.Add [data; data2]
 
     Assert.That(data.Length, Is.EqualTo(44100))
     Assert.That(finalData |> List.max, Is.LessThan(1))
@@ -54,7 +55,7 @@ let OverdriveTest() =
     let frequency = 440.
     let overDrive = 1.
 
-    let a = List.init arraySize (fun i -> ((fourWaves.sinWave) frequency amplitude verticalShift phaseShift (float i/sampleRate)))
+    let a = List.init arraySize (fun i -> ((FourWaves.SinWave) frequency amplitude verticalShift phaseShift (float i/sampleRate)))
     let data = Utility.Overdrive 1 a
 
     Assert.That(data.Length, Is.EqualTo(arraySize))

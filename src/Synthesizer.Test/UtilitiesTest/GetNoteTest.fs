@@ -8,7 +8,7 @@ let Setup () =
     ()
 
 [<Test>]
-let getNoteSimple () =
+let GetNoteSimple () =
     let val1 = Math.Round( CalcNoteFreq(Note.A, 4).Output, 2)
     let val2 = Math.Round( CalcNoteFreq(Note.B, 5).Output, 2)
 
@@ -16,7 +16,7 @@ let getNoteSimple () =
     Assert.That(val2, Is.EqualTo(987.77))
 
 [<Test>]
-let getNoteChangeDefaultFreq () =
+let GetNoteChangeDefaultFreq () =
     let val1 = Math.Round( CalcNoteFreq(Note.A, 4, 436).Output, 2)
     let val2 = Math.Round( CalcNoteFreq(Note.B, 5, 444).Output, 2)
 

@@ -10,9 +10,9 @@ let Setup () =
     ()
 
 [<Test>]
-let createTest() =
+let CreateTest() =
     let soundDataCreater = new SoundData()
-    let data = soundDataCreater.create Silence
+    let data = soundDataCreater.Create Silence
 
     let mockData = List.init (int(44100.*60./90.)) (fun i -> 0.)
 
