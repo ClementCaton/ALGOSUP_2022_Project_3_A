@@ -122,7 +122,10 @@ This sound was caused by the notes ending on a not-zero amplitude.
 
 The solution was to add in a filter that gradually lowers the amplitude of the notes start and end to 0.
 
-<!-- insert before and after image here -->
+|          Before cutCorne             |          After cutCorner            |
+|:------------------------------------:|:-----------------------------------:|
+| ![Before](Reports/readme/cut_b.png)  | ![After](Reports/readme/cut_a.png)  |
+
 
 Therefore; the``Synth.compose (sounds:List<float>)`` function has a default cutCorner value of 100 (this means it cuts away from the first and last 100 bytes from each note).
 
