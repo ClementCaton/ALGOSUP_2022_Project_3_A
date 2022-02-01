@@ -53,8 +53,6 @@ module Filter =
             if wet.Length >= dry.Length then wet
 
             elif Math.Floor(float current%step) = 0 then
-                printfn $"{float wet.Length / float dry.Length}"
-
                 let addition = [for i in 0 .. (rate) -> dry[current]]
                 flangerInner step (rate+initialRate) initialRate (current+1) dry (wet @ addition)
 
