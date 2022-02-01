@@ -309,3 +309,5 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 [^1]: Octaves: A series of eight notes occupying the interval between (and including) two notes, one having twice or half the frequency of vibration of the other.
 
 [^2]: Notes: A note is a symbol denoting a musical sound.
+
+https://user-images.githubusercontent.com/91249762/152002722-5442f1d9-fe37-4373-a82c-815790e3420b.mov
