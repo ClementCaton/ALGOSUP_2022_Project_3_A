@@ -85,3 +85,5 @@ module Synth =
     let cutCorners limit (data:List<float>) =
         Utility.cutCorners limit data
 
+    let ApplyFilters filters data =
+        Filter.ApplyFilters filters data
