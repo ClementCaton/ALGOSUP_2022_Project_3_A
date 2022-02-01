@@ -1,18 +1,18 @@
-module playMusic
+module PlayMusic
     open System.IO
     open SFML.Audio
     open SFML.System
 
-    let playWithOffset offset (stream:Stream) =     //if the offset is > to the length of the music it will start from the beginning
-        let music = new Music(stream)
-        let timeOffset = Time.FromSeconds(offset)
-        music.PlayingOffset <- timeOffset
+    let PlayWithOffset Offset (stream:Stream) =     //if the offset is > to the length of the music it will start from the beginning
+        let Music = new Music(Stream)
+        let TimeOffset = Time.FromSeconds(Offset)
+        music.PlayingOffset <- TimeOffset
         music.Play()
         ignore (System.Console.ReadLine())
 
-    let play stream =
-        playWithOffset (float32(0.)) stream
+    let Play Stream =
+        PlayWithOffset (float32(0.)) Stream
 
-    let playWithOffsetFromPath offset (filePath:string) =
-        let stream = File.Open (filePath, FileMode.Open)
-        playWithOffset offset stream
+    let PlayWithOffsetFromPath Offset (FilePath:string) =
+        let Stream = File.Open (FilePath, FileMode.Open)
+        PlayWithOffset Offset Stream

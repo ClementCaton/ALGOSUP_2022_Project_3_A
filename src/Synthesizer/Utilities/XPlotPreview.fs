@@ -1,9 +1,9 @@
 namespace Synthesizer
 
-module previewarr =
+module Previewarr =
     open XPlot.Plotly
-    let chart title (array:List<float>) =
-        array |> Chart.Line |> Chart.WithOptions(Options(title = title)) |> Chart.Show
+    let Chart Title (Array:List<float>) =
+        Array |> Chart.Line |> Chart.WithOptions(Options(Title = Title)) |> Chart.Show
     
-    let chartXY title (x:List<float>) (y:List<float>) =
-        Scatter(x=x, y=y) |> Chart.Plot |> Chart.WithLayout(Layout(title=title)) |> Chart.Show
+    let ChartXY Title (x:List<float>) (y:List<float>) =
+        Scatter(x=x, y=y) |> Chart.Plot |> Chart.WithLayout(Layout(Title=Title)) |> Chart.Show

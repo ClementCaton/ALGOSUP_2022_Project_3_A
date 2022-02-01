@@ -14,14 +14,14 @@ type Note =
     | As = 1 | Bb = 1
     | B = 2
 
-type CalcNoteFreq(note:Note, octav:int, ?a4Freq0:float) =
+type CalcNoteFreq(Note:Note, Octav:int, ?A4Freq0:float) =
     //setting default A4 frequency * octav level
-    let startingFreq = (defaultArg a4Freq0 440.) * (2. ** (float octav - 4.))
+    let StartingFreq = (DefaultArg A4Freq0 440.) * (2. ** (float Octav - 4.))
 
     //changing to the right note
-    let calcNote step = startingFreq * (1.05946309436 ** step)
+    let CalcNote Step = StartingFreq * (1.05946309436 ** Step)
 
     member x.Output = 
-        calcNote (float note)
+        CalcNote (float Note)
 
 

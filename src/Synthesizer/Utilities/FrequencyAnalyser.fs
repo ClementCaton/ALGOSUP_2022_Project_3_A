@@ -3,7 +3,7 @@ namespace Synthesizer
 open System
 open System.Numerics
 
-module frequencyAnalysis =
+module FrequencyAnalysis =
 
     (*
         Waveform can be described by adding sinusoidal with some frequencies magnitudes and phase angles
@@ -17,24 +17,24 @@ module frequencyAnalysis =
     *)
 
     // Note: The following FFT algorithm is actually used for IFFT, thus there is a static negative sign in the complex exponent
-    let rec fft = function
+    let rec Fft = function
     | []  -> []
     | [x] -> [x] 
     | x ->
-        let multiplier = -2. * Math.PI / float x.Length
+        let Multiplier = -2. * Math.PI / float x.Length
         x
         |> List.mapi (fun i c -> i % 2 = 0, c)
         |> List.partition fst
-        |> fun (even, odd) -> fft (List.map snd even), fft (List.map snd odd)
+        |> fun (even, odd) -> Fft (List.map snd even), Fft (List.map snd odd)
         ||> List.mapi2 (fun i even odd -> 
-            let btf = odd * Complex.FromPolarCoordinates(1., multiplier * float i)
-            even + btf, even - btf
+            let Btf = odd * Complex.FromPolarCoordinates(1., Multiplier * float i)
+            even + Btf, even - Btf
         )
         |> List.unzip
         ||> List.append
 
-    let fourier sampleRate (x: List<float>) =
-        let n =
+    let Fourier SampleRate (x: List<float>) =
+        let N =
             x
             |> List.length
             |> float
@@ -44,9 +44,9 @@ module frequencyAnalysis =
             |> int
         // n is a power of 2 greater or equal to the size of x
 
-        let increment = sampleRate / (float n - 2.) //* Given by Robert, taken from a library he uses
+        let Increment = SampleRate / (float N - 2.) //* Given by Robert, taken from a library he uses
 
-        (n - x.Length, 0.)
+        (N - x.Length, 0.)
         ||> List.replicate
         |> List.append x
         // Now a list with a length that is a power of two
@@ -56,13 +56,13 @@ module frequencyAnalysis =
         |> List.mapi (fun i c -> float i * increment, c.Magnitude / float n)
         |> Map.ofList
 
-    let localMaxValuesIndices (threshold: float) (map: Map<float, float>) =
+    let LocalMaxValuesIndices (Threshold: float) (Map: Map<float, float>) =
         // The threshold is the percentage between the bottom and the top where all point below are discarded to remove noise
         match Map.count map with
         | 0 -> []
         | _ ->
-            if threshold < 0. || threshold > 1. then failwith "Threshold must be a float in the range [0, 1]"
-            let limit = (1. - threshold) * (Seq.min (Map.values map)) + threshold * (Seq.max (Map.values map))
+            if Threshold < 0. || Threshold > 1. then failwith "Threshold must be a float in the range [0, 1]"
+            let Limit = (1. - Threshold) * (Seq.min (Map.values map)) + Threshold * (Seq.max (Map.values map))
             //printfn "%f %f %f" (List.min values) (List.max values) (List.average values)
             map
             |> Map.add -infinity -infinity
@@ -70,8 +70,8 @@ module frequencyAnalysis =
             |> Map.toList
             |> List.windowed 3
             |> List.filter (fun items ->
-                let v = List.map snd items
-                v.[1] > limit && v.[0] <= v.[1] && v.[1] >= v.[2]
+                let V = List.map snd items
+                V.[1] > limit && V.[0] <= V.[1] && V.[1] >= V.[2]
             )
             |> List.map (fun k -> k.[1])
             |> List.map fst

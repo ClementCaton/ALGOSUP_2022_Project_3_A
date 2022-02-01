@@ -1,15 +1,15 @@
-module fourWaves
+module FourWaves
     open System
-    let pi = Math.PI
+    let Pi = Math.PI
     
-    let sinWave frequence amplitude verticalShift phaseShift t  =
-        amplitude * sin (2. * pi * t * frequence - phaseShift) + verticalShift
+    let SinWave Frequence Amplitude VerticalShift PhaseShift tT  =
+        Amplitude * Sin (2. * Pi * T * Frequence - PhaseShift) + VerticalShift
 
-    let sawWave frequence amplitude verticalShift phaseShift t =
-        2. * amplitude * (t * frequence - phaseShift - floor (0.5 +  t * frequence - phaseShift)) + verticalShift
+    let SawWave Frequence Amplitude VerticalShift PhaseShift T =
+        2. * Amplitude * (T * Frequence - PhaseShift - floor (0.5 +  T * Frequence - PhaseShift)) + VerticalShift
 
-    let squareWave frequence amplitude verticalShift phaseShift t =
-        amplitude * float (sign (sin (2. * pi * t * frequence - phaseShift))) + verticalShift
+    let SquareWave Frequence amplitude VerticalShift PhaseShift T =
+        Amplitude * float (sign (sin (2. * Pi * T * Frequence - PhaseShift))) + VerticalShift
 
-    let triangleWave frequence amplitude verticalShift phaseShift t =
-        2. * amplitude * asin (sin (2. * pi * t * frequence - phaseShift)) / pi + verticalShift
+    let TriangleWave Frequence amplitude VerticalShift PhaseShift T =
+        2. * Amplitude * Asin (sin (2. * Pi * T * Frequence - PhaseShift)) / Pi + VerticalShift

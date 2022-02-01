@@ -9,77 +9,77 @@ let Setup () =
     ()
 
 [<Test>]
-let changeAmplitudeTest() =
-    let creater1 = new SoundData (amplitude0 = 0.5)
-    let data = changeAmplitude 2. (creater1.create Sin)
-    let creater2 = new SoundData (amplitude0 = 1.)
-    let mockData = creater2.create Sin
+let ChangeAmplitudeTest() =
+    let Creater1 = new SoundData (Amplitude0 = 0.5)
+    let Data = ChangeAmplitude 2. (Creater1.Create Sin)
+    let Creater2 = new SoundData (Amplitude0 = 1.)
+    let MockData = Creater2.Create Sin
 
-    Assert.That(mockData,Is.EqualTo(data))
-    Assert.That(data,Is.InstanceOf<List<float>>())
-
-[<Test>]
-let addTwoWavesTest() =
-    let data = addTwoWaves 0.5 (SoundData(amplitude0 = 0.).create Sin) (SoundData(amplitude0 = 1.).create Sin)
-    let mockData = (SoundData(amplitude0 = 0.5).create Sin)
-
-    Assert.That(mockData,Is.EqualTo(data))
-    Assert.That(data,Is.InstanceOf<List<float>>())
+    Assert.That(MockData,Is.EqualTo(Data))
+    Assert.That(Data,Is.InstanceOf<List<float>>())
 
 [<Test>]
-let addTwoWavesWithASilentTest() =
-    let data = addTwoWaves 0.5 (SoundData(amplitude0 = 1.).create Sin) (SoundData(amplitude0 = 0.).create Sin)
-    let mockData = (SoundData(amplitude0 = 0.5).create Sin)
+let AddTwoWavesTest() =
+    let Data = AddTwoWaves 0.5 (SoundData(Amplitude0 = 0.).Create Sin) (SoundData(Amplitude0 = 1.).Create Sin)
+    let MockData = (SoundData(Amplitude0 = 0.5).Create Sin)
 
-    Assert.That(mockData,Is.EqualTo(data))
-    Assert.That(data,Is.InstanceOf<List<float>>())
-
-[<Test>]
-let addTwoWavesFirstRatioTest() =
-    let data = addTwoWaves 1. (SoundData(amplitude0 = 1.).create Sin) (SoundData(amplitude0 = 0.5).create Sin)
-    let mockData = SoundData(amplitude0 = 1.).create Sin
-
-    Assert.That(mockData,Is.EqualTo(data))
-    Assert.That(data,Is.InstanceOf<List<float>>())
+    Assert.That(MockData,Is.EqualTo(Data))
+    Assert.That(Data,Is.InstanceOf<List<float>>())
 
 [<Test>]
-let addTwoWavesSecondRatioTest() =
-    let data = addTwoWaves 0 (SoundData(amplitude0 = 1.).create Sin) (SoundData(amplitude0 = 0.5).create Sin)
-    let mockData = SoundData(amplitude0 = 0.5).create Sin
+let AddTwoWavesWithASilentTest() =
+    let Data = AddTwoWaves 0.5 (SoundData(Amplitude0 = 1.).Create Sin) (SoundData(Amplitude0 = 0.).Create Sin)
+    let MockData = (SoundData(Amplitude0 = 0.5).Create Sin)
 
-    Assert.That(mockData,Is.EqualTo(data))
-    Assert.That(data,Is.InstanceOf<List<float>>())
+    Assert.That(MockData,Is.EqualTo(Data))
+    Assert.That(Data,Is.InstanceOf<List<float>>())
+
+[<Test>]
+let AddTwoWavesFirstRatioTest() =
+    let Data = AddTwoWaves 1. (SoundData(Amplitude0 = 1.).Create Sin) (SoundData(Amplitude0 = 0.5).Create Sin)
+    let MockData = SoundData(Amplitude0 = 1.).Create Sin
+
+    Assert.That(MockData,Is.EqualTo(Data))
+    Assert.That(Data,Is.InstanceOf<List<float>>())
+
+[<Test>]
+let AddTwoWavesSecondRatioTest() =
+    let Data = AddTwoWaves 0 (SoundData(Amplitude0 = 1.).Create Sin) (SoundData(Amplitude0 = 0.5).Create Sin)
+    let MockData = SoundData(Amplitude0 = 0.5).Create Sin
+
+    Assert.That(MockData,Is.EqualTo(Data))
+    Assert.That(Data,Is.InstanceOf<List<float>>())
     
 [<Test>]
-let addModulationWithASilentTest() =
-    let data = addModulation 0.5 (SoundData(amplitude0 = 0.).create Silence) (SoundData(amplitude0 = 1.).create Sin)
-    let mockData = (SoundData(amplitude0 = 1.).create Sin)
+let AddModulationWithASilentTest() =
+    let Data = AddModulation 0.5 (SoundData(Amplitude0 = 0.).Create Silence) (SoundData(Amplitude0 = 1.).Create Sin)
+    let MockData = (SoundData(Amplitude0 = 1.).Create Sin)
     
-    let roundData = data |> List.map (fun x -> Math.Round(x, 10))
-    let roundMockData = mockData |> List.map (fun x -> Math.Round(x, 10))
+    let RoundData = Data |> List.map (fun x -> Math.Round(x, 10))
+    let RoundMockData = MockData |> List.map (fun x -> Math.Round(x, 10))
 
-    Assert.That(roundMockData,Is.EqualTo(roundData))
-    Assert.That(data,Is.InstanceOf<List<float>>())
+    Assert.That(RoundMockData,Is.EqualTo(RoundData))
+    Assert.That(Data,Is.InstanceOf<List<float>>())
 
-
-[<Test>]
-let addModulationFirstRatioTest() =
-    let data = addModulation 1. (SoundData(amplitude0 = 0.5).create Sin) (SoundData(amplitude0 = 1.).create Sin)
-    let mockData = SoundData(amplitude0 = 0.5).create Sin
-
-    let roundData = data |> List.map (fun x -> Math.Round(x, 10))
-    let roundMockData = mockData |> List.map (fun x -> Math.Round(x, 10))
-
-    Assert.That(roundMockData.[300],Is.EqualTo(roundData.[300]))
-    Assert.That(roundData,Is.InstanceOf<List<float>>())
 
 [<Test>]
-let addModulationSecondRatioTest() =
-    let data = addModulation 0. (SoundData(amplitude0 = 0.).create Sin) (SoundData(amplitude0 = 0.5).create Sin)
-    let mockData = SoundData(amplitude0 = 0.5).create Sin
+let AddModulationFirstRatioTest() =
+    let Data = AddModulation 1. (SoundData(Amplitude0 = 0.5).Create Sin) (SoundData(Amplitude0 = 1.).Create Sin)
+    let MockData = SoundData(Amplitude0 = 0.5).Create Sin
 
-    let roundData = data |> List.map (fun x -> Math.Round(x, 10))
-    let roundMockData = mockData |> List.map (fun x -> Math.Round(x, 10))
+    let RoundData = Data |> List.map (fun x -> Math.Round(x, 10))
+    let RoundMockData = MockData |> List.map (fun x -> Math.Round(x, 10))
 
-    Assert.That(roundMockData.[300],Is.EqualTo(roundData.[300]))
-    Assert.That(data,Is.InstanceOf<List<float>>())
+    Assert.That(RoundMockData.[300],Is.EqualTo(RoundData.[300]))
+    Assert.That(RoundData,Is.InstanceOf<List<float>>())
+
+[<Test>]
+let AddModulationSecondRatioTest() =
+    let Data = addModulation 0. (SoundData(Amplitude0 = 0.).Create Sin) (SoundData(Amplitude0 = 0.5).Create Sin)
+    let MockData = SoundData(Amplitude0 = 0.5).Create Sin
+
+    let RoundData = Data |> List.map (fun x -> Math.Round(x, 10))
+    let RoundMockData = MockData |> List.map (fun x -> Math.Round(x, 10))
+
+    Assert.That(RoundMockData.[300],Is.EqualTo(RoundData.[300]))
+    Assert.That(Data,Is.InstanceOf<List<float>>())
