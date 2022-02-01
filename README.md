@@ -6,17 +6,25 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 
 ## **Getting Started**
 
+<br>
+
 ## Prerequisites
 
 - Download .Net 6.0 or newer
 
+<br>
+
 ## .Net CLI
 
-> dotnet add package Synthesizer.Json
+``dotnet add package Synthesizer --version 1.0.0``
+
+<br>
 
 ## windows
 
-> Install-Package Synthesizer.Json
+``Install-Package Synthesizer -Version 1.0.0``
+
+<br>
 
 ## **Project members**
 
@@ -29,8 +37,6 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 
 # Project documentation
 
-## **NuGet install**
-<!-- KFC goes here -->
 
 ## **Basic structure**
 
@@ -55,6 +61,69 @@ You can open it from your own path using ``readFromWavWithPath /path-to.mp3``
 
 ## **Writing to files / Saving**
 
+<br>
+
+## Usable notes 
+
+You can uses multiples notes to create your sound :
+
+- C = -9
+
+- Cs = -8 | Db = -8
+
+- D = -7
+
+- Ds = -6 | Eb = -6
+
+- E = -5
+
+- F = -4
+
+- Fs = -3 | Gb = -3
+
+- G = -2
+
+- Gs = -1 | Ab = -1
+
+- A = 0
+
+- As = 1 | Bb = 1
+
+- B = 2
+
+
+## Possible Waves
+
+You can create multiples type of waves in case you want to create differents types of sounds :
+
+
+- Sin
+
+- Square
+
+- Triangular
+
+- Saw
+
+- Silence 
+
+## Duration of elements
+
+You can control the durations of all the elements you use to create sounds : 
+
+- Whole
+
+- Half
+
+- Quarter
+
+- Eighth
+
+- Sixteenth
+
+- Seconds    
+
+
 ## Writing to wav files
 
 ## Writing to mp3 files
@@ -65,9 +134,15 @@ You can open it from your own path using ``readFromWavWithPath /path-to.mp3``
 
 ## **Creating basic audio data**
 
+You can create some basic audio using ``Synth.
+
+<br>
+
 The library supports the creation
 
 ## Creating audio data with an envelope
+
+In order to create a sound with an enveloppe you need to use ``Synth.SoundWithEnveloppe
 
 ## Creating audio data with a custom envelope
 
@@ -191,13 +266,39 @@ These two are equivalents.
 
 ## **Filters**
 
+## Usable Filters
+
+To complement your sounds you can add some filters : 
+
+- Flanger
+
+- Echo 
+
+- Reverb
+
+- Envelope
+
+- LFO AM 
+
+- LFO FM
+
+- Low Pass
+
+- High Pass
+
 ## Apply multiple filters at once
 
 ## Cutting audio
 
+
+
 ## Changing amplitude
 
 ## Reverb, Echo and chorus
+
+## Frequency analysis 
+
+
 
 ## Flanger
 
@@ -227,3 +328,4 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 [^1]: Octaves: A series of eight notes occupying the interval between (and including) two notes, one having twice or half the frequency of vibration of the other.
 
 [^2]: Notes: A note is a symbol denoting a musical sound.
+
