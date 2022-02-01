@@ -89,9 +89,10 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
         Utility.CutEnd x.sampleRate (float data.Length/x.sampleRate - timeStart) data @ Utility.CutStart x.sampleRate (float data.Length/x.sampleRate - timeEnd) data
 
     member x.CutEdge timeStart timeEnd (data:List<float>) =
-        Utility.CutStart x.sampleRate timeStart (Utility.CutEnt x.sampleRate timeEnd data)
+        Utility.CutStart x.sampleRate timeStart (Utility.CutEnd x.sampleRate timeEnd data)
         
     member x.CutCorners limit (data:List<float>) =
         Utility.CutCorners limit data
-    let ApplyFilters filters data =
+
+    member x.ApplyFilters filters data =
         Filter.ApplyFilters filters data
