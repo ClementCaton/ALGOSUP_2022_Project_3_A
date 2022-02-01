@@ -110,6 +110,33 @@ Creating silence is as simple as calling the ``Synth.silence (duration:Duration)
 let silence = Synth.silence (Seconds 2) // Returns 2 seconds of silence
 ```
 
+## **Cutting audio**
+
+Cutting audio is simple. You can use the following functions
+
+- ``Synth.cutStart (sampleRate:float) (time:float) (data:List<float>)`` : Cuts the start of the audio data returning the end part
+  
+- ``Synth.cutEnd (sampleRate:float) (time:float) (data:List<float>)`` : Cuts the end of the audio data returning the first part
+  
+- ``Synth.cutMiddle (sampleRate:float) (timeStart:float) (timeEnd:float) (data:List<float>)`` : Cuts out the middle of the audio data and returns the edges merged together
+  
+- ``Synth.cutEdge (sampleRate:float) (timeStart:float) (timeEnd:float) (data:List<float>)`` : Cuts of both ends of the audio data and returns the middle part
+
+Example:
+```fs
+let a = Synth.note (Seconds 1) Note.A 4
+let b = Synth.note (Seconds 1) Note.B 4
+let c = Synth.note (Seconds 1) Note.C 4
+let d = Synth.note (Seconds 1) Note.D 4
+
+let full = Synth.compose 0 [a; b; c; d;]        // Complete sound, takes 4 second and plays 4 different notes
+
+let lastThree = Synth.cutStart 44100. 1. full   // Cuts first note, leaving last 3
+let firstThree = Synth.cutEnd 44100. 1. full    // Cuts last note, leaving first 3
+let edges = Synth.cutMiddle 44100. 1. 1. full   // Cuts out the 2 middle notes, leaving the first and the last ones
+let second = Synth.cutMiddle 44100. 1. 2. full  // Cuts the first and the last 2 notes, leaving the second one
+```
+
 ## **Additioning audio data**
 
 ## Additioning audio with a predefined ratio
@@ -195,33 +222,6 @@ These two are equivalents.
 ## **Filters**
 
 ## Apply multiple filters at once
-
-## Cutting audio
-
-Cutting audio is simple. You can use the following functions
-
-- ``Synth.cutStart (sampleRate:float) (time:float) (data:List<float>)`` : Cuts the start of the audio data returning the end part
-  
-- ``Synth.cutEnd (sampleRate:float) (time:float) (data:List<float>)`` : Cuts the end of the audio data returning the first part
-  
-- ``Synth.cutMiddle (sampleRate:float) (timeStart:float) (timeEnd:float) (data:List<float>)`` : Cuts out the middle of the audio data and returns the edges merged together
-  
-- ``Synth.cutEdge (sampleRate:float) (timeStart:float) (timeEnd:float) (data:List<float>)`` : Cuts of both ends of the audio data and returns the middle part
-
-Example:
-```fs
-let a = Synth.note (Seconds 1) Note.A 4
-let b = Synth.note (Seconds 1) Note.B 4
-let c = Synth.note (Seconds 1) Note.C 4
-let d = Synth.note (Seconds 1) Note.D 4
-
-let full = Synth.compose 0 [a; b; c; d;]        // Complete sound, takes 4 second and plays 4 different notes
-
-let lastThree = Synth.cutStart 44100. 1. full   // Cuts first note, leaving last 3
-let firstThree = Synth.cutEnd 44100. 1. full    // Cuts last note, leaving first 3
-let edges = Synth.cutMiddle 44100. 1. 1. full   // Cuts out the 2 middle notes, leaving the first and the last ones
-let second = Synth.cutMiddle 44100. 1. 2. full  // Cuts the first and the last 2 notes, leaving the second one
-```
 
 ## Changing amplitude
 
