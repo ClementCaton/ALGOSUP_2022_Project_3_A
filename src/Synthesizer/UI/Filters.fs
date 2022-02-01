@@ -30,20 +30,36 @@ module Filter =
         output <- changeAmplitude oldMax output
         Utility.Overdrive 1. output
 
-    let reverb (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) = 
-        let rec revebInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
+
+    let Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) = 
+        let rec RepeaterInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
             if nbEcho=0 then
                 Utility.add [dryData; wetData]
             else
-                let silence = SoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = 114).create(Silence)
+                let silence = SoundData(frequency0 = 0, duration0 = (Seconds (delay*float nbEcho)), bpm0 = 114).create(Silence)
                 let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
-                revebInner (nbEcho-1) decay delay sampleRate updatedWetData dryData
+                RepeaterInner (nbEcho-1) decay delay sampleRate updatedWetData dryData
 
-        revebInner nbEcho decay delay sampleRate [] dryData
+        RepeaterInner nbEcho decay delay sampleRate [] dryData
+
+    let Reverb (delayRatio:float) (minAmpRatio:float) (decay:float) (sampleRate:float) (dryData:List<float>) =
+        let delay = (float dryData.Length * delayRatio) / sampleRate
+        let rec calcSteps minAmp decay current step =
+            if minAmp >= current then
+                step
+            else
+                calcSteps minAmp decay (current*decay) (step+1)
+
+        let nbEcho = calcSteps minAmpRatio decay 1. 0
+
+        Repeater nbEcho decay delay sampleRate dryData
+    
+    let Echo (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) =
+        Repeater nbEcho decay (float dryData.Length / sampleRate + delay) sampleRate dryData
+
+    //TODO: let chorus
 
 
-
-    //! WIP
     let flanger (delay:float) (speed:float) (sampleRate:float) (dryData:List<float>) =
         let step = speed/1000.*sampleRate
         let silence = SoundData(frequency0 = 0, sampleRate0 = sampleRate,  duration0 = (Seconds (delay/1000.)), bpm0 = 114).create(Silence)
@@ -53,8 +69,6 @@ module Filter =
             if wet.Length >= dry.Length then wet
 
             elif Math.Floor(float current%step) = 0 then
-                printfn $"{float wet.Length / float dry.Length}"
-
                 let addition = [for i in 0 .. (rate) -> dry[current]]
                 flangerInner step (rate+initialRate) initialRate (current+1) dry (wet @ addition)
 
@@ -152,3 +166,10 @@ module Filter =
         let lowPassData = highPass sampleRate lowFreq data
         let highPassData = lowPass sampleRate highFreq data
         Utility.add [lowPassData; highPassData]
+
+    let ApplyFilters filterList data =
+        let mutable output = List.empty
+        filterList |> List.map (fun func -> 
+            output <- func data
+        ) |> ignore
+        output
