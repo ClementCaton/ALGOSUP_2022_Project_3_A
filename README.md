@@ -152,7 +152,7 @@ The solution was to add in a filter that gradually lowers the amplitude of the n
 |          Before cutCorne             |          After cutCorner            |
 |:------------------------------------:|:-----------------------------------:|
 | ![Before](Reports/readme/cut_b.png)  | ![After](Reports/readme/cut_a.png)  |
-
+<sup>* for the shake of the example, the filter has been exagerated</sup>
 
 Therefore; the``Synth.compose (sounds:List<float>)`` function has a default cutCorner value of 100 (this means it cuts away from the first and last 100 bytes from each note).
 
