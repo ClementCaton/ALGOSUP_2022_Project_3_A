@@ -7,7 +7,7 @@ module Filter =
         x |> List.map (( * ) multiplicator)
 
 
-    let addTwoWaves ratio (y:List<float>) (x:List<float>) =
+    let addTwoWaves ratio (x:List<float>) (y:List<float>) =
         let mutable output = List.empty
         if not (x.Length = y.Length) then
             let diff = Math.Abs(x.Length - y.Length)
@@ -22,10 +22,10 @@ module Filter =
             output <- List.init x.Length (fun i -> (x[i] * ratio) + (y[i] * (1.-ratio)))
         output
 
-    let addModulation ratio (y:List<float>) (x:List<float>) = 
+    let addModulation ratio (x:List<float>) (y:List<float>) = 
         let mutable oldMax = x |> List.max
         if y |> List.max > oldMax then oldMax <- y |> List.max
-        let mutable output = (addTwoWaves ratio y x)
+        let mutable output = (addTwoWaves ratio x y)
         output <- changeAmplitude (1./(output|>List.max)) output
         output <- changeAmplitude oldMax output
         Utility.Overdrive 1. output
@@ -80,13 +80,7 @@ module Filter =
 
         Utility.add [dryData; (silence @ wetData)]
 
-        
-    let envelope sustain attack hold0 decay0 release0 (sampleRate:float) (data:List<float>) = //release substracts from hold because I don't have the data for the release periode
-        let hold = hold0 + attack
-        let decay = hold + decay0
-        let release = (float data.Length/float sampleRate) - release0
-        
-        let pinchAmp (dataPoints0: List<float * float>) (sampleRate:float) (data:List<float>) =
+    let CustomEnvelope (dataPoints0: List<float * float>) (sampleRate:float) (data:List<float>) =
             let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
     
             let calcSegment (fromTime:float) (toTime:float) fromAmp toAmp =
@@ -96,8 +90,15 @@ module Filter =
             let output = List.map2(fun fromT toT -> calcSegment (sampleRate * (fst fromT)) (sampleRate * (fst toT)) (snd fromT) (snd toT)) dataPoints[ .. dataPoints.Length-2] dataPoints[1 ..]
     
             output |> List.concat
+    
+    let envelope sustain attack hold0 decay0 release0 (sampleRate:float) (data:List<float>) = //release substracts from hold because I don't have the data for the release periode
+        let hold = hold0 + attack
+        let decay = hold + decay0
+        let release = (float data.Length/float sampleRate) - release0
+        
+        
 
-        pinchAmp ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (release, sustain); ((float data.Length/float sampleRate), 0.)]) sampleRate data //error here
+        CustomEnvelope ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (release, sustain); ((float data.Length/float sampleRate), 0.)]) sampleRate data //error here
         //pinchAmp data ([(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); ((float data.Length/float sampleRate), sustain); (release, 0.)]) sampleRate  //error here
 
 
