@@ -3,12 +3,15 @@ namespace Synthesizer
 open System
 open System.IO
 
-type Synth(?baseBpm:float, ?baseSampleRate:float) =
+type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
 
     member val bpm = defaultArg baseBpm 90.
         with get, set
     
     member val sampleRate = defaultArg baseSampleRate 44100.
+        with get, set
+
+    member val waveType = defaultArg baseWaveType Sin
         with get, set
     
     member x.GetNoteFreq octav note =
@@ -45,7 +48,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float) =
 
     member x.Note duration mNote octave =
         let freq = x.GetNoteFreq mNote octave
-        x.Sound freq duration Sin
+        x.Sound freq duration x.waveType
 
     member x.Silence duration =
         x.Sound 0 duration Silence
