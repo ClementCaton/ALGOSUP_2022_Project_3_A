@@ -1,6 +1,7 @@
 # Header composition of a WAV file
 
 ## File header
+
 | Name         | Size    | Value                | Description                                            |
 | ------------ | ------- | -------------------- | ------------------------------------------------------ |
 | File type    | 4 bytes | Constant "RIFF"      |                                                        |
@@ -8,6 +9,7 @@
 | File subtype | 4 bytes | Constant "WAVE"      |                                                        |
 
 ## Format header
+
 | Name                | Size    | Value                                         | Description                                      |
 | ------------------- | ------- | --------------------------------------------- | ------------------------------------------------ |
 | Format chunk marker | 4 bytes | Constant "fmt "                               |                                                  |
@@ -20,6 +22,7 @@
 | Bits per sample     | 2 bytes | Variable                                      | Number of bits to represent a sample             |
 
 ## Data header
+
 | Name              | Size    | Value                                        | Description                        |
 | ----------------- | ------- | -------------------------------------------- | ---------------------------------- |
 | Data chunk marker | 4 bytes | Constant "data"                              |

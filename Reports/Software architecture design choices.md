@@ -1,13 +1,14 @@
 # Software architecture design choices
-## Architecture tree :
+
+## Architecture tree
+
 ![tree](./Files/design.png)
 
 <br>
 
 The architecture of the application is planned to possess three main parts :
 
-
-### 
+###
 
 ## User's program
 

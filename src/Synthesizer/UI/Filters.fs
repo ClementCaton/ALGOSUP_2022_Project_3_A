@@ -22,21 +22,27 @@ module Filter =
             output <- List.init x.Length (fun i -> (x[i] * ratio) + (y[i] * (1.-ratio)))
         output
 
-    //! Should be modified
-    // let Reverb (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (bpm:float) (dryData:List<float>) = 
-    //     let rec RevebInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
-    //         if nbEcho=0 then
-    //             Utility.Add [dryData; wetData]
-    //         else
-    //             let silence = SoundData(frequency0 = 0, duration0 = (Seconds (delay * float nbEcho)), bpm0 = bpm).create(Silence)
-    //             let updatedWetData = Utility.Add [wetData; List.concat [silence ; ChangeAmplitude decay dryData]]
-    //             RevebInner (nbEcho-1) decay delay sampleRate updatedWetData dryData
+    let Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) = 
+        let rec RepeaterInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
+            if nbEcho=0 then
+                Utility.add [dryData; wetData]
+            else
+                let silence = SoundData(frequency0 = 0, duration0 = (Seconds (delay*float nbEcho)), bpm0 = 114).create(Silence)
+                let updatedWetData = Utility.add [wetData; List.concat [silence ; changeAmplitude decay dryData]]
+                RepeaterInner (nbEcho-1) decay delay sampleRate updatedWetData dryData
 
-    //     RevebInner nbEcho decay delay sampleRate [] dryData
+        RepeaterInner nbEcho decay delay sampleRate [] dryData
+
+        let nbEcho = calcSteps minAmpRatio decay 1. 0
+
+        Repeater nbEcho decay delay sampleRate dryData
+    
+    let Echo (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) =
+        Repeater nbEcho decay (float dryData.Length / sampleRate + delay) sampleRate dryData
+
+    //TODO: let chorus
 
 
-
-    //! WIP
     let Flanger (delay:float) (speed:float) (sampleRate:float) (bpm:float) (dryData:List<float>) =
         let step = speed/1000.*sampleRate
         let silence = SoundData(frequency0 = 0, sampleRate0 = sampleRate,  duration0 = (Seconds (delay/1000.)), bpm0 = bpm).Create(Silence)
@@ -46,8 +52,6 @@ module Filter =
             if wet.Length >= dry.Length then wet
 
             elif Math.Floor(float current%step) = 0 then
-                // printfn $"{float wet.Length / float dry.Length}"
-
                 let addition = [for i in 0 .. (rate) -> dry[current]]
                 FlangerInner step (rate+initialRate) initialRate (current+1) dry (wet @ addition)
 
@@ -138,7 +142,15 @@ module Filter =
     let BandPass sampleRate lowFreq highFreq (data:List<float>) = 
         data |> LowPass sampleRate lowFreq |> HighPass sampleRate highFreq
 
+
     let RejectBand sampleRate lowFreq highFreq (data:List<float>) = 
         let lowPassData = HighPass sampleRate lowFreq data
         let highPassData = LowPass sampleRate highFreq data
         Utility.Add [lowPassData; highPassData]
+
+    let ApplyFilters filterList data =
+        let mutable output = List.empty
+        filterList |> List.map (fun func -> 
+            output <- func data
+        ) |> ignore
+        output
