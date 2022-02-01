@@ -47,8 +47,6 @@ You can open it from your own path using ``readFromWavWithPath /path-to.Wav``
 
 ## Reading mp3 files
 
-<span style="color: red;">WIP</span>
-
 You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav name.mp3``
 
 You can open it from your own path using ``readFromWavWithPath /path-to.mp3``
@@ -57,19 +55,27 @@ You can open it from your own path using ``readFromWavWithPath /path-to.mp3``
 
 ## Writing to wav files
 
+<span style="color: red;">WIP</span>
+
 ## Writing to mp3 files
 
 <span style="color: red;">WIP</span>
 
 ## **Dealing with stereo**
 
+<span style="color: red;">WIP</span>
+
 ## **Creating basic audio data**
 
-The library supports the creation
+<span style="color: red;">WIP</span>
 
 ## Creating audio data with an envelope
 
+<span style="color: red;">WIP</span>
+
 ## Creating audio data with a custom envelope
+
+<span style="color: red;">WIP</span>
 
 ## **Finding frequencies from notes and octaves**
 
@@ -77,7 +83,6 @@ A more simplified way to find the sound you are looking for is trought musical o
 To call on this form of notation you'll have to use the ``Synth.getNoteFreq (octav:int) (note:Note)`` function to get the right frequency.
 
 Example:
-
 ```fs
 let note = Synth.getNoteFreq Note.C 4 // This returns the frequency of the C4 note
 ```
@@ -85,7 +90,6 @@ let note = Synth.getNoteFreq Note.C 4 // This returns the frequency of the C4 no
 Alternatively, you could directly create a SinWave using the ``Synth.note (duration:Duration) (note:Note) (octav:int)``.
 
 Example:
-
 ```fs
 let note = Synth.note Half Note.C 4 // This returns the frequency a half duration of the C4 note
 ```
@@ -139,7 +143,11 @@ let second = Synth.cutMiddle 44100. 1. 2. full  // Cuts the first and the last 2
 
 ## **Additioning audio data**
 
+<span style="color: red;">WIP</span>
+
 ## Additioning audio with a predefined ratio
+
+<span style="color: red;">WIP</span>
 
 ## **Composing**
 
@@ -217,29 +225,75 @@ These two are equivalents.
 
 ## **Preview**
 
+Its possible to create a preview of ant audio loaded into the filter using the ``Synth.preview (title:string) (sound:List<float>)`` function.
+
+Example:
+```fs
+let basic = Synth.note Whole Note.A 2       // reating a basic note
+let cut = Utility.cutCorners 5000 basic     // Making it look a bit more interresting
+
+Synth.preview "Example" cut |> ignore       // Launch preview
+```
+The above example automatically opens the browser with the following image:
+![Preview](Reports/readme/preview.png)
+
+Tools to zoom/zoom out are also present on the page.
+
 ## **Frequency analysis**
+
+<span style="color: red;">WIP</span>
 
 ## **Filters**
 
+<span style="color: red;">WIP</span>
+
 ## Apply multiple filters at once
+
+<span style="color: red;">WIP</span>
 
 ## Changing amplitude
 
-## Reverb, Echo and chorus
+<span style="color: red;">WIP</span>
+
+## Reverb
+
+<span style="color: red;">WIP</span>
+
+## Echo
+
+<span style="color: red;">WIP</span>
+
+## Custom repeater filter
+
+<span style="color: red;">WIP</span>
 
 ## Flanger
 
+<span style="color: red;">WIP</span>
+
 ## Envelope
+
+<span style="color: red;">WIP</span>
 
 ## Custom envelope
 
+<span style="color: red;">WIP</span>
+
 ## Low frequency oscillation
+
+<span style="color: red;">WIP</span>
 
 ### AM
 
+<span style="color: red;">WIP</span>
+
 ### FM
 
+<span style="color: red;">WIP</span>
+
 ## LowPass / HighPass / BandPass / RejectBand filters
+
+<span style="color: red;">WIP</span>
 
 # Footnotes
 

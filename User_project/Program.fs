@@ -10,11 +10,10 @@ open Synthesizer
 
 
 module Program =
-    let basic = Synth.Sound 440. Quarter Sin
-    let cut = Utility.cutCorners 5000 basic
+    let basic = Synth.note Whole Note.A 2       // reating a basic note
+    let cut = Utility.cutCorners 10000 basic     // Making it look a bit more interresting
 
-    Synth.writeToWav "basic.wav" [basic]
-    Synth.writeToWav "cut.wav" [cut]
+    Synth.preview "Example" cut |> ignore
 
     // let input = Synth.add [Synth.note Whole Note.A 2; Synth.note Whole Note.A 3; Synth.note Whole Note.A 4; Synth.note Whole Note.A 5]
     // printfn "Wanted:   %A" [CalcNoteFreq(Note.A, 2).Output; CalcNoteFreq(Note.A, 3).Output; CalcNoteFreq(Note.A, 4).Output; CalcNoteFreq(Note.A, 5).Output]
