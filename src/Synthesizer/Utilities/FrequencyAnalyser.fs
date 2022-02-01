@@ -21,20 +21,20 @@ module FrequencyAnalysis =
     | []  -> []
     | [x] -> [x] 
     | x ->
-        let Multiplier = -2. * Math.PI / float x.Length
+        let multiplier = -2. * Math.PI / float x.Length
         x
         |> List.mapi (fun i c -> i % 2 = 0, c)
         |> List.partition fst
         |> fun (even, odd) -> Fft (List.map snd even), Fft (List.map snd odd)
         ||> List.mapi2 (fun i even odd -> 
-            let Btf = odd * Complex.FromPolarCoordinates(1., Multiplier * float i)
+            let Btf = odd * Complex.FromPolarCoordinates(1., multiplier * float i)
             even + Btf, even - Btf
         )
         |> List.unzip
         ||> List.append
 
-    let Fourier SampleRate (x: List<float>) =
-        let N =
+    let Fourier sampleRate (x: List<float>) =
+        let n =
             x
             |> List.length
             |> float
@@ -44,25 +44,25 @@ module FrequencyAnalysis =
             |> int
         // n is a power of 2 greater or equal to the size of x
 
-        let Increment = SampleRate / (float N - 2.) //* Given by Robert, taken from a library he uses
+        let increment = sampleRate / (float n - 2.) //* Given by Robert, taken from a library he uses
 
-        (N - x.Length, 0.)
+        (n - x.Length, 0.)
         ||> List.replicate
         |> List.append x
         // Now a list with a length that is a power of two
         |> List.map (fun f -> Complex(f, 0))
-        |> fft
+        |> Fft
         |> List.take (x.Length / 2)
         |> List.mapi (fun i c -> float i * increment, c.Magnitude / float n)
         |> Map.ofList
 
-    let LocalMaxValuesIndices (Threshold: float) (Map: Map<float, float>) =
+    let LocalMaxValuesIndices (threshold: float) (map: Map<float, float>) =
         // The threshold is the percentage between the bottom and the top where all point below are discarded to remove noise
         match Map.count map with
         | 0 -> []
         | _ ->
-            if Threshold < 0. || Threshold > 1. then failwith "Threshold must be a float in the range [0, 1]"
-            let Limit = (1. - Threshold) * (Seq.min (Map.values map)) + Threshold * (Seq.max (Map.values map))
+            if threshold < 0. || threshold > 1. then failwith "threshold must be a float in the range [0, 1]"
+            let limit = (1. - threshold) * (Seq.min (Map.values map)) + threshold * (Seq.max (Map.values map))
             //printfn "%f %f %f" (List.min values) (List.max values) (List.average values)
             map
             |> Map.add -infinity -infinity

@@ -11,10 +11,10 @@ let Setup () =
 
 [<Test>]
 let CreateTest() =
-    let SoundDataCreater = new SoundData()
-    let Data = SoundDataCreater.Create Silence
+    let soundDataCreater = new SoundData()
+    let data = soundDataCreater.Create Silence
 
-    let MockData = List.init (int(44100.*60./90.)) (fun i -> 0.)
+    let mockData = List.init (int(44100.*60./90.)) (fun i -> 0.)
 
-    Assert.That (Data, Is.EqualTo MockData)
-    Assert.That (Data, Is.InstanceOf(typeof<List<float>>))
+    Assert.That (data, Is.EqualTo mockData)
+    Assert.That (data, Is.InstanceOf(typeof<List<float>>))

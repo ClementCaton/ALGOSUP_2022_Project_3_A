@@ -20,18 +20,18 @@ type BaseWaves =
     | Silence
 
 type SoundData(
-        ?OverDrive0:float,
-        ?Duration0:Duration, // In seconds
-        ?ArraySize0:float,
-        ?Amplitude0:float,
-        ?VerticalShift0:float,
-        ?PhaseShift0:float,
-        ?Frequency0:float,
-        ?SampleRate0:float,
-        ?Bpm0:float) =
+        ?overDrive0:float,
+        ?duration0:Duration, // In seconds
+        ?arraySize0:float,
+        ?amplitude0:float,
+        ?verticalShift0:float,
+        ?phaseShift0:float,
+        ?frequency0:float,
+        ?sampleRate0:float,
+        ?bpm0:float) =
 
-    let GetDuration DurationType Bpm =
-        match DurationType with
+    let GetDuration durationType bpm =
+        match durationType with
         | Whole ->  4.                  * 60./bpm
         | Half -> 2.                    * 60./bpm
         | Quarter -> 1.                 * 60./bpm
@@ -40,51 +40,51 @@ type SoundData(
         | Custom value -> value * 4.    * 60./bpm
         | Seconds value -> value
 
-    let Duration = GetDuration (DefaultArg Duration0 Quarter) (DefaultArg Bpm0 90.) // In seconds
-    let SampleRate = defaultArg SampleRate0 44100.
-    let ArraySize = int ((defaultArg ArraySize0 44100.) * Duration) 
-    let Amplitude = defaultArg Amplitude0 1.
-    let PhaseShift = (defaultArg PhaseShift0 0.) * Math.PI
-    let VerticalShift = defaultArg VerticalShift0 0.
-    let Frequency = defaultArg Frequency0 440.
-    let OverDrive = defaultArg OverDrive0 1.
+    let duration = GetDuration (defaultArg duration0 Quarter) (defaultArg bpm0 90.) // In seconds
+    let sampleRate = defaultArg sampleRate0 44100.
+    let arraySize = int ((defaultArg arraySize0 44100.) * duration) 
+    let amplitude = defaultArg amplitude0 1.
+    let phaseShift = (defaultArg phaseShift0 0.) * Math.PI
+    let verticalShift = defaultArg verticalShift0 0.
+    let frequency = defaultArg frequency0 440.
+    let overDrive = defaultArg overDrive0 1.
 
     let ToByte x = x/2. * 255. |> byte
     //https://www.geogebra.org/m/NS9DJf4S
 
-    let SecTobyte (Sec:float) =
-        Sec * SampleRate
+    let SecTobyte (sec:float) =
+        sec * sampleRate
     
-    let WaveFunc WaveType = 
-            match WaveType with
+    let WaveFunc waveType = 
+            match waveType with
             | Sin -> FourWaves.SinWave
             | Square -> FourWaves.SquareWave
             | Triangular -> FourWaves.TriangleWave
             | Saw -> FourWaves.SawWave
-            | Silence -> (fun Freq Amp VShift PhaseShift T -> 0)
+            | Silence -> (fun freq amp vShift phaseShift t -> 0)
 
-    member x.Create WaveType =
-        let A = List.init ArraySize (fun I -> ((WaveFunc WaveType) Frequency Amplitude VerticalShift PhaseShift (float i/SampleRate)))
-        Utility.Overdrive OverDrive A
+    member x.Create waveType =
+        let a = List.init arraySize (fun i -> ((WaveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate)))
+        Utility.Overdrive overDrive a
 
-    member x.CreateFromDataPoints WaveType (DataPoints0: List<float * float>) = // (time, amp)
-        let DataPoints = if (fst DataPoints0[0] <> 0.) then (0., 0.) :: DataPoints0 else DataPoints0
-        let FlatSoundData = Utility.Overdrive 1. (List.init (int (SecTobyte (fst DataPoints[DataPoints.Length-1])))  (fun i -> ((waveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate))))
+    member x.CreateFromDataPoints waveType (dataPoints0: List<float * float>) = // (time, amp)
+        let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
+        let flatSoundData = Utility.Overdrive 1. (List.init (int (SecTobyte (fst dataPoints[dataPoints.Length-1])))  (fun i -> ((WaveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate))))
 
-        let CalcSegment (FromTime:float) (ToTime:float) FromAmp ToAmp =
-            let Step = (toAmp - fromAmp) / (toTime - fromTime)
-            List.mapi(fun I FlatPoint -> (FlatPoint * (FromAmp + (float Step * float I)))) FlatSoundData[int FromTime .. int ToTime]
+        let CalcSegment (fromTime:float) (toTime:float) fromAmp toAmp =
+            let step = (toAmp - fromAmp) / (toTime - fromTime)
+            List.mapi(fun i flatPoint -> (flatPoint * (fromAmp + (float step * float i)))) flatSoundData[int fromTime .. int toTime]
 
-        let Output = List.map2(fun FromT ToT -> CalcSegment (SecTobyte (fst FromT)) (SecTobyte (fst ToT)) (snd fromT) (snd ToT)) DataPoints[ .. DataPoints.Length-2] DataPoints[1 ..]
+        let output = List.map2(fun fromT toT -> CalcSegment (SecTobyte (fst fromT)) (SecTobyte (fst toT)) (snd fromT) (snd toT)) dataPoints[ .. dataPoints.Length-2] dataPoints[1 ..]
 
         output |> List.concat
 
-    member x.CreateWithEnvelope WaveType Sustain Attack Hold0 Decay0 Release0 =  // time, time, time, amp, time
-        let Hold = Hold0 + Attack
-        let Decay = Hold + Decay0
-        let Release = Duration + Release0
+    member x.CreateWithEnvelope waveType sustain attack hold0 decay0 release0 =  // time, time, time, amp, time
+        let Hold = hold0 + attack
+        let Decay = Hold + decay0
+        let Release = duration + release0
 
-        x.CreateFromDataPoints WaveType [(0., 0.); (Attack, 1.); (Hold, 1.); (Decay, Sustain); (Duration, Sustain); (Release, 0.)]
+        x.CreateFromDataPoints waveType [(0., 0.); (attack, 1.); (Hold, 1.); (Decay, sustain); (duration, sustain); (Release, 0.)]
 
 
 

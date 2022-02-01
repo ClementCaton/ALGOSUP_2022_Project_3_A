@@ -6,44 +6,44 @@ open System.IO
 
 type ReadWav() =
 
-    let FromBytes NbChannels BytesPerSample Bytes =
+    let FromBytes nbChannels bytesPerSample bytes =
 
-        match BytesPerSample with
+        match bytesPerSample with
         | 1 -> [List.map (fun b -> (float b) / 255. * 2. - 1.) bytes]
         | _ ->
             bytes
-            |> List.chunkBySize (BytesPerSample * NbChannels) // Split in samples
-            |> List.map (List.ChunkBySize BytesPerSample) // Split each samples in channels
+            |> List.chunkBySize (bytesPerSample * nbChannels) // Split in samples
+            |> List.map (List.chunkBySize bytesPerSample) // Split each samples in channels
             |> List.transpose // Now channels of samples
             |> List.map (
                 List.map List.indexed
                 >> List.map (List.fold (fun v (k, b) -> v + (float b) * (256. ** float k)) 0.)
-                >> List.map (fun x -> x / 256. ** (float BytesPerSample))
+                >> List.map (fun x -> x / 256. ** (float bytesPerSample))
                 >> List.map (fun x -> (x * 2. + 1.) % 2. - 1.)
             )
 
-    member x.Read Stream =
-        use Reader = new BinaryReader(Stream)
+    member x.Read stream =
+        use reader = new BinaryReader(stream)
 
-        Reader.ReadBytes(20) |> ignore // ignore header ?
-        let Pcm = Reader.ReadInt16() // ignore ?
-        let NbChannels = int (Reader.ReadUInt16())
-        let SampleRate = Reader.ReadInt32()
-        let ByteRate = Reader.ReadInt32()
-        let BlockAlign = Reader.ReadInt16()
-        let BitsPerSample = int (Reader.ReadUInt16())
+        reader.ReadBytes(20) |> ignore // ignore header ?
+        let pcm = reader.ReadInt16() // ignore ?
+        let nbChannels = int (reader.ReadUInt16())
+        let sampleRate = reader.ReadInt32()
+        let byteRate = reader.ReadInt32()
+        let blockAlign = reader.ReadInt16()
+        let bitsPerSample = int (reader.ReadUInt16())
 
         // Skip unwanted chunks
         let mutable ChunkType = ""
         let mutable ByteDataLength = 0
         while ChunkType <> "data" do
-            Reader.ReadBytes(ByteDataLength) |> ignore
-            ChunkType <- Text.Encoding.UTF8.GetString(Reader.ReadBytes(4))
-            ByteDataLength <- Reader.ReadInt32()
+            reader.ReadBytes(ByteDataLength) |> ignore
+            ChunkType <- Text.Encoding.UTF8.GetString(reader.ReadBytes(4))
+            ByteDataLength <- reader.ReadInt32()
         
         // data
-        let ByteData = Reader.ReadBytes(ByteDataLength)
-        let Data = ByteData |> List.ofArray |> FromBytes NbChannels (BitsPerSample/8)
-        let Duration = float (List.length data.[0]) / float SampleRate
+        let byteData = reader.ReadBytes(ByteDataLength)
+        let data = byteData |> List.ofArray |> FromBytes nbChannels (bitsPerSample/8)
+        let duration = float (List.length data.[0]) / float sampleRate
 
-        Data, Duration, SampleRate, BitsPerSample
+        data, duration, sampleRate, bitsPerSample
