@@ -46,9 +46,9 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     member x.ReadFromWavWithPath path =
         ReadWav().Read (File.Open(path, FileMode.Open))
 
-    member x.ReadFromMP3 name = readMP3().Header ((new BinaryReader(File.Open("./Output/" + name, FileMode.Open))).ReadBytes(1000) |>  Array.toList |> List.map(fun i -> int i))
+    member x.ReadFromMP3 name = readMP3(File.Open("./Output/" + name, FileMode.Open)).mp3Decoding
 
-    member x.ReadFromMP3WithPath path = readMP3().Header ((new BinaryReader(File.Open(path, FileMode.Open))).ReadBytes(1000) |>  Array.toList |> List.map(fun i -> int i))
+    member x.ReadFromMP3WithPath path = readMP3(File.Open(path, FileMode.Open)).mp3Decoding
 
     member x.Note duration mNote octave =
         let freq = x.GetNoteFreq mNote octave

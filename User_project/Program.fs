@@ -10,5 +10,5 @@ open Synthesizer
 
 
 module Program =
-    let d = (new Synth()).ReadFromMP3 "Silence.mp3"
+    let d = (new Synth()).ReadFromMP3 "440.mp3"
     printfn "%A" (d) 

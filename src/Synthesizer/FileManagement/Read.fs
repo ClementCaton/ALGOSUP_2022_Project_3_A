@@ -49,7 +49,10 @@ type ReadWav() =
         data, duration, sampleRate, bitsPerSample
 
 
-type readMP3() =
+type readMP3(stream:Stream) =
+
+    let reader = (new BinaryReader(stream)).ReadBytes(int stream.Length)
+
     let rec BinaryConverter (emptArr:List<int>) byte recnum=
         if recnum > 0 then
             BinaryConverter ((byte%2)::emptArr) (byte/2) (recnum-1)
@@ -59,9 +62,10 @@ type readMP3() =
     let FirstHeader (data:List<int>) =
         seq{0..(data.Length-2)} |> Seq.tryFindIndex(fun d -> data.[d] = 255 && data.[d+1] > 223)
 
-    member x.Header (data:List<int>) =
-        let fh = FirstHeader data
-        match fh with 
+    let mutable currentHeaderIndex:option<int> = FirstHeader (reader |>  Array.toList |> List.map(fun i -> int i))
+
+    let Header (data:List<int>) =
+        match currentHeaderIndex with 
         | Some int -> // AAAAAAAA AAABBCCD EEEEFFGH IIJJKLMM format
             let bit = BinaryConverter [] data.[int+1] 8 // AAABBCCD using only BBCCD
             let MPEGVer =
@@ -102,7 +106,7 @@ type readMP3() =
                                 | [1; 1; 0; 0] -> [384; 256; 224; 192; 128]
                                 | [1; 1; 0; 1] -> [416; 320; 256; 224; 144]
                                 | [1; 1; 1; 0] -> [448; 384; 320; 256; 160]
-                                | [1; 1; 1; 1] -> [0; 0; 0; 0; 1] // bad bad bad bad (not permitted)
+                                | [1; 1; 1; 1] -> [0; 0; 0; 0; 0] // bad bad bad bad (not permitted)
                                 | _ -> failwith "bitRate not defined or non existing bitRate used"
             (*
                 V1 - MPEG Version 1
@@ -149,3 +153,11 @@ type readMP3() =
             let nextFrameHeader = ((144 * 1000 * bitRate) / sampleRate) + padding
             MPEGVer, layerDesc, bitProtection, bitRate, sampleRate, padding, chanMode, nextFrameHeader
         | None -> failwith "header not found"
+
+    member x.mp3Decoding =
+        let hData = reader |>  Array.toList |> List.map(fun i -> int i)
+        let MPEGVer, layerDesc, bitProtection, bitRate, sampleRate, padding, chanMode, nextFrameHeader = Header hData
+        currentHeaderIndex <- match currentHeaderIndex with
+                                | Some int ->  Some (int + nextFrameHeader)
+                                | _ -> failwith "next Frame Header not found"
+        MPEGVer, layerDesc, bitProtection, bitRate, sampleRate, padding, chanMode, nextFrameHeader
