@@ -312,4 +312,6 @@ $RECYCLE.BIN/
 *.lnk
 *.wav
 *.mp3
+
 Program.fs
+*/Program.fs

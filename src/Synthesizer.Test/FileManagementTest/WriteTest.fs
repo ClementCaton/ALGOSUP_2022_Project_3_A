@@ -9,9 +9,9 @@ let Setup () =
     ()
 
 [<Test>]
-let writeTest () =
-    let writer = new writeWav()
+let WriteTest () =
+    let writer = new WriteWav()
     use stream = new MemoryStream()
-    writer.Write stream [Synth.Sound 440. Quarter Sin]
+    writer.Write stream [Synth().Sound 440. Quarter Sin]
     
     Assert.IsTrue(File.Exists("./Output/wave.wav"))

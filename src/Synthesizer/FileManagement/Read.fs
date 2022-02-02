@@ -4,9 +4,9 @@ open System
 open System.IO
 
 
-type readWav() =
+type ReadWav() =
 
-    let fromBytes nbChannels bytesPerSample bytes =
+    let FromBytes nbChannels bytesPerSample bytes =
 
         match bytesPerSample with
         | 1 -> [List.map (fun b -> (float b) / 255. * 2. - 1.) bytes]
@@ -43,7 +43,7 @@ type readWav() =
         
         // data
         let byteData = reader.ReadBytes(byteDataLength)
-        let data = byteData |> List.ofArray |> fromBytes nbChannels (bitsPerSample/8)
+        let data = byteData |> List.ofArray |> FromBytes nbChannels (bitsPerSample/8)
         let duration = float (List.length data.[0]) / float sampleRate
 
         data, duration, sampleRate, bitsPerSample

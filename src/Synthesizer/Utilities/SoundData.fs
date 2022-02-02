@@ -18,6 +18,7 @@ type BaseWaves =
     | Triangular
     | Saw
     | Silence
+    | CustomInstrument of (float -> float -> float -> float -> float -> float)
 
 type SoundData(
         ?overDrive0:float,
@@ -30,7 +31,7 @@ type SoundData(
         ?sampleRate0:float,
         ?bpm0:float) =
 
-    let getDuration durationType bpm =
+    let GetDuration durationType bpm =
         match durationType with
         | Whole ->  4.                  * 60./bpm
         | Half -> 2.                    * 60./bpm
@@ -40,7 +41,7 @@ type SoundData(
         | Custom value -> value * 4.    * 60./bpm
         | Seconds value -> value
 
-    let duration = getDuration (defaultArg duration0 Quarter) (defaultArg bpm0 90.) // In seconds
+    let duration = GetDuration (defaultArg duration0 Quarter) (defaultArg bpm0 90.) // In seconds
     let sampleRate = defaultArg sampleRate0 44100.
     let arraySize = int ((defaultArg arraySize0 44100.) * duration) 
     let amplitude = defaultArg amplitude0 1.
@@ -49,49 +50,40 @@ type SoundData(
     let frequency = defaultArg frequency0 440.
     let overDrive = defaultArg overDrive0 1.
 
-    let toByte x = x/2. * 255. |> byte
+    let ToByte x = x/2. * 255. |> byte
     //https://www.geogebra.org/m/NS9DJf4S
 
-    let secTobyte (sec:float) =
+    let SecTobyte (sec:float) =
         sec * sampleRate
     
-    let waveFunc waveType = 
-            match waveType with
-            | Sin -> fourWaves.sinWave
-            | Square -> fourWaves.squareWave
-            | Triangular -> fourWaves.triangleWave
-            | Saw -> fourWaves.sawWave
-            | Silence -> (fun freq amp vShift phaseShift t -> 0)
+    let WaveFunc waveType = 
+        match waveType with
+        | Sin -> FourWaves.SinWave
+        | Square -> FourWaves.SquareWave
+        | Triangular -> FourWaves.TriangleWave
+        | Saw -> FourWaves.SawWave
+        | Silence -> (fun freq amp vShift phaseShift t -> 0)
+        | CustomInstrument func -> func
 
-    member x.create waveType =
-        let a = List.init arraySize (fun i -> ((waveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate)))
+    member x.Create waveType =
+        let a = List.init arraySize (fun i -> ((WaveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate)))
         Utility.Overdrive overDrive a
 
-    member x.createFromDataPoints waveType (dataPoints0: List<float * float>) = // (time, amp)
+    member x.CreateFromDataPoints waveType (dataPoints0: List<float * float>) = // (time, amp)
         let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
-        let flatSoundData = Utility.Overdrive 1. (List.init (int (secTobyte (fst dataPoints[dataPoints.Length-1])))  (fun i -> ((waveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate))))
+        let flatSoundData = Utility.Overdrive 1. (List.init (int (SecTobyte (fst dataPoints[dataPoints.Length-1])))  (fun i -> ((WaveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate))))
 
-        let calcSegment (fromTime:float) (toTime:float) fromAmp toAmp =
+        let CalcSegment (fromTime:float) (toTime:float) fromAmp toAmp =
             let step = (toAmp - fromAmp) / (toTime - fromTime)
             List.mapi(fun i flatPoint -> (flatPoint * (fromAmp + (float step * float i)))) flatSoundData[int fromTime .. int toTime]
 
-        let output = List.map2(fun fromT toT -> calcSegment (secTobyte (fst fromT)) (secTobyte (fst toT)) (snd fromT) (snd toT)) dataPoints[ .. dataPoints.Length-2] dataPoints[1 ..]
+        let output = List.map2(fun fromT toT -> CalcSegment (SecTobyte (fst fromT)) (SecTobyte (fst toT)) (snd fromT) (snd toT)) dataPoints[ .. dataPoints.Length-2] dataPoints[1 ..]
 
         output |> List.concat
 
-    member x.createWithEnvelope waveType sustain attack hold0 decay0 release0 =  // time, time, time, amp, time
+    member x.CreateWithEnvelope waveType sustain attack hold0 decay0 release0 =  // time, time, time, amp, time
         let hold = hold0 + attack
         let decay = hold + decay0
         let release = duration + release0
 
-        x.createFromDataPoints waveType [(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (duration, sustain); (release, 0.)]
-
-
-
-
-    // let cutCorners (data:List<float>) limit =
-        // let step = 1. / float limit
-        // let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
-        // let endVals = List.map2(fun x i -> x * step * i) data[data.Length-limit..] [float limit .. -1. .. 1.]
-
-        // List.append (List.append startVals data[limit .. data.Length-limit-1]) endVals
+        x.CreateFromDataPoints waveType [(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (duration, sustain); (release, 0.)]

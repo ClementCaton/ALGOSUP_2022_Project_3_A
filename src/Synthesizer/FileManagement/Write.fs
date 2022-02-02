@@ -3,7 +3,7 @@
 open System.IO
 
 
-type writeWav( 
+type WriteWav( 
         ?sampleRate0:int, 
         ?pcmFormat0:int,
         ?bytesPerSample0:int
@@ -13,8 +13,8 @@ type writeWav(
     let pcmFormat = (defaultArg pcmFormat0 1)
     let bytesPerSample = (defaultArg bytesPerSample0 2)
 
-    // let cutStart = (defaultArg cutStart 0s)
-    // let cutEnd = (defaultArg cutEnd 0s)
+    // let CutStart = (defaultArg cutStart 0s)
+    // let CutEnd = (defaultArg cutEnd 0s)
 
     let bitsPerSample = bytesPerSample * 8
 
@@ -27,7 +27,7 @@ type writeWav(
         let byteRate = sampleRate * nbChannels * bytesPerSample
         let blockAlign = uint16 (nbChannels * bytesPerSample)
 
-        let toBytes x =
+        let ToBytes x =
             match bytesPerSample with
             | 1 ->
                 let upscaled = round ((x + 1.) * 128.)
@@ -40,11 +40,7 @@ type writeWav(
             | _ -> failwithf "Invalid number of bytes per sample: %i. Valid values: 1, 2, 3, 4" bytesPerSample
         
         let transposed = data |> List.transpose
-        let byteData = [| for sample in transposed do yield! [| for channel in sample do yield! toBytes channel |] |]
-
-        
-        let transposed = data |> List.transpose
-        let byteData = [| for sample in transposed do yield! [| for channel in sample do yield! toBytes channel |] |]
+        let byteData = [| for sample in transposed do yield! [| for channel in sample do yield! ToBytes channel |] |]
 
         let encode = new System.Text.UTF32Encoding() 
         use writer = new BinaryWriter(stream, encode, true)
