@@ -66,7 +66,7 @@ module Filter =
         
         let wetData = FlangerInner step 1 1 0 dryData[silence.Length..] []
 
-        Utility.Add [dryData; (silence @ wetData)]
+        Utility.AddMean [dryData; (silence @ wetData)]
 
     let CustomEnvelope (dataPoints0: List<float * float>) (sampleRate:float) (data:List<float>) =
         let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
@@ -153,7 +153,7 @@ module Filter =
     let RejectBand sampleRate lowFreq highFreq (data:List<float>) = 
         let lowPassData = HighPass sampleRate lowFreq data
         let highPassData = LowPass sampleRate highFreq data
-        Utility.Add [lowPassData; highPassData]
+        Utility.AddMean [lowPassData; highPassData]
 
     let ApplyFilters filterList data =
         let mutable output = List.empty
