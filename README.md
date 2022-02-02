@@ -53,8 +53,6 @@ You can open it from your own path using ``readFromWavWithPath /path-to.Wav``
 
 ## Reading mp3 files
 
-<span style="color: red;">WIP</span>
-
 You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav name.mp3``
 
 You can open it from your own path using ``readFromWavWithPath /path-to.mp3``
@@ -126,11 +124,15 @@ You can control the durations of all the elements you use to create sounds :
 
 ## Writing to wav files
 
+<span style="color: red;">WIP</span>
+
 ## Writing to mp3 files
 
 <span style="color: red;">WIP</span>
 
 ## **Dealing with stereo**
+
+<span style="color: red;">WIP</span>
 
 ## **Creating basic audio data**
 
@@ -146,13 +148,14 @@ In order to create a sound with an enveloppe you need to use ``Synth.SoundWithEn
 
 ## Creating audio data with a custom envelope
 
+<span style="color: red;">WIP</span>
+
 ## **Finding frequencies from notes and octaves**
 
 A more simplified way to find the sound you are looking for is trought musical octaves[^1] and notes[^2].
 To call on this form of notation you'll have to use the ``Synth.getNoteFreq (octav:int) (note:Note)`` function to get the right frequency.
 
 Example:
-
 ```fs
 let note = Synth.getNoteFreq Note.C 4 // This returns the frequency of the C4 note
 ```
@@ -160,7 +163,6 @@ let note = Synth.getNoteFreq Note.C 4 // This returns the frequency of the C4 no
 Alternatively, you could directly create a SinWave using the ``Synth.note (duration:Duration) (note:Note) (octav:int)``.
 
 Example:
-
 ```fs
 let note = Synth.note Half Note.C 4 // This returns the frequency a half duration of the C4 note
 ```
@@ -185,9 +187,40 @@ Creating silence is as simple as calling the ``Synth.silence (duration:Duration)
 let silence = Synth.silence (Seconds 2) // Returns 2 seconds of silence
 ```
 
+## **Cutting audio**
+
+Cutting audio is simple. You can use the following functions
+
+- ``Synth.cutStart (sampleRate:float) (time:float) (data:List<float>)`` : Cuts the start of the audio data returning the end part
+  
+- ``Synth.cutEnd (sampleRate:float) (time:float) (data:List<float>)`` : Cuts the end of the audio data returning the first part
+  
+- ``Synth.cutMiddle (sampleRate:float) (timeStart:float) (timeEnd:float) (data:List<float>)`` : Cuts out the middle of the audio data and returns the edges merged together
+  
+- ``Synth.cutEdge (sampleRate:float) (timeStart:float) (timeEnd:float) (data:List<float>)`` : Cuts of both ends of the audio data and returns the middle part
+
+Example:
+```fs
+let a = Synth.note (Seconds 1) Note.A 4
+let b = Synth.note (Seconds 1) Note.B 4
+let c = Synth.note (Seconds 1) Note.C 4
+let d = Synth.note (Seconds 1) Note.D 4
+
+let full = Synth.compose 0 [a; b; c; d;]        // Complete sound, takes 4 second and plays 4 different notes
+
+let lastThree = Synth.cutStart 44100. 1. full   // Cuts first note, leaving last 3
+let firstThree = Synth.cutEnd 44100. 1. full    // Cuts last note, leaving first 3
+let edges = Synth.cutMiddle 44100. 1. 1. full   // Cuts out the 2 middle notes, leaving the first and the last ones
+let second = Synth.cutMiddle 44100. 1. 2. full  // Cuts the first and the last 2 notes, leaving the second one
+```
+
 ## **Additioning audio data**
 
+<span style="color: red;">WIP</span>
+
 ## Additioning audio with a predefined ratio
+
+<span style="color: red;">WIP</span>
 
 ## **Composing**
 
@@ -197,7 +230,10 @@ This sound was caused by the notes ending on a not-zero amplitude.
 
 The solution was to add in a filter that gradually lowers the amplitude of the notes start and end to 0.
 
-<!-- insert before and after image here -->
+|          Before cutCorne             |          After cutCorner            |
+|:------------------------------------:|:-----------------------------------:|
+| ![Before](Reports/readme/cut_b.png)  | ![After](Reports/readme/cut_a.png)  |
+<sup>* for the shake of the example, the filter has been exagerated</sup>
 
 Therefore; the``Synth.compose (sounds:List<float>)`` function has a default cutCorner value of 100 (this means it cuts away from the first and last 100 bytes from each note).
 
@@ -262,7 +298,23 @@ These two are equivalents.
 
 ## **Preview**
 
+Its possible to create a preview of ant audio loaded into the filter using the ``Synth.preview (title:string) (sound:List<float>)`` function.
+
+Example:
+```fs
+let basic = Synth.note Whole Note.A 2       // reating a basic note
+let cut = Utility.cutCorners 5000 basic     // Making it look a bit more interresting
+
+Synth.preview "Example" cut |> ignore       // Launch preview
+```
+The above example automatically opens the browser with the following image:
+![Preview](Reports/readme/preview.png)
+
+Tools to zoom/zoom out are also present on the page.
+
 ## **Frequency analysis**
+
+<span style="color: red;">WIP</span>
 
 ## **Filters**
 
@@ -288,13 +340,25 @@ To complement your sounds you can add some filters :
 
 ## Apply multiple filters at once
 
-## Cutting audio
+<span style="color: red;">WIP</span>
 
 
 
 ## Changing amplitude
 
-## Reverb, Echo and chorus
+<span style="color: red;">WIP</span>
+
+## Reverb
+
+<span style="color: red;">WIP</span>
+
+## Echo
+
+<span style="color: red;">WIP</span>
+
+## Custom repeater filter
+
+<span style="color: red;">WIP</span>
 
 ## Frequency analysis 
 
@@ -302,17 +366,31 @@ To complement your sounds you can add some filters :
 
 ## Flanger
 
+<span style="color: red;">WIP</span>
+
 ## Envelope
+
+<span style="color: red;">WIP</span>
 
 ## Custom envelope
 
+<span style="color: red;">WIP</span>
+
 ## Low frequency oscillation
+
+<span style="color: red;">WIP</span>
 
 ### AM
 
+<span style="color: red;">WIP</span>
+
 ### FM
 
+<span style="color: red;">WIP</span>
+
 ## LowPass / HighPass / BandPass / RejectBand filters
+
+<span style="color: red;">WIP</span>
 
 # Footnotes
 
@@ -329,3 +407,4 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 
 [^2]: Notes: A note is a symbol denoting a musical sound.
 
+https://user-images.githubusercontent.com/91249762/152002722-5442f1d9-fe37-4373-a82c-815790e3420b.mov
