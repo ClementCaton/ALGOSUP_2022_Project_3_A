@@ -8,24 +8,6 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 
 <br>
 
-## Prerequisites
-
-- Download .Net 6.0 or newer
-
-<br>
-
-## .Net CLI
-
-``dotnet add package Synthesizer --version 1.0.0``
-
-<br>
-
-## windows
-
-``Install-Package Synthesizer -Version 1.0.0``
-
-<br>
-
 ## **Project members**
 
 [*Ivan Molnar*](https://github.com/ivan-molnar) <br>
@@ -36,6 +18,30 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 [*Léo Chartier*](https://github.com/leo-chartier)
 
 # Project documentation
+
+## Prerequisites
+
+- Download .Net 6.0 or newer
+
+<br>
+
+## .Net CLI
+
+``dotnet add package Synthesizer --version 1.1.0``
+
+<br>
+
+## Windows
+
+``Install-Package Synthesizer -Version 1.1.0``
+
+<br>
+
+## Package Reference
+
+``<PackageReference Include="Synthesizer" Version="1.1.0" />``
+
+## **Installation**
 
 
 ## **Basic structure**
@@ -232,7 +238,7 @@ The solution was to add in a filter that gradually lowers the amplitude of the n
 
 |          Before cutCorne             |          After cutCorner            |
 |:------------------------------------:|:-----------------------------------:|
-| ![Before](Reports/readme/cut_b.png)  | ![After](Reports/readme/cut_a.png)  |
+| ![Before](Reports/Files/cut_b.png)  | ![After](Reports/Files/cut_a.png)  |
 <sup>* for the shake of the example, the filter has been exagerated</sup>
 
 Therefore; the``Synth.compose (sounds:List<float>)`` function has a default cutCorner value of 100 (this means it cuts away from the first and last 100 bytes from each note).
@@ -308,7 +314,7 @@ let cut = Utility.cutCorners 5000 basic     // Making it look a bit more interre
 Synth.preview "Example" cut |> ignore       // Launch preview
 ```
 The above example automatically opens the browser with the following image:
-![Preview](Reports/readme/preview.png)
+![Preview](Reports/Files/preview.png)
 
 Tools to zoom/zoom out are also present on the page.
 
