@@ -40,15 +40,29 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
         use stream = File.Create(path + fileName)
         WriteWav().Write (stream) (music)
 
-    member x.ReadFromWav name =
-        ReadWav().Read (File.Open("./Output/"+name, FileMode.Open))
+    member x.ReadFromWav (name: string) =
+        if name.Contains(".wav") then
+            ReadWav().Read (File.Open("./Output/"+name, FileMode.Open))
+        else
+            ReadWav().Read (File.Open("./Output/"+name+".wav", FileMode.Open))
 
-    member x.ReadFromWavWithPath path =
-        ReadWav().Read (File.Open(path, FileMode.Open))
+    member x.ReadFromWavWithPath (path: string) =
+        if path.Contains(".wav") then
+            ReadWav().Read (File.Open(path, FileMode.Open))
+        else
+            ReadWav().Read (File.Open(path+".wav", FileMode.Open))
 
-    member x.ReadFromMP3 name = readMP3(File.Open("./Output/" + name, FileMode.Open)).mp3Decoding
+    member x.ReadFromMP3 (name: string) =
+        if name.Contains(".mp3") then
+            readMP3(File.Open("./Output/" + name, FileMode.Open)).mp3Decoding
+        else
+            readMP3(File.Open("./Output/" + name + ".mp3", FileMode.Open)).mp3Decoding
 
-    member x.ReadFromMP3WithPath path = readMP3(File.Open(path, FileMode.Open)).mp3Decoding
+    member x.ReadFromMP3WithPath (path: string) =
+        if path.Contains(".mp3") then
+            readMP3(File.Open(path, FileMode.Open)).mp3Decoding
+        else
+            readMP3(File.Open(path+".mp3", FileMode.Open)).mp3Decoding
 
     member x.Note duration mNote octave =
         let freq = x.GetNoteFreq mNote octave
