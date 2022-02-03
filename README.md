@@ -65,7 +65,17 @@ You can open it from your own path using ``readFromWavWithPath /path-to.mp3``
 
 ## **Writing to files / Saving**
 
-<br>
+## Writing wav files
+
+<span style="color: red;">WIP</span>
+
+## Writing mp3 files
+
+<span style="color: red;">WIP</span>
+
+## **Playing music**
+
+<span style="color: red;">WIP</span>
 
 ## Usable notes 
 
