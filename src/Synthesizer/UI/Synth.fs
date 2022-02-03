@@ -115,7 +115,9 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     member x.ApplyFilters filters data =
         Filter.ApplyFilters filters data
 
-    member x.PlayWav offset (stream:Stream) = 
+    member x.PlayWav offset data = 
+        let stream = new MemoryStream()
+        WriteWav().Write stream data 
         PlayMusic.PlayWithOffset offset stream
 
     member x.PlayWavFromPath offset ((filePath:string)) = 
