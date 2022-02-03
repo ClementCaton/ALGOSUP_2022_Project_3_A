@@ -10,8 +10,15 @@ open Synthesizer
 
 
 module Program =
-    
-    let synth = Synth()
+    let filters = [
+        Filter.lowPass 44100 500;
+        Filter.highPass 44100 500;
+        Filter.flanger 0.1 0.1 44100;
+    ]
+
+    let input = Synth.add [Synth.note Whole Note.A 2; Synth.note Whole Note.A 3; Synth.note Whole Note.A 4; Synth.note Whole Note.A 5]
+
+    let a = Synth.ApplyFilters filters input
 
     (*
     let input = synth.Add [synth.Note Whole Note.A 2; synth.Note Whole Note.A 3; synth.Note Whole Note.A 4; synth.Note Whole Note.A 5]

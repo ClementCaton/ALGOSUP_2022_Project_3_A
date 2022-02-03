@@ -47,6 +47,7 @@ dotnet 6.0
 ### Download at
 
 [**Github**](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A)
+[**Nuget**](https://www.nuget.org/packages/Synthesizer/)
 
 ## Terminology
 
