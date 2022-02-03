@@ -8,7 +8,7 @@ module PlayMusic
         let timeOffset = Time.FromSeconds(offset)
         music.PlayingOffset <- timeOffset
         music.Play()
-        ignore (System.Console.ReadLine())
+        ignore (System.Console.ReadLine()) // press enter to end it // thread.sleep(1) could be another solution
 
     let Play stream =
         PlayWithOffset (float32(0.)) stream

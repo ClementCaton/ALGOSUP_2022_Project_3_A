@@ -114,3 +114,9 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
 
     member x.ApplyFilters filters data =
         Filter.ApplyFilters filters data
+
+    member x.PlayWav offset (stream:Stream) = 
+        PlayMusic.PlayWithOffset offset stream
+
+    member x.PlayWavFromPath offset ((filePath:string)) = 
+        PlayMusic.PlayWithOffsetFromPath offset filePath
