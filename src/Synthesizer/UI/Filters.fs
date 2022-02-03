@@ -108,7 +108,7 @@ module Filter =
         let rec LFO_FM_inner (altWave:list<float>) (dryData:list<float>) (wetData0:list<float>) =
             if dryData.Length<=2 then wetData0
             else 
-                printfn $"{dryData.Length}"
+                //printfn $"{dryData.Length}"
 
                 let delta = altWave[0] * multiplicator
 
