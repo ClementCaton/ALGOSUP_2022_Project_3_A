@@ -97,23 +97,33 @@ module Filter =
             x * (oscillator frequency amplitude verticalShift 0. t)
         )
 
-    let LFO_FM frequency deltaFreq sampleRate (data:List<float>) =
-        failwith "Not working yet"
-        let ac = 1. // Carrier's amplitude
-        let fc = frequency // Carrier's frequency
-        let fd = deltaFreq // frequency deviation = frequency modulator's sensitivity * data's amplitude
+    let LFO_FM (deltaPeriod:int) (step:float) (data:List<float>) =
+        
+        let getShift (startAmp:float) (endAmp:float) (nStep:float)=
+            let fullRange = endAmp - startAmp
+            let step = fullRange / nStep
+            [for i in startAmp .. step .. endAmp do yield i]
 
-        let Integrate n (xs:List<float>) =
-            xs
-            |> List.take (n+1)
-            |> List.sum
-            |> ( * ) (float n) // (float n / float sampleRate)
 
-        List.init (List.length data) (fun i ->
-            let t = float i / sampleRate
-            ac * cos ( 2. * Math.PI * (fc * t + fd * Integrate i data))
-            // https://en.wikipedia.org/wiki/Frequency_modulation#Theory
-        )
+        let rec LFO_FM_inner (deltaPeriod:int) (dryData:list<float>) (wetData0:list<float>) (currentDelta0:float) (direction0:bool) (step:float) =
+            if dryData.Length<=2 then wetData0
+            else 
+                printfn $"{dryData.Length}"
+                let direction = if Math.Abs currentDelta0 >= deltaPeriod then not direction0 else direction0
+                let currentDelta = if direction then currentDelta0+step else currentDelta0-step
+
+                let wetData = 
+                    match None with 
+                    | _ when currentDelta>0 -> wetData0 @ (getShift dryData[0] dryData[1] currentDelta)
+                    | _ -> wetData0 @ [dryData[0]]
+
+            
+                match None with
+                | _ when currentDelta>0 -> LFO_FM_inner deltaPeriod dryData[1..] wetData currentDelta direction step
+                | _ when currentDelta<0 -> LFO_FM_inner deltaPeriod dryData[(int (Math.Abs (Math.Floor currentDelta)))..] wetData currentDelta direction step
+                | _ -> LFO_FM_inner deltaPeriod dryData[1..] wetData currentDelta direction step
+
+        LFO_FM_inner deltaPeriod data [] 0 true step
 
     let LowPass sampleRate cutoffFreq (data:List<float>) =
         let RC = 1. / (2. * Math.PI * cutoffFreq)
