@@ -60,7 +60,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     
     member x.ComposeNoCutCorner sounds = List.concat
     
-    member x.Add sounds = Utility.Add sounds
+    member x.Add sounds = Utility.AddMean sounds
 
     member x.Preview title sound =
         Preview.Chart title sound

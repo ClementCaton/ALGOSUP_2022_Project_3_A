@@ -1,9 +1,11 @@
 namespace Synthesizer
 
+open System
+
 module Utility = 
+
     let CutStart (sampleRate:float) time (data:List<float>) = 
         data[int (sampleRate * time) .. data.Length]
-
 
     let CutEnd (sampleRate:float) time (data:List<float>) = 
         data[0 .. data.Length - int (sampleRate * time)-1] //need to add another time for the end
@@ -14,19 +16,26 @@ module Utility =
         let endVals = List.map2(fun x i -> x * step * i) data[data.Length-limit..] [float limit .. -1. .. 1.]
 
         List.append (List.append startVals data[limit .. data.Length-limit-1]) endVals
+        
+    let Maximize data =
+        let factor = data |> List.map abs |> List.max |> ( / ) 1.
+        data |> List.map (( * ) factor)
 
-    let Add sounds =
-        let size = sounds |> List.map List.length |> List.max
+    let AddFactor (map:List<Tuple<List<float>, float>>) =
+        let size = map |> List.map fst |> List.map List.length |> List.max
+        let expand sound = List.append sound (List.replicate (size - List.length sound) 0.)
+        map
+        |> List.unzip
+        ||> List.map2 (fun data factor -> data |> List.map (( * ) factor) )
+        |> List.map expand
+        |> List.transpose
+        |> List.map List.sum
+
+    let AddMean sounds =
         let mean = 1. / (float (List.length sounds))
-        let expand sound =
-            List.append sound (Array.toList(Array.replicate (size - List.length sound) 0.))
-        let rec AddTwo (sounds: List<float> list) =
-            match sounds with
-            | a::b::rest -> AddTwo ((List.map2 ( + ) a b)::rest)
-            | [a] -> a
-            | [] -> List.empty
+        sounds |> List.map (fun sound -> sound, mean) |> AddFactor
 
-        sounds |> List.map expand |> AddTwo |> List.map (( * ) mean)
+    let AddMaximize = AddMean >> Maximize
 
     let Overdrive multiplicator (x:List<float>) =
         [for i in x do 
