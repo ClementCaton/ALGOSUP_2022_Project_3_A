@@ -11,8 +11,8 @@ module PlayMusic
         music.Play()
         ignore (System.Console.ReadLine()) // press enter to end it // thread.sleep(1) could be another solution
     
-    let PlayMac (file:string) =     //if the offset is > to the length of the music it will start from the beginning
-        Process.Start("afplay", file)
+    let PlayMac (file:string) =
+        Process.Start("afplay", file) |> ignore
 
     let Play stream =
         PlayWithOffset (float32(0.)) stream
