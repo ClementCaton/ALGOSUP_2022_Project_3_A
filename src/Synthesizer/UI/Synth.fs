@@ -76,7 +76,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     member x.ForAllChannels func channels =
         channels |> List.map func
 
-    member x.Fourier wave =
+    member x.Fourier sampleRate wave =
         FrequencyAnalysis.Fourier(wave)
 
     member x.Cutstart time (data:List<float>) =
