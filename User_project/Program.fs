@@ -15,8 +15,10 @@ module Program =
     let basic = synth.Add [synth.Note (Seconds 3.) Note.A 4; synth.Note (Seconds 3.) Note.A 3;] 
     
     synth.WriteToWav "basic.wav" [basic]
-    let lfo = Filter.LFO_FM 2 1. basic
+    let altWave = synth.Sound 100. (Seconds 3.) Saw
+    let lfo = Filter.LFO_FM altWave basic 5.
     synth.WriteToWav "lfo.wav" [lfo]
+    synth.WriteToWav "alt.wav" [altWave]
     
     // let filterAndWrite periode (step:float) n=
     //     printfn $"{n} {periode} {step}"
