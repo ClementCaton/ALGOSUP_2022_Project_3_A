@@ -118,14 +118,14 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
     member x.ApplyFilters filters data =
         Filter.ApplyFilters filters data
 
-    member x.PlayWav offset data = 
+    member x.PlayWav (offset:float32) data = 
         if x.platform then
             let stream = new MemoryStream()
             WriteWav().Write stream data 
             PlayMusic.PlayWithOffset offset stream |> ignore
         else
             x.WriteToWavWithPath ".Output/temp_file_storage/" ".tempFile.wav" data
-            PlayMusic.PlayMac ".Output/temp_file_storage/.tempFile.wav"
+            PlayMusic.PlayMac ".Output/temp_file_storage/.tempFile.wav" offset |> ignore
             File.Delete ".Output/temp_file_storage/.tempFile.wav"
             Directory.Delete ".Output/temp_file_storage/" |> ignore
 

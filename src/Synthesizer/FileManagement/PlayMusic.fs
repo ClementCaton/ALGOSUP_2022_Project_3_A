@@ -11,8 +11,8 @@ module PlayMusic
         music.Play()
         ignore (System.Console.ReadLine()) // press enter to end it // thread.sleep(1) could be another solution
     
-    let PlayMac (file:string) =
-        Process.Start("afplay", file) |> ignore
+    let PlayMac (file:string) offset =
+        Process.Start("afplay", file + " -t " + string offset)
 
     let Play stream =
         PlayWithOffset (float32(0.)) stream
