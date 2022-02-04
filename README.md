@@ -137,15 +137,6 @@ You can control the durations of all the elements you use to create sounds :
 
 - Seconds    
 
-
-## Writing to wav files
-
-<span style="color: red;">WIP</span>
-
-## Writing to mp3 files
-
-<span style="color: red;">WIP</span>
-
 ## **Dealing with stereo**
 
 <span style="color: red;">WIP</span>
