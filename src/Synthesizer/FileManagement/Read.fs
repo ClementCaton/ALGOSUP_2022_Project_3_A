@@ -49,7 +49,10 @@ type ReadWav() =
         data, duration, sampleRate, bitsPerSample
 
 
-type readMP3() =
+type readMP3(stream:Stream) =
+
+    let reader = (new BinaryReader(stream)).ReadBytes(int stream.Length)
+
     let rec BinaryConverter (emptArr:List<int>) byte recnum=
         if recnum > 0 then
             BinaryConverter ((byte%2)::emptArr) (byte/2) (recnum-1)
@@ -59,11 +62,14 @@ type readMP3() =
     let FirstHeader (data:List<int>) =
         seq{0..(data.Length-2)} |> Seq.tryFindIndex(fun d -> data.[d] = 255 && data.[d+1] > 223)
 
-    member x.Header (data:List<int>) =
-        let fh = FirstHeader data
-        match fh with 
+    let mutable currentHeaderIndex:option<int> = FirstHeader (reader |>  Array.toList |> List.map(fun i -> int i))
+
+    let Header (data:List<int>) =
+        match currentHeaderIndex with 
         | Some int -> // AAAAAAAA AAABBCCD EEEEFFGH IIJJKLMM format
             let bit = BinaryConverter [] data.[int+1] 8 // AAABBCCD using only BBCCD
+            let bit3 = BinaryConverter [] data.[int+3] 8 // IIJJKLMM
+            let bit2 = BinaryConverter [] data.[int+2] 8 // EEEEFFGH
             let MPEGVer =
                             match [bit.[3]; bit.[4]] with
                             | [0;0] -> 2.5 //V2 (bis/considered as)
@@ -83,8 +89,6 @@ type readMP3() =
                                 | 0 -> false //  Protected by CRC (16bit crc follows header)
                                 | 1 -> true 
                                 | _ -> failwith "bitProtection not defined"
-
-            let bit2 = BinaryConverter [] data.[int+2] 8 // EEEEFFGH
             let bitRateIndex =
                                 match [bit2.[0];bit2.[1];bit2.[2];bit2.[3]] with
                                 | [0; 0; 0; 0] -> [1; 1; 1; 1; 1] // free free free free
@@ -102,7 +106,7 @@ type readMP3() =
                                 | [1; 1; 0; 0] -> [384; 256; 224; 192; 128]
                                 | [1; 1; 0; 1] -> [416; 320; 256; 224; 144]
                                 | [1; 1; 1; 0] -> [448; 384; 320; 256; 160]
-                                | [1; 1; 1; 1] -> [0; 0; 0; 0; 1] // bad bad bad bad (not permitted)
+                                | [1; 1; 1; 1] -> [0; 0; 0; 0; 0] // bad bad bad bad (not permitted)
                                 | _ -> failwith "bitRate not defined or non existing bitRate used"
             (*
                 V1 - MPEG Version 1
@@ -137,8 +141,6 @@ type readMP3() =
                             | 0 -> 0 // no padding
                             | 1 -> 1 // padded with one extra slot
                             | _ -> failwith "not a bit"
-
-            let bit3 = BinaryConverter [] data.[int+3] 8 // IIJJKLMM
             let chanMode =
                             match [bit3.[0]; bit3.[1]] with
                             | [0;0] -> 4 // Stereo
@@ -149,3 +151,68 @@ type readMP3() =
             let nextFrameHeader = ((144 * 1000 * bitRate) / sampleRate) + padding
             MPEGVer, layerDesc, bitProtection, bitRate, sampleRate, padding, chanMode, nextFrameHeader
         | None -> failwith "header not found"
+
+    let SideData (data:List<int>) chanMode =
+        match chanMode with
+        | 1 -> 
+            match currentHeaderIndex with 
+            | Some int -> 
+                let bit1 = BinaryConverter [] data.[int+5] 8
+                let bit2 = BinaryConverter [] data.[int+6] 8
+                let bit3 = BinaryConverter [] data.[int+7] 8
+                let bit4 = BinaryConverter [] data.[int+8] 8
+                let bit5 = BinaryConverter [] data.[int+9] 8
+                let bit6 = BinaryConverter [] data.[int+10] 8
+                let bit7 = BinaryConverter [] data.[int+11] 8
+                let bit8 = BinaryConverter [] data.[int+12] 8
+                let bit9 = BinaryConverter [] data.[int+13] 8
+                let bit10 = BinaryConverter [] data.[int+14] 8
+                let bit11 = BinaryConverter [] data.[int+15] 8
+                let bit12 = BinaryConverter [] data.[int+16] 8
+                let bit13 = BinaryConverter [] data.[int+17] 8
+                let bit14 = BinaryConverter [] data.[int+18] 8
+                let bit15 = BinaryConverter [] data.[int+19] 8
+                let bit16 = BinaryConverter [] data.[int+20] 8
+
+                let main_data_begin = data.[int+4]*2 + bit1.[0]
+
+                main_data_begin
+            | None -> failwith "SideData not found"
+        | chanMode when chanMode > 1 ->
+            match currentHeaderIndex with 
+            | Some int -> 
+                let bit1 = BinaryConverter [] data.[int+5] 8
+                let bit2 = BinaryConverter [] data.[int+6] 8
+                let nbit3 = BinaryConverter [] data.[int+7] 8
+                let bit4 = BinaryConverter [] data.[int+8] 8
+                let bit5 = BinaryConverter [] data.[int+9] 8
+                let bit6 = BinaryConverter [] data.[int+10] 8
+                let bit7 = BinaryConverter [] data.[int+11] 8
+                let bit8 = BinaryConverter [] data.[int+12] 8
+                let bit9 = BinaryConverter [] data.[int+13] 8
+                let bit10 = BinaryConverter [] data.[int+14] 8
+                let bit11 = BinaryConverter [] data.[int+15] 8
+                let bit12 = BinaryConverter [] data.[int+16] 8
+                let bit13 = BinaryConverter [] data.[int+17] 8
+                let bit14 = BinaryConverter [] data.[int+18] 8
+                let bit15 = BinaryConverter [] data.[int+19] 8
+                let bit16 = BinaryConverter [] data.[int+20] 8
+                let main_data_begin = data.[int+4]*2 + bit1.[0]
+                let scfi = 
+                    if bit1.[6] = 1 then
+                        true
+                    else
+                        false
+                main_data_begin
+            | None -> failwith "SideData not found"
+        | _ ->
+            failwith "Stereo WIP"
+
+    member x.mp3Decoding =
+        let hData = reader |>  Array.toList |> List.map(fun i -> int i)
+        let MPEGVer, layerDesc, bitProtection, bitRate, sampleRate, padding, chanMode, nextFrameHeader = Header hData
+        let h = SideData hData chanMode
+        currentHeaderIndex <- match currentHeaderIndex with
+                                | Some int ->  Some (int + nextFrameHeader)
+                                | _ -> failwith "next Frame Header not found"
+        h
