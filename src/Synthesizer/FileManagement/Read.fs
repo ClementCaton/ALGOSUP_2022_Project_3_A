@@ -9,14 +9,14 @@ type ReadWav() =
 
 
     /// <summary>
-    /// 
+    /// Extract sound data from WAV bytes
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="nbChannels">Number of channels in the music</param>
+    /// <param name="bytesPerSample">Number of bytes for one data point</param>
+    /// <param name="bytes">Data to extract from</param>
+    /// <returns>Raw sound data</returns>
     
-    let FromBytes nbChannels bytesPerSample bytes =
+    let FromBytes (nbChannels:int) (bytesPerSample:int) (bytes:List<byte>) =
 
         match bytesPerSample with
         | 1 -> [List.map (fun b -> (float b) / 255. * 2. - 1.) bytes]
@@ -35,10 +35,10 @@ type ReadWav() =
 
 
     /// <summary>
-    /// 
+    /// Read data from a WAV stream
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="stream">Stream to extract from</param>
+    /// <returns>Tuple with the extracted music, duration, stream sample rate and bits per sample</returns>
     
     member x.Read stream =
         use reader = new BinaryReader(stream)

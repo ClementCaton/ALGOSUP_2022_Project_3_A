@@ -315,7 +315,15 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     member x.ApplyFilters filters data =
         Filter.ApplyFilters filters data
 
-    member x.PlayWav (offset:float32) data =
+
+
+    /// <summary>
+    /// Plays a .wav file from raw data with an offset
+    /// </summary>
+    /// <param name="offset">When to start playing in seconds</param>
+    /// <param name="data">Data of the sound to play</param>
+
+    member x.PlayWav (offset:float) data =
         match int Environment.OSVersion.Platform with
         | 4| 6 -> 
             x.WriteToWavWithPath "./Output/temp_file_storage/" ".tempFile.wav" data
@@ -325,11 +333,19 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
         | _       ->  
             let stream = new MemoryStream()
             WriteWav().Write stream data 
-            PlayMusic.PlayWithOffset offset stream |> ignore
+            PlayMusic.PlayWithOffset (float32 offset) stream |> ignore
 
-    member x.PlayWavFromPath offset (filePath:string) =
+
+
+    /// <summary>
+    /// Plays a .wav file from a path with an offset
+    /// </summary>
+    /// <param name="offset">When to start playing in seconds</param>
+    /// <param name="filePath">Path of the file</param>
+
+    member x.PlayWavFromPath (offset:float) (filePath:string) =
         match int Environment.OSVersion.Platform with
         | 4| 6 -> 
             PlayMusic.PlayMac filePath offset |> ignore
         | _ ->  
-            PlayMusic.PlayWithOffsetFromPath offset filePath
+            PlayMusic.PlayWithOffsetFromPath (float32 offset) filePath
