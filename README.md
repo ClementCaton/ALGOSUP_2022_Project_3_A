@@ -57,9 +57,13 @@ You can extract data from a wav file in the default ``/Output/`` folder using ``
 
 You can open it from your own path using ``Synth.readFromWavWithPath (filePath:string)``.
 
+These functions return a tuple containing the ``soundData:list<list<float>>``, ``duration:float``, ``sampleRate:int`` and the ``bitsPerSample:int``.
+
 Example:
 ```fs
+let inOutputData, inOutputDuration, inOutputSampleRate, inOutputBPSampleRate = synth.ReadFromWav "yourFileName.wav"     // get everything from a file in the Output folder
 
+let fromPathData, _, fromPathSampleRate, _ = Synth.readFromWavWithPath "/yourPath/yourFileName.wav"     // get only the sound data and the samplerate from a predefined path
 ```
 
 ## Reading mp3 files
