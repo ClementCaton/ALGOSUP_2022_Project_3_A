@@ -451,7 +451,7 @@ Tools to zoom/zoom out are also present on the page.
 
 ## Filters
 
-### Usable Filters
+### Currently accessible Filters
 
 To complement your music, its possible to add filters to your audio data:
 
