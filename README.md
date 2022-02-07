@@ -19,9 +19,9 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 
 # Project documentation
 
-## Prerequisites
+## **Installation**
 
-- Download .Net 6.0 or newer
+Download .Net 6.0 or newer
 
 <br>
 
@@ -42,8 +42,6 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 ``<PackageReference Include="Synthesizer" Version="1.1.0" />``
 
 <br>
-
-## **Installation**
 
 ## **Basic structure**
 
@@ -149,7 +147,8 @@ let newNote = synth.Note Quarter Note.D 5 // Create a D5 quarter note.
 
 In order to create a sound with an enveloppe you need to use ``Synth.SoundWithEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (sustain:float) (attack:float) (hold:float) (decay:float) (release:float)``.
 
-We are using a basic AHDSR envelope:
+We are using a basic AHDSR envelope :
+
 ![After](Reports/Files/envelope.png)
 
 Example:
@@ -172,7 +171,7 @@ The above example creats the following sound:
 A more simplified way to find the sound you are looking for is trought musical octaves[^1] and notes[^2].
 To call on this form of notation you'll have to use the ``Synth.getNoteFreq (octav:int) (note:Note)`` function to get the right frequency.
 
-Example:
+Example :
 
 ```fs
 let Note = Synth.GetNoteFreq Note.C 4 // This returns the frequency of the C4 note
@@ -180,7 +179,7 @@ let Note = Synth.GetNoteFreq Note.C 4 // This returns the frequency of the C4 no
 
 Alternatively, you could directly create a SinWave using the ``Synth.note (duration:Duration) (note:Note) (octav:int)``.
 
-Example:
+Example :
 
 ```fs
 let Note = Synth.Note Half Note.C 4 // This returns the frequency a half duration of the C4 note
@@ -192,7 +191,7 @@ In most cases, the frequency of a note is calculated from a default frequency (m
 However, in some cases, you might need to find a note from a different starting frequency.
 This can be done using the ``Synth.getNoteFreqOffset (octav:int) (note:Note) (aFourFreq:Float)``
 
-Example:
+Example :
 
 ```fs
 let Note = Synth.GetNoteFreqOffset Note.C 4 444. // This returns the frequency of the C4 note calculated from the starting point 444Hz at the A4 note
@@ -218,7 +217,7 @@ Cutting audio is simple. You can use the following functions
   
 - ``Synth.cutEdge (sampleRate:float) (timeStart:float) (timeEnd:float) (data:List<float>)`` : Cuts of both ends of the audio data and returns the middle part
 
-Example:
+Example :
 
 ```fs
 let a = Synth.note (Seconds 1) Note.A 4
@@ -257,7 +256,7 @@ The solution was to add in a filter that gradually lowers the amplitude of the n
 
 Therefore; the``Synth.compose (sounds:List<float>)`` function has a default cutCorner value of 100 (this means it cuts away from the first and last 100 bytes from each note).
 
-Example:
+Example :
 
 ```fs
 let C4 = Synth.Note Half Note.C 4   // init
@@ -290,7 +289,7 @@ let Music = Synth.ComposeCutCorner 1000 [
 Alternatively, one might want to compose without the cutCorners filter.
 This can be done either by giving it a 0 value or by using the ``Synth.composeNoCutCorner (corner:int) (sounds:List<float>)`` function.
 
-With zero value:
+With zero value :
 
 ```fs
 let Music = Synth.ComposeCutCorner 0 [
@@ -320,7 +319,7 @@ These two are equivalents.
 
 Its possible to create a preview of an audio loaded into the filter using the ``Synth.preview (title:string) (sound:List<float>)`` function.
 
-Example:
+Example :
 
 ```fs
 let basic = Synth.note Whole Note.A 2       // reating a basic note
@@ -405,12 +404,12 @@ This filter is the basis on which we built the Reverb and Echo filters.
 
 The function looks like this: ``Filter.Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)``
 
-The variables inputed are:
-- nbEcho: The number of times the original sound gets repeated.
-- decay: Each time the sound is repeated we jusge the amplitude of the sound using this value
-- delay: The offset added to the echo (multiplies accordingly to the echo ex.: echo 1 will have 1x this value, echo 2 will have 2x this value, etc..)
-- sampleRate: The sampleRate of the sound
-- dryData: The original sound
+The variables inputed are :
+- nbEcho : The number of times the original sound gets repeated.
+- decay : Each time the sound is repeated we jusge the amplitude of the sound using this value
+- delay : The offset added to the echo (multiplies accordingly to the echo ex : echo 1 will have 1x this value, echo 2 will have 2x this value, etc..)
+- sampleRate : The sampleRate of the sound
+- dryData : The original sound
 
 Example :
 ```fs
@@ -489,7 +488,7 @@ The note durations available are:
 
 The tests can be found in the Synthesizer.Test project. To run them you'll have to be located in the project folder and run the dotnet test command.
 
-## see also
+## See Also
 
 Info on [**.mp3 files**](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/blob/main/Informations/INFO%20mp3.md)<br>
 Info on [**.Wav files**](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/blob/main/Informations/INFO.md)<br>
@@ -500,10 +499,10 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 
 ## **Definitions**
 
-[^1]: Octaves: A series of eight notes occupying the interval between (and including) two notes, one having twice or half the frequency of vibration of the other.
+[^1]: Octaves : A series of eight notes occupying the interval between (and including) two notes, one having twice or half the frequency of vibration of the other.
 
-[^2]: Notes: A note is a symbol denoting a musical sound.
+[^2]: Notes : A note is a symbol denoting a musical sound.
 
-[^3]: Wave functions: 
+[^3]: Wave functions : 
 
-[^4]: Musical durations:  
+[^4]: Musical durations : 
