@@ -97,7 +97,7 @@ module Filter =
             x * (oscillator frequency amplitude verticalShift 0. t)
         )
 
-    let LFO_FM (altWave:List<float>) (data:List<float>) (multiplicator:float) =
+    let LFO_FM (modWave:List<float>) (data:List<float>) (multiplicator:float) =
         
         let getShift (startAmp:float) (endAmp:float) (nStep:float)=
             let fullRange = endAmp - startAmp
@@ -105,13 +105,13 @@ module Filter =
             [for i in startAmp .. step .. endAmp do yield i]
 
 
-        let rec LFO_FM_inner (altWave:list<float>) (dryData:list<float>) (wetData0:list<float>) =
-            if altWave.Length<dryData.Length then failwith "AltWave too short for LFO FM! AltWave must have at least the longer of the dryData!"
+        let rec LFO_FM_inner (modWave:list<float>) (dryData:list<float>) (wetData0:list<float>) =
+            if modWave.Length<dryData.Length then failwith "modWave too short for LFO FM! modWave must have at least the longer of the dryData!"
             if dryData.Length<=2 then wetData0
             else 
                 //printfn $"{dryData.Length}"
 
-                let delta = altWave[0] * multiplicator
+                let delta = modWave[0] * multiplicator
 
                 let wetData = 
                     match None with 
@@ -120,11 +120,11 @@ module Filter =
 
             
                 match None with
-                | _ when delta>0. -> LFO_FM_inner altWave[1..] dryData[1..] wetData
-                | _ when delta<0. -> LFO_FM_inner altWave[1..] dryData[(int (Math.Abs (Math.Floor delta)))..] wetData
-                | _ -> LFO_FM_inner altWave[1..] dryData[1..] wetData 
+                | _ when delta>0. -> LFO_FM_inner modWave[1..] dryData[1..] wetData
+                | _ when delta<0. -> LFO_FM_inner modWave[1..] dryData[(int (Math.Abs (Math.Floor delta)))..] wetData
+                | _ -> LFO_FM_inner modWave[1..] dryData[1..] wetData 
 
-        LFO_FM_inner altWave data []
+        LFO_FM_inner modWave data []
 
     let LowPass sampleRate cutoffFreq (data:List<float>) =
         let RC = 1. / (2. * Math.PI * cutoffFreq)
