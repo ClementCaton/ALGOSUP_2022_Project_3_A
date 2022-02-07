@@ -59,7 +59,7 @@
 
 ## Project
 
-The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Robert Pickering*](https://github.com/robertpi) was to create a Sound Synthesizer able to open, modify, create and save sounds.
+The project given by [*Algosup*](https://www.algosup.com/index.html) and [*Robert Pickering*](https://github.com/robertpi) was to create a Sound Synthesizer able to open, modify, create and save sounds written in F#.
 
 
 ## Project members
@@ -77,9 +77,11 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 
 ### Prerequisites
 
-Download .Net 6.0 or newer
+Download .NET 6.0 or newer
 
 ## Download
+
+You can simply download our lastest builds by the NuGet platfom then use these commands 
 
 <br>
 
@@ -89,7 +91,7 @@ Download .Net 6.0 or newer
 
 <br>
 
-#### Windows
+#### Nuget
 
 ``Install-Package Synthesizer -Version 1.1.0``
 
