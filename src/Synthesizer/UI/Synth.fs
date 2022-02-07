@@ -58,7 +58,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
             
     member x.Compose = x.ComposeCutCorner 100
     
-    member x.ComposeNoCutCorner sounds = List.concat
+    member x.ComposeNoCutCorner (sounds:list<list<float>>) = List.concat sounds
     
     member x.Add sounds = Utility.AddMean sounds
 
