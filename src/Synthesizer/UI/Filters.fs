@@ -106,6 +106,7 @@ module Filter =
 
 
         let rec LFO_FM_inner (altWave:list<float>) (dryData:list<float>) (wetData0:list<float>) =
+            if altWave.Length<dryData.Length then failwith "AltWave too short for LFO FM! AltWave must have at least the longer of the dryData!"
             if dryData.Length<=2 then wetData0
             else 
                 //printfn $"{dryData.Length}"
