@@ -445,7 +445,7 @@ The note durations available are:
 
 ## Unit Test
 
-The tests are in the Synthesizer.Test project. To run them you just need to be inside the project and use ``dotnet test``.
+The tests can be found in the Synthesizer.Test project. To run them you'll have to be located in the project folder and run the dotnet test command.
 
 ## see also
 
