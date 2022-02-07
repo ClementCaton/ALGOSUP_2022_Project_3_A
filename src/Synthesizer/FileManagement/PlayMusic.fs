@@ -17,11 +17,11 @@ module PlayMusic
         let timeOffset = Time.FromSeconds(float32(offset))
         music.PlayingOffset <- timeOffset
         music.Play()
-        ignore (System.Console.ReadLine())  //This line allows the sfml to play until the user press the enter key
+        ignore (System.Console.ReadLine()) // press enter to end it // thread.sleep(1) could be another solution
     
     let PlayMac offset (file:string) =
         Process.Start("afplay", file + " -t " + string offset)
-
+        ignore (System.Console.ReadLine()) // press enter to end it // thread.sleep(1) could be another solution
 
     /// <summary>
     /// This function is just an alias for PlayWithOffset that gives an offset of 0 seconds. It requires only one parameter
