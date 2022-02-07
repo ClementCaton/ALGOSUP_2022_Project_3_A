@@ -50,27 +50,27 @@ type WriteWav(
     member x.Write stream (data: List<List<float>>) =
         if pcmFormat <> 1 then failwithf "Invalid pcm format %i" pcmFormat
             
-            let nbChannels = List.length data
-            let byteRate = sampleRate * nbChannels * bytesPerSample
-            let blockAlign = uint16 (nbChannels * bytesPerSample)
-            
-            let transposed = data |> List.transpose
-            let byteData = [| for sample in transposed do yield! [| for channel in sample do yield! ToBytes channel |] |]
-            
-            let encode = new System.Text.UTF32Encoding() 
-            use writer = new BinaryWriter(stream, encode, true)
-            // RIFF
-            writer.Write("RIFF"B)
-            writer.Write(36 + byteData.Length) // File size
-            writer.Write("WAVE"B)
-            // fmt
-            writer.Write("fmt "B)
-            writer.Write(16) // Header size
-            writer.Write(uint16 pcmFormat)
-            writer.Write(uint16 nbChannels)
-            writer.Write(sampleRate)
-            writer.Write(byteRate)
-            writer.Write(blockAlign)
+        let nbChannels = List.length data
+        let byteRate = sampleRate * nbChannels * bytesPerSample
+        let blockAlign = uint16 (nbChannels * bytesPerSample)
+        
+        let transposed = data |> List.transpose
+        let byteData = [| for sample in transposed do yield! [| for channel in sample do yield! ToBytes channel |] |]
+        
+        let encode = new System.Text.UTF32Encoding()
+        use writer = new BinaryWriter(stream, encode, true)
+        // RIFF
+        writer.Write("RIFF"B)
+        writer.Write(36 + byteData.Length) // File size
+        writer.Write("WAVE"B)
+        // fmt
+        writer.Write("fmt "B)
+        writer.Write(16) // Header size
+        writer.Write(uint16 pcmFormat)
+        writer.Write(uint16 nbChannels)
+        writer.Write(sampleRate)
+        writer.Write(byteRate)
+        writer.Write(blockAlign)
         writer.Write(uint16 bitsPerSample)
         // data
         writer.Write("data"B)
