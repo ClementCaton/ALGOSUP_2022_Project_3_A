@@ -541,7 +541,23 @@ The above examples give the following outputs:
 
 ## LowPass / HighPass / BandPass / RejectBand filters
 
-<span style="color: red;">WIP</span>
+These are 4 filters appliable to the audio data.
+
+They are used to cut off frequencies above a given treshold, below a given treshold, both above and below a given treshold, or both above and below a given treshold and inverse.
+
+They are used like so :
+```fs
+  let musicLowpass = Filter.LowPass sampleRate cutOffFreq Music
+```
+```fs
+  let musicHighpass = Filter.HighPass sampleRate cutOffFreq Music
+```
+```fs
+  let musicBandpass = Filter.BandPass sampleRate lowCutOffFreq highCutOffFreq Music
+```
+```fs
+  let musicRejectBand = Filter.RejectBand sampleRate lowCutOffFreq highCutOffFreq Music
+```
 
 # Footnotes
 
