@@ -93,6 +93,23 @@ module Utility =
     let AddMaximize = AddMean >> Maximize
 
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
+    let AddSimple (sounds:list<list<float>>) = 
+        let size = sounds |> List.map List.length |> List.max
+        let expand sound = List.append sound (List.replicate (size - List.length sound) 0.)
+        let add (values:List<float>) = 
+            let sum = List.sum values
+            if sum>1. then 1.
+            else sum
+
+        sounds |> List.map expand |> List.transpose |>  List.map add
+
+
 
     /// <summary>
     /// 
@@ -101,7 +118,7 @@ module Utility =
     /// <returns></returns>
     
     let Overdrive multiplicator (x:List<float>) =
-        [for i in x do 
-            if i < (-1. * multiplicator * 256.) then (-1. * multiplicator * 256.) else
-            if i > (1. * multiplicator  * 256.) then (1. * multiplicator * 256.) else
-            i]
+        x |> List.map (
+            min multiplicator
+            >> max (multiplicator * -1.)
+        )
