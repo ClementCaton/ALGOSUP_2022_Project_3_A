@@ -372,7 +372,7 @@ These two are equivalents.
 
 ## **Preview**
 
-Its possible to create a preview of ant audio loaded into the filter using the ``Synth.preview (title:string) (sound:List<float>)`` function.
+Its possible to create a preview of an audio loaded into the filter using the ``Synth.preview (title:string) (sound:List<float>)`` function.
 
 Example:
 
@@ -383,14 +383,28 @@ let cut = Utility.cutCorners 5000 basic     // Making it look a bit more interre
 Synth.preview "Example" cut |> ignore       // Launch preview
 ```
 
-The above example automatically opens the browser with the following image:
+The above example automatically opens the browser with the following image :
+
 ![Preview](Reports/Files/preview.png)
 
 Tools to zoom/zoom out are also present on the page.
 
 ## **Frequency analysis**
 
-<span style="color: red;">WIP</span>
+It's possible to create a frequency analysis by using a fourrier transform on an audio file using :
+``member x.Fourier (data:List<float>) =
+        FrequencyAnalysis.Fourier x.sampleRate data``
+
+Example : 
+```fs
+
+```
+
+The above example automatically opens the browser with the following image :
+
+![Preview](Reports/Files/Frequency-Analysis.png)
+
+Tools to zoom/zoom out are also present on the page.
 
 ## **Filters**
 
@@ -417,23 +431,67 @@ To complement your sounds you can add some filters :
 
 You can use this function to apply multi filters at once : 
 
-``member x.ApplyFilters filters data =
-Filter.ApplyFilters filters data``
+```fs
+member x.ApplyFilters filters data =
+    Filter.ApplyFilters filters data
+```
 
+Like so :
+```fs
+let x = Synth()
+
+let MusicWithFilters = x.ApplyFilters [
+    Filter.ChangeAmplitude 0.5;
+    Filter.LowPass 44100. 400.;
+    Filter.Echo 4 0.7 1.5 44100.] Music
+```
 
 ## Changing amplitude
 
-<span style="color: red;">WIP</span>
+To change the amplitude of a sound, use the ``Filter.ChangeAmplitude (amplitude:float)`` Filter.
+
+```fs
+    let ChangeAmplitude multiplicator (x:List<float>) =
+        x |> List.map (( * ) multiplicator)
+```
+
+Like so :
+```fs
+let MusicWithAmplitude = Filter.ChangeAmplitude 0.5 Music
+```
+
+## Custom repeater filter
+
+The repeater filter does exatly what it says on the tin.
+It repeats the inputed data with an offset and readds to the original sound.
+This filter is the basis on which we built the Reverb and Echo filters.
+
+The function looks like this: ``Filter.Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)``
+
+The variables inputed are:
+- nbEcho: The number of times the original sound gets repeated.
+- decay: Each time the sound is repeated we jusge the amplitude of the sound using this value
+- delay: The offset added to the echo (multiplies accordingly to the echo ex.: echo 1 will have 1x this value, echo 2 will have 2x this value, etc..)
+- sampleRate: The sampleRate of the sound
+- dryData: The original sound
+
+Example :
+```fs
+let synth = Synth() // Init
+let basicSound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5     // Creating a basic sound with an envelope to make it interresting
+
+let repeated1 = Filter.Repeater 5 0.6 2.5 44100. basicSound
+let repeated2 = Filter.Repeater 5 0.9 4. 44100. basicSound
+```
+The above examples give the following outputs:
+![Repeater examples](Reports/Files/repeater.png)
+
 
 ## Reverb
 
 <span style="color: red;">WIP</span>
 
 ## Echo
-
-<span style="color: red;">WIP</span>
-
-## Custom repeater filter
 
 <span style="color: red;">WIP</span>
 
