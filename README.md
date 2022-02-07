@@ -41,6 +41,8 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 
 ``<PackageReference Include="Synthesizer" Version="1.1.0" />``
 
+<br>
+
 ## **Installation**
 
 
@@ -126,7 +128,7 @@ The library supports the creation
 
 ## Creating audio data with an envelope
 
-In order to create a sound with an enveloppe you need to use ``Synth.SoundWithEnveloppe
+In order to create a sound with an enveloppe you need to use ``Synth.SoundWithEnveloppe``
 
 ## Creating audio data with a custom envelope
 
@@ -321,8 +323,10 @@ To complement your sounds you can add some filters :
 
 ## Apply multiple filters at once
 
-<span style="color: red;">WIP</span>
+You can use this function to apply multi filters at once : 
 
+``member x.ApplyFilters filters data =
+Filter.ApplyFilters filters data``
 
 
 ## Changing amplitude
@@ -343,7 +347,7 @@ To complement your sounds you can add some filters :
 
 ## Frequency analysis 
 
-
+<span style="color: red;">Wip</span>
 
 ## Flanger
 

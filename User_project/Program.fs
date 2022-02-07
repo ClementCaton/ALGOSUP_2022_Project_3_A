@@ -26,5 +26,5 @@ module Program =
     ]
 
     synth.WriteToWav "amogus.wav" [music]
-    synth.PlayWav (float32 3) [music] |> ignore 
+    synth.PlayWav (float32 1) [music] |> ignore 
 
