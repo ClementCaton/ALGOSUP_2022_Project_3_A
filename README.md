@@ -5,49 +5,49 @@
 
 - [ALGOSUP_2022_Project_3_A | Sound Synthesizer](#algosup_2022_project_3_a--sound-synthesizer)
   - [**Project:**](#project)
-  - [**Getting Started**](#getting-started)
   - [**Project members**](#project-members)
 - [**Project documentation**](#project-documentation)
-  - [Prerequisites](#prerequisites)
-  - [.Net CLI](#net-cli)
-  - [Windows](#windows)
-  - [Package Reference](#package-reference)
-  - [**Installation**](#installation)
-  - [**Basic structure**](#basic-structure)
+    - [**Getting Started**](#getting-started)
+      - [Prerequisites](#prerequisites)
+        - [.Net CLI](#net-cli)
+        - [Windows](#windows)
+        - [Package Reference](#package-reference)
+      - [**Installation**](#installation)
+      - [**Basic structure**](#basic-structure)
   - [**Reading files**](#reading-files)
-  - [Reading wav files](#reading-wav-files)
-  - [Reading mp3 files](#reading-mp3-files)
+    - [Reading wav files](#reading-wav-files)
+    - [Reading mp3 files](#reading-mp3-files)
   - [**Writing to files / Saving**](#writing-to-files--saving)
-  - [Writing wav files](#writing-wav-files)
-  - [Writing mp3 files](#writing-mp3-files)
+    - [Writing wav files](#writing-wav-files)
+    - [Writing mp3 files](#writing-mp3-files)
   - [**Playing music**](#playing-music)
   - [**Dealing with stereo**](#dealing-with-stereo)
   - [**Creating audio data**](#creating-audio-data)
-  - [Creating audio data with an envelope](#creating-audio-data-with-an-envelope)
-  - [Creating audio data with a custom envelope](#creating-audio-data-with-a-custom-envelope)
+    - [Creating audio data with an envelope](#creating-audio-data-with-an-envelope)
+    - [Creating audio data with a custom envelope](#creating-audio-data-with-a-custom-envelope)
   - [**Finding frequencies from notes and octaves**](#finding-frequencies-from-notes-and-octaves)
-  - [Finding notes with a custom default frequency](#finding-notes-with-a-custom-default-frequency)
+    - [Finding notes with a custom default frequency](#finding-notes-with-a-custom-default-frequency)
   - [**Creating silence**](#creating-silence)
   - [**Cutting audio**](#cutting-audio)
   - [**Additioning audio data**](#additioning-audio-data)
-  - [Additioning audio with a predefined ratio](#additioning-audio-with-a-predefined-ratio)
+    - [Additioning audio with a predefined ratio](#additioning-audio-with-a-predefined-ratio)
   - [**Composing**](#composing)
   - [**Preview**](#preview)
   - [**Frequency analysis**](#frequency-analysis)
   - [**Filters**](#filters)
-  - [Usable Filters](#usable-filters)
-  - [Apply multiple filters at once](#apply-multiple-filters-at-once)
-  - [Changing amplitude](#changing-amplitude)
-  - [Custom repeater filter](#custom-repeater-filter)
-  - [Echo](#echo)
-  - [Reverb](#reverb)
-  - [Flanger](#flanger)
-  - [Envelope](#envelope)
-  - [Custom envelope](#custom-envelope)
-  - [Low frequency oscillation](#low-frequency-oscillation)
-    - [AM](#am)
-    - [FM](#fm)
-  - [LowPass / HighPass / BandPass / RejectBand filters](#lowpass--highpass--bandpass--rejectband-filters)
+    - [Usable Filters](#usable-filters)
+    - [Apply multiple filters at once](#apply-multiple-filters-at-once)
+    - [Changing amplitude](#changing-amplitude)
+    - [Custom repeater filter](#custom-repeater-filter)
+    - [Echo](#echo)
+    - [Reverb](#reverb)
+    - [Flanger](#flanger)
+    - [Envelope](#envelope)
+    - [Custom envelope](#custom-envelope)
+    - [Low frequency oscillation](#low-frequency-oscillation)
+      - [AM](#am)
+      - [FM](#fm)
+    - [LowPass / HighPass / BandPass / RejectBand filters](#lowpass--highpass--bandpass--rejectband-filters)
 - [Footnotes](#footnotes)
   - [Usable notes](#usable-notes)
   - [Possible Waves](#possible-waves)
@@ -61,9 +61,6 @@
 
 The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Robert Pickering*](https://github.com/robertpi) was to create a Sound Synthesizer able to open, modify, create and save sounds.
 
-## **Getting Started**
-
-<br>
 
 ## **Project members**
 
@@ -75,6 +72,10 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 [*Léo Chartier*](https://github.com/leo-chartier)
 
 # **Project documentation**
+
+## **Getting Started**
+
+<span style="color: red;">WIP</span>
 
 ## Prerequisites
 
@@ -101,6 +102,8 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 <br>
 
 ## **Installation**
+
+<span style="color: red;">WIP</span>
 
 ## **Basic structure**
 
@@ -589,12 +592,12 @@ They are used like so :
 
 # Footnotes
 
-## Usable notes
+## Musical notes
 
 The musical notes available are:
 > ``C``,  ``Cs / Db``, ``D``, ``Ds / Eb``, ``E``, ``F``, ``Fs / Gb``, ``G``, ``Gs / Ab``, ``A``, ``As / Bb``, ``B``
 
-## Possible Waves
+## Wave functions
 
 The wave types available are:
 > ``Sin``, ``Square``, ``Triangular``, ``Saw``, ``Silence``, ``CustomInstrument``
