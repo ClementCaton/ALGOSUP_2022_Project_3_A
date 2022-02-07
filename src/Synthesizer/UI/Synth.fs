@@ -63,19 +63,32 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     /// <param name="frequency">Frequency of the note</param>
     /// <param name="duration">Duration of the sound</param>
     /// <param name="waveType">Sound generator</param>
-    /// <param name="sustain">Sustain duration</param>
+    /// <param name="sustain">Sustain amplitude</param>
     /// <param name="attack">Attack duration</param>
     /// <param name="hold">Hold duration</param>
-    /// <param name="decay">Decay amplitude</param>
+    /// <param name="decay">Decay durqtion</param>
     /// <param name="release">Release duration</param>
     /// <returns>Enveloped sound</returns>
     
-    member x.SoundWithEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (sustain:float) (attack:float) (hold:float) (decay:float) (release:float) = // time, time, time, amp, time
-        let data = SoundData(frequency0 = frequency, duration0 = duration, bpm0 = x.bpm) // TEMP: Remove bpm
+    member x.SoundWithEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (sustain:float) (attack:float) (hold:float) (decay:float) (release:float) =
+        let data = SoundData(frequency0 = frequency, duration0 = duration, bpm0 = x.bpm)
         //! The "1." was supposed to be "(data.overDrive)"
         Utility.Overdrive 1. (data.CreateWithEnvelope waveType sustain attack hold decay release)
 
 
+       /// <summary>
+    /// Creates a sound with a single note in a custom envelope
+    /// </summary>
+    /// <param name="frequency">Frequency of the note</param>
+    /// <param name="duration">Duration of the sound</param>
+    /// <param name="waveType">Sound generator</param>
+    /// <param name="dataPoints">List of datapoints on which the sound is pushed towrds (time, amp)</param>
+    /// <returns>Enveloped sound</returns>
+    
+    member x.SoundWithCustomEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (dataPoints: List<float * float>) = // (time, amp)
+        let data = SoundData(frequency0 = frequency, duration0 = duration, bpm0 = x.bpm)
+        //! The "1." was supposed to be "(data.overDrive)"
+        Utility.Overdrive 1. (data.CreateFromDataPoints waveType dataPoints)
 
     /// <summary>
     /// Writes a music to a .wav file.

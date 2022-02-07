@@ -228,7 +228,54 @@ The above example creats the following sound:
 
 ## Creating audio data with a custom envelope
 
-<span style="color: red;">WIP</span>
+Its possible to create sounds with more ezoteric envelopes using the ``Synth.SoundWithCustomEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (dataPoints: List<float * float>)`` function.
+
+The ``dataPoints`` variable refers to a list of coordinates for which the envelope will "nudge" the sound towards.
+It contains a list of tuples, each tuple represents a point in time first and an amplitude second.
+
+For the shake of an example, lets create a simple envelope that only rises up from 0 to 1 and than back again to 0:
+
+First of all, a simple sound withoun an envelope so we'll have a point of reference:
+
+```fs
+let synth = Synth() // Init
+let basicSound = synth.Note (Seconds 1) Note.A 4
+
+synth.WriteToWav "basic.wav" [basicSound]
+```
+This, of course, live us with a straight blob of a sinusoidal soundwave with a duration of 1 second:
+![Simple sinwave](Reports/Files/customEnv-0.PNG)
+
+Now if we do the same thing but with our envelope that would look a little like this:
+
+```fs
+let synth = Synth() // Init
+let custEnvSound = synth.SoundWithCustomEnveloppe (synth.GetNoteFreq Note.A 4) (Seconds 1) Sin [(0., 0.); (0.5, 1.); (1., 0.)]
+
+synth.WriteToWav "custEnvSound.wav" [custEnvSound]
+```
+The output already looks a bit more interresting:
+
+![Simple envelope](Reports/Files/customEnv-1.PNG)
+
+A better way of doing this would be to outright create a function for the new envelope:
+```fs
+let synth = Synth() // Init
+
+let exampleCustomEnvelope (note:Note) (octav:int) (duration:float) =
+    synth.SoundWithCustomEnveloppe (synth.GetNoteFreq note octav) (Seconds duration) Sin [(0., 0.); ((duration/2.), 1.); (duration, 0.)]
+
+let custEnvSound1 = exampleCustomEnvelope Note.A 4 1.
+let custEnvSound2 = exampleCustomEnvelope Note.B 6 2.
+let custEnvSound3 = exampleCustomEnvelope Note.D 3 3.
+
+synth.WriteToWav "custEnvSound1.wav" [custEnvSound1]
+synth.WriteToWav "custEnvSound2.wav" [custEnvSound2]
+synth.WriteToWav "custEnvSound3.wav" [custEnvSound3]
+```
+This way the new, completielly personalised, envelope can easily be applied to a large number of notes.
+![Custom envelope final](Reports/Files/customEnv-2.PNG)
+
 
 ## **Finding frequencies from notes and octaves**
 
