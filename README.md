@@ -53,15 +53,26 @@ The ``Synth`` object which is the actual sound synthesizer and the ``Filter`` ob
 
 ## Reading wav files
 
-You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav name.Wav``
+You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav (fileName:string)``.
 
-You can open it from your own path using ``readFromWavWithPath /path-to.Wav``
+You can open it from your own path using ``Synth.readFromWavWithPath (filePath:string)``.
+
+These functions return a tuple containing the ``soundData:list<list<float>>``, ``duration:float``, ``sampleRate:int`` and the ``bitsPerSample:int``.
+
+Example:
+```fs
+let inOutputData, inOutputDuration, inOutputSampleRate, inOutputBPSampleRate = synth.ReadFromWav "yourFileName.wav"     // get everything from a file in the Output folder
+
+let fromPathData, _, fromPathSampleRate, _ = Synth.readFromWavWithPath "/yourPath/yourFileName.wav"     // get only the sound data and the samplerate from a predefined path
+```
 
 ## Reading mp3 files
 
-You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav name.mp3``
+<span style="color: red;">WIP</span>
 
-You can open it from your own path using ``readFromWavWithPath /path-to.mp3``
+<!-- You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromMp3 name.mp3``
+
+You can open it from your own path using ``readFromWavWithPath /path-to.mp3`` -->
 
 ## **Writing to files / Saving**
 
