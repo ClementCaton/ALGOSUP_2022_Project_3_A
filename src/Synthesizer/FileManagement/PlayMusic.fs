@@ -2,6 +2,7 @@ module PlayMusic
     open System.IO
     open SFML.Audio
     open SFML.System
+    open System.Diagnostics
 
 
 
@@ -16,7 +17,10 @@ module PlayMusic
         let timeOffset = Time.FromSeconds(offset)
         music.PlayingOffset <- timeOffset
         music.Play()
-        ignore (System.Console.ReadLine())
+        ignore (System.Console.ReadLine()) // press enter to end it // thread.sleep(1) could be another solution
+    
+    let PlayMac (file:string) offset =
+        Process.Start("afplay", file + " -t " + string offset)
 
 
 

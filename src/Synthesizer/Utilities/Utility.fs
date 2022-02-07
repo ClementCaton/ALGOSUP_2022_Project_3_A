@@ -1,4 +1,5 @@
 namespace Synthesizer
+open System
 
 module Utility =
     
@@ -30,7 +31,8 @@ module Utility =
     /// <param name=""></param>
     /// <returns></returns>
     
-    let CutCorners limit (data:List<float>) =
+    let CutCorners (limit0:int) (data:List<float>) =
+        let limit = if limit0>data.Length/2 then data.Length/2 else limit0
         let step = 1. / float limit
         let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
         let endVals = List.map2(fun x i -> x * step * i) data[data.Length-limit..] [float limit .. -1. .. 1.]
@@ -44,19 +46,51 @@ module Utility =
     /// </summary>
     /// <param name=""></param>
     /// <returns></returns>
-    
-    let Add sounds =
-        let size = sounds |> List.map List.length |> List.max
-        let mean = 1. / (float (List.length sounds))
-        let expand sound =
-            List.append sound (Array.toList(Array.replicate (size - List.length sound) 0.))
-        let rec AddTwo (sounds: List<float> list) =
-            match sounds with
-            | a::b::rest -> AddTwo ((List.map2 ( + ) a b)::rest)
-            | [a] -> a
-            | [] -> List.empty
+        
+    let Maximize data =
+        let factor = data |> List.map abs |> List.max |> ( / ) 1.
+        data |> List.map (( * ) factor)
+        
+        
 
-        sounds |> List.map expand |> AddTwo |> List.map (( * ) mean)
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+
+    let AddFactor (map:List<Tuple<List<float>, float>>) =
+        let size = map |> List.map fst |> List.map List.length |> List.max
+        let expand sound = List.append sound (List.replicate (size - List.length sound) 0.)
+        map
+        |> List.unzip
+        ||> List.map2 (fun data factor -> data |> List.map (( * ) factor) )
+        |> List.map expand
+        |> List.transpose
+        |> List.map List.sum
+
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
+    let AddMean sounds =
+        let mean = 1. / (float (List.length sounds))
+        sounds |> List.map (fun sound -> sound, mean) |> AddFactor
+
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
+    let AddMaximize = AddMean >> Maximize
 
 
 
