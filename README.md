@@ -316,7 +316,7 @@ These two are equivalents.
 
 ## **Preview**
 
-Its possible to create a preview of ant audio loaded into the filter using the ``Synth.preview (title:string) (sound:List<float>)`` function.
+Its possible to create a preview of an audio loaded into the filter using the ``Synth.preview (title:string) (sound:List<float>)`` function.
 
 Example:
 
@@ -327,14 +327,21 @@ let cut = Utility.cutCorners 5000 basic     // Making it look a bit more interre
 Synth.preview "Example" cut |> ignore       // Launch preview
 ```
 
-The above example automatically opens the browser with the following image:
+The above example automatically opens the browser with the following image :
+
 ![Preview](Reports/Files/preview.png)
 
 Tools to zoom/zoom out are also present on the page.
 
 ## **Frequency analysis**
 
-<span style="color: red;">WIP</span>
+It's possible to create a frequency analysis by using a fourrier transform on an audio file using :
+``member x.Fourier (data:List<float>) =
+        FrequencyAnalysis.Fourier x.sampleRate data``
+
+The above example automatically opens the browser with the following image :
+
+![Preview](Reports/Files/Frequency-Analysis.png)
 
 ## **Filters**
 
