@@ -45,4 +45,4 @@ module Program =
         synth.Note Quarter Note.C 5
     ]
 
-    printfn "%A" (synth.ReadFromMP3Header "Silence")
+    //printfn "%A" (synth.ReadFromMP3Header "Silence")
