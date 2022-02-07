@@ -81,7 +81,7 @@ module Filter =
             if minAmp >= current then
                 step
             else
-                calcSteps minAmp decay (current*decay) (step+1)
+                calcSteps minAmp (decay*decay) (current*decay) (step+1)
         let nbEcho = calcSteps minAmpRatio decay 1. 0
 
         Repeater nbEcho decay delay sampleRate dryData

@@ -20,7 +20,7 @@ module PlayMusic
         ignore (System.Console.ReadLine()) // press enter to end it // thread.sleep(1) could be another solution
     
     let PlayMac offset (file:string) =
-        Process.Start("afplay", file + " -t " + string offset)
+        Process.Start("afplay", file + " -t " + string offset) |> ignore
         ignore (System.Console.ReadLine()) // press enter to end it // thread.sleep(1) could be another solution
 
     /// <summary>

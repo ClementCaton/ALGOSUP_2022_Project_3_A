@@ -13,10 +13,6 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
 
     member val waveType = defaultArg baseWaveType Sin
         with get, set
-        
-    member x.GetNoteFreq octav note =
-        CalcNoteFreq(octav, note).Output
-
 
     /// <summary>
     /// Calculates a frequency with the base A4=440 Hz
@@ -104,18 +100,6 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
         use stream = File.Create(path + filename)
         WriteWav().Write (stream) (music)
 
-    member x.ReadFromWav (name: string) =
-        if name.Contains(".wav") then
-            ReadWav().Read (File.Open("./Output/"+name, FileMode.Open))
-        else
-            ReadWav().Read (File.Open("./Output/"+name+".wav", FileMode.Open))
-
-    member x.ReadFromWavWithPath (path: string) =
-        if path.Contains(".wav") then
-            ReadWav().Read (File.Open(path, FileMode.Open))
-        else
-            ReadWav().Read (File.Open(path+".wav", FileMode.Open))
-
     member x.ReadFromMP3Header (name: string) =
         if name.Contains(".mp3") then
             readMP3(File.Open("./Output/" + name, FileMode.Open)).mp3Decoding
@@ -134,8 +118,11 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
     /// <param name="filename">Name of the input file</param>
     /// <returns>Music from the file</returns>
     
-    member x.ReadFromWav (filename:string) =
-        ReadWav().Read (File.Open("./Output/"+filename, FileMode.Open))
+    member x.ReadFromWav (name: string) =
+        if name.Contains(".wav") then
+            ReadWav().Read (File.Open("./Output/"+name, FileMode.Open))
+        else
+            ReadWav().Read (File.Open("./Output/"+name+".wav", FileMode.Open))
 
 
 
@@ -145,10 +132,11 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
     /// <param name="filepath">Path of the input file</param>
     /// <returns>Music from the file</returns>
     
-    member x.ReadFromWavWithPath (filepath:string) =
-        ReadWav().Read (File.Open(filepath, FileMode.Open))
-
-
+    member x.ReadFromWavWithPath (path: string) =
+        if path.Contains(".wav") then
+            ReadWav().Read (File.Open(path, FileMode.Open))
+        else
+            ReadWav().Read (File.Open(path+".wav", FileMode.Open))
 
     /// <summary>
     /// Creates a sound with a single note
