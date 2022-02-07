@@ -35,6 +35,15 @@ type SoundData(
         ?sampleRate0:float,
         ?bpm0:float) =
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
     let GetDuration durationType bpm =
         match durationType with
         | Whole ->  4.                  * 60./bpm
@@ -54,11 +63,35 @@ type SoundData(
     let frequency = defaultArg frequency0 440.
     let overDrive = defaultArg overDrive0 1.
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
     let ToByte x = x/2. * 255. |> byte
     //https://www.geogebra.org/m/NS9DJf4S
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
     let SecTobyte (sec:float) =
         sec * sampleRate
+    
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
     
     let WaveFunc waveType = 
         match waveType with
@@ -69,10 +102,27 @@ type SoundData(
         | Silence -> (fun freq amp vShift phaseShift t -> 0)
         | CustomInstrument func -> func
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
     member x.Create waveType =
         let a = List.init arraySize (fun i -> ((WaveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate)))
         Utility.Overdrive overDrive a
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
     member x.CreateFromDataPoints waveType (dataPoints0: List<float * float>) = // (time, amp)
         let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
         let flatSoundData = Utility.Overdrive 1. (List.init (int (SecTobyte (fst dataPoints[dataPoints.Length-1])))  (fun i -> ((WaveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate))))
@@ -85,6 +135,19 @@ type SoundData(
 
         output |> List.concat
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <param name=""></param>
+    /// <param name=""></param>
+    /// <param name=""></param>
+    /// <param name=""></param>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
     member x.CreateWithEnvelope waveType sustain attack hold0 decay0 release0 =  // time, time, time, amp, time
         let hold = hold0 + attack
         let decay = hold + decay0

@@ -6,6 +6,16 @@ open System.IO
 
 type ReadWav() =
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <param name=""></param>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
     let FromBytes nbChannels bytesPerSample bytes =
 
         match bytesPerSample with
@@ -22,6 +32,14 @@ type ReadWav() =
                 >> List.map (fun x -> (x * 2. + 1.) % 2. - 1.)
             )
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
     member x.Read stream =
         use reader = new BinaryReader(stream)
 

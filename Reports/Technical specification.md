@@ -20,6 +20,7 @@ Franck Jeannin, Robert Pickering
 ### Context
 
 The context of the project is to create a library that could be used by a developer/artist to create, modify, listen to and save sounds used for musical purposes as well as do the same to an entire list of said sounds.  
+
 [Project file](./Files/FsProject.pdf)
 
 ### Language
@@ -32,6 +33,8 @@ The context of the project is to create a library that could be used by a develo
 [**XPlot.Plotly**](https://fslab.org/XPlot/plotly.html)
 
 ### Dotnet version
+
+<br>
 
 dotnet 6.0
 
@@ -75,9 +78,9 @@ dotnet 6.0
 
 ## Out of scope
 
-|       Out of scope       |
-|--------------------------|
-| Long term support        |
+    |       Out of scope       |
+    |--------------------------|
+    | Long term support        |
 
 ## Test Plan
 
