@@ -10,23 +10,18 @@ open Synthesizer
 
 
 module Program =
-    let synth = new Synth()
+    let synth = Synth() // Init
+    let basicSound = synth.Note (Seconds 1) Note.A 4
+
+    let exampleCustomEnvelope (note:Note) (octav:int) (duration:float) =
+        synth.SoundWithCustomEnveloppe (synth.GetNoteFreq note octav) (Seconds duration) Sin [(0., 0.); ((duration/2.), 1.); (duration, 0.)]
+
+    let custEnvSound1 = exampleCustomEnvelope Note.A 4 1.
+    let custEnvSound2 = exampleCustomEnvelope Note.B 6 2.
+    let custEnvSound3 = exampleCustomEnvelope Note.D 3 3.
+
+    synth.WriteToWav "basic.wav" [basicSound]
+    synth.WriteToWav "custEnvSound1.wav" [custEnvSound1]
+    synth.WriteToWav "custEnvSound2.wav" [custEnvSound2]
+    synth.WriteToWav "custEnvSound3.wav" [custEnvSound3]
     
-    let music = synth.Compose [
-        synth.Note Eighth Note.C 5
-        synth.Note Eighth Note.Eb 5
-        synth.Note Eighth Note.F 5
-        synth.Note Eighth Note.Gb 5
-        synth.Note Eighth Note.F 5
-        synth.Note Eighth Note.Eb 5
-        synth.Note Eighth Note.C 5
-        synth.Note Sixteenth Note.Bb 4
-        synth.Note Sixteenth Note.D 5
-        synth.Note Quarter Note.C 5
-    ]
-
-    synth.WriteToWav "amogus.wav" [music]
-    synth.PlayWav (float32 1) [music] |> ignore 
-    let sound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5
-    synth.WriteToWav "env.wav" [sound]
-
