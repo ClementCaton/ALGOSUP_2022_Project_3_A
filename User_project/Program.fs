@@ -26,5 +26,7 @@ module Program =
     ]
 
     synth.WriteToWav "amogus.wav" [music]
-    synth.PlayWav (float32 3) [music] |> ignore 
+    synth.PlayWav (float32 1) [music] |> ignore 
+    let sound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5
+    synth.WriteToWav "env.wav" [sound]
 
