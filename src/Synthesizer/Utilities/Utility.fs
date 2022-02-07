@@ -10,7 +10,8 @@ module Utility =
     let CutEnd (sampleRate:float) time (data:List<float>) = 
         data[0 .. data.Length - int (sampleRate * time)-1] //need to add another time for the end
 
-    let CutCorners limit (data:List<float>) =
+    let CutCorners (limit0:int) (data:List<float>) =
+        let limit = if limit0>data.Length/2 then data.Length/2 else limit0
         let step = 1. / float limit
         let startVals = List.map2(fun x i -> x * step * i) data[..limit-1] [1. .. float limit]
         let endVals = List.map2(fun x i -> x * step * i) data[data.Length-limit..] [float limit .. -1. .. 1.]
