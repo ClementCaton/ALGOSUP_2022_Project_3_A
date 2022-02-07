@@ -4,6 +4,14 @@ module PlayMusic
     open SFML.System
     open System.Diagnostics
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <param name=""></param>
+    
     let PlayWithOffset offset (stream:Stream) =     //if the offset is > to the length of the music it will start from the beginning
         let music = new Music(stream)
         let timeOffset = Time.FromSeconds(offset)
@@ -14,9 +22,24 @@ module PlayMusic
     let PlayMac (file:string) offset =
         Process.Start("afplay", file + " -t " + string offset)
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    
     let Play stream =
         PlayWithOffset (float32(0.)) stream
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <param name=""></param>
+    
     let PlayWithOffsetFromPath offset (filePath:string) =
         let stream = File.Open (filePath, FileMode.Open)
         PlayWithOffset offset stream
