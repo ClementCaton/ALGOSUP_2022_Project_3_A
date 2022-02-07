@@ -60,7 +60,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     
     member x.ComposeNoCutCorner (sounds:list<list<float>>) = List.concat sounds
     
-    member x.Add sounds = Utility.Add sounds
+    member x.Add sounds = Utility.AddMean sounds
 
     member x.Preview title sound =
         Preview.Chart title sound
@@ -76,7 +76,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     member x.ForAllChannels func channels =
         channels |> List.map func
 
-    member x.Fourier wave =
+    member x.Fourier sampleRate wave =
         FrequencyAnalysis.Fourier(wave)
 
     member x.Cutstart time (data:List<float>) =
@@ -96,3 +96,22 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
 
     member x.ApplyFilters filters data =
         Filter.ApplyFilters filters data
+
+    member x.PlayWav (offset:float32) data =
+        match int Environment.OSVersion.Platform with
+        | 4| 6 -> 
+            x.WriteToWavWithPath "./Output/temp_file_storage/" ".tempFile.wav" data
+            PlayMusic.PlayMac "./Output/temp_file_storage/.tempFile.wav" offset |> ignore
+            File.Delete "./Output/temp_file_storage/.tempFile.wav"
+            Directory.Delete "./Output/temp_file_storage/" |> ignore
+        | _       ->  
+            let stream = new MemoryStream()
+            WriteWav().Write stream data 
+            PlayMusic.PlayWithOffset offset stream |> ignore
+
+    member x.PlayWavFromPath offset (filePath:string) =
+        match int Environment.OSVersion.Platform with
+        | 4| 6 -> 
+            PlayMusic.PlayMac filePath offset |> ignore
+        | _ ->  
+            PlayMusic.PlayWithOffsetFromPath offset filePath

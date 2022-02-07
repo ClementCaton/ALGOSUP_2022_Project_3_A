@@ -25,10 +25,10 @@ module Filter =
     let Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) = 
         let rec RepeaterInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
             if nbEcho=0 then
-                Utility.Add [dryData; wetData]
+                Utility.AddMean [dryData; wetData]
             else
                 let silence = SoundData(frequency0 = 0, duration0 = (Seconds (delay*float nbEcho)), bpm0 = 114).Create(Silence)
-                let updatedWetData = Utility.Add [wetData; List.concat [silence ; ChangeAmplitude decay dryData]]
+                let updatedWetData = Utility.AddMean [wetData; List.concat [silence ; ChangeAmplitude decay dryData]]
                 RepeaterInner (nbEcho-1) decay delay sampleRate updatedWetData dryData
 
         RepeaterInner nbEcho decay delay sampleRate [] dryData
@@ -66,7 +66,7 @@ module Filter =
         
         let wetData = FlangerInner step 1 1 0 dryData[silence.Length..] []
 
-        Utility.Add [dryData; (silence @ wetData)]
+        Utility.AddMean [dryData; (silence @ wetData)]
 
     let CustomEnvelope (dataPoints0: List<float * float>) (sampleRate:float) (data:List<float>) =
         let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
@@ -164,7 +164,7 @@ module Filter =
     let RejectBand sampleRate lowFreq highFreq (data:List<float>) = 
         let lowPassData = HighPass sampleRate lowFreq data
         let highPassData = LowPass sampleRate highFreq data
-        Utility.Add [lowPassData; highPassData]
+        Utility.AddMean [lowPassData; highPassData]
 
     let ApplyFilters filterList data =
         let mutable output = List.empty

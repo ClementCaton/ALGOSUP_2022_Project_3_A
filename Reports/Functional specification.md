@@ -22,7 +22,7 @@ The saving and loading of .wav files must also be possible at this stage.
 ## Use cases
  <!-- WIP -->
 
-## Defenitions
+## Definitions
 
 [^1]: Octaves: A series of eight notes occupying the interval between (and including) two notes, one having twice or half the frequency of vibration of the other.
 

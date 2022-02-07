@@ -38,7 +38,7 @@ let AddTest() =
     let data = synth.Note one Note.C 4
     let data2 = synth.Note one Note.C 7
 
-    let finalData = Utility.Add [data; data2]
+    let finalData = Utility.AddMean [data; data2]
 
     Assert.That(data.Length, Is.EqualTo(44100))
     Assert.That(finalData |> List.max, Is.LessThan(1))
