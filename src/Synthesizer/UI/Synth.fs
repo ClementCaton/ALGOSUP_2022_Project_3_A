@@ -130,6 +130,6 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
     member x.PlayWavFromPath offset (filePath:string) =
         match int Environment.OSVersion.Platform with
         | 4| 6 -> 
-            PlayMusic.PlayMac filePath offset
+            PlayMusic.PlayMac ("./Output/" + filePath) offset
         | _ ->  
-            PlayMusic.PlayWithOffsetFromPath offset filePath
+            PlayMusic.PlayWithOffsetFromPath offset ("./Output/" + filePath)
