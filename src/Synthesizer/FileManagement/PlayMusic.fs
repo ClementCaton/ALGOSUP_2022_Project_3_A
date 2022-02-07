@@ -19,7 +19,7 @@ module PlayMusic
         music.Play()
         ignore (System.Console.ReadLine())  //This line allows the sfml to play until the user press the enter key
     
-    let PlayMac (file:string) offset =
+    let PlayMac offset (file:string) =
         Process.Start("afplay", file + " -t " + string offset)
 
 
