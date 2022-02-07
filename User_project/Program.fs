@@ -10,8 +10,15 @@ open Synthesizer
 
 
 module Program =
-    let synth = new Synth()
-    
-    let sound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5
-    synth.WriteToWav "env.wav" [sound]
+    let synth = Synth() // Init
+    let basicSound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5     // Creating a basic sound with an envelope to make it interresting
+
+    let repeated1 = Filter.Repeater 5 0.6 2. 44100. basicSound
+    let repeated2 = Filter.Repeater 5 0.9 4. 44100. basicSound
+    let small = Filter.ChangeAmplitude 0.5 basicSound
+
+    synth.WriteToWav "basic.wav" [basicSound]
+    synth.WriteToWav "repeated1.wav" [repeated1]
+    synth.WriteToWav "repeated2.wav" [repeated2]
+    synth.WriteToWav "small.wav" [small]
 

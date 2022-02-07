@@ -364,6 +364,31 @@ To complement your sounds you can add some filters :
 
 <span style="color: red;">WIP</span>
 
+## Custom repeater filter
+
+The repeater filter does exatly what it says on the tin.
+It repeats the inputed data with an offset and readds to the original sound.
+This filter is the basis on which we built the Reverb and Echo filters.
+
+The function looks like this: ``Filter.Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)``
+
+The variables inputed are:
+- nbEcho: The number of times the original sound gets repeated.
+- decay: Each time the sound is repeated we jusge the amplitude of the sound using this value
+- delay: The offset added to the echo (multiplies accordingly to the echo ex.: echo 1 will have 1x this value, echo 2 will have 2x this value, etc..)
+- sampleRate: The sampleRate of the sound
+- dryData: The original sound
+
+Example:
+```fs
+let synth = Synth() // Init
+let basicSound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5     // Creating a basic sound with an envelope to make it interresting
+
+let repeated1 = Filter.Repeater 5 0.6 1.5 44100. basicSound
+
+let repeated2 = Filter.Repeater 10 0.9 4. 44100. basicSound
+```
+
 ## Reverb
 
 <span style="color: red;">WIP</span>
@@ -372,11 +397,10 @@ To complement your sounds you can add some filters :
 
 <span style="color: red;">WIP</span>
 
-## Custom repeater filter
+## Frequency analysis
 
 <span style="color: red;">WIP</span>
 
-## Frequency analysis
 
 ## Flanger
 
