@@ -381,7 +381,17 @@ let MusicWithFilters = x.ApplyFilters [
 
 ## Changing amplitude
 
-<span style="color: red;">WIP</span>
+To change the amplitude of a sound, use the ``Filter.ChangeAmplitude (amplitude:float)`` Filter.
+
+```fs
+    let ChangeAmplitude multiplicator (x:List<float>) =
+        x |> List.map (( * ) multiplicator)
+```
+
+Like so :
+```fs
+let MusicWithAmplitude = Filter.ChangeAmplitude 0.5 Music
+```
 
 ## Reverb
 
