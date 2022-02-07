@@ -23,7 +23,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     /// <param name="note">Value of the note</param>
     /// <returns>Frequency of the note</returns>
     
-    member x.GetNoteFreq (octave:int) (note:Note) =
+    member x.GetNoteFreq (note:Note) (octave:int)=
         CalcNoteFreq(note, octave).Output
 
 
@@ -36,7 +36,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     /// <param name="aFourFreq">Frequency of A4</param>
     /// <returns>Frequency of the note</returns>
     
-    member x.GetNoteFreqOffset (octave:int) (note:Note) (aFourFreq:float) =
+    member x.GetNoteFreqOffset (note:Note) (octave:int) (aFourFreq:float) =
         CalcNoteFreq(note, octave, aFourFreq).Output
 
 
@@ -135,7 +135,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     /// <returns>Sound represented by a list of samples</returns>
     
     member x.Note (duration:Duration) (mNote:Note) (octave:int) =
-        let freq = x.GetNoteFreq octave mNote
+        let freq = x.GetNoteFreq mNote octave
         x.Sound freq duration x.waveType
 
 
