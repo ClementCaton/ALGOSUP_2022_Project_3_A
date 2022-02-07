@@ -16,6 +16,14 @@ module FrequencyAnalysis =
         The magnitude and the phases of these waves should be changeable
     *)
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
     // Note: The following FFT algorithm is actually used for IFFT, thus there is a static negative sign in the complex exponent
     let rec FFT = function
     | []  -> []
@@ -33,6 +41,15 @@ module FrequencyAnalysis =
         |> List.unzip
         ||> List.append
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
     let Fourier sampleRate (x: List<float>) =
         let n =
             x
@@ -56,6 +73,15 @@ module FrequencyAnalysis =
         |> List.mapi (fun i c -> float i * increment, c.Magnitude / float n)
         |> Map.ofList
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
     let LocalMaxValuesIndices (threshold: float) (map: Map<float, float>) =
         // The threshold is the percentage between the bottom and the top where all point below are discarded to remove noise
         match Map.count map with
