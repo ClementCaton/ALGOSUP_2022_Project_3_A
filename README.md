@@ -15,39 +15,39 @@
   - [**Installation**](#installation)
   - [**Basic structure**](#basic-structure)
   - [**Reading files**](#reading-files)
-    - [Reading wav files](#reading-wav-files)
-    - [Reading mp3 files](#reading-mp3-files)
+  - [Reading wav files](#reading-wav-files)
+  - [Reading mp3 files](#reading-mp3-files)
   - [**Writing to files / Saving**](#writing-to-files--saving)
-    - [Writing wav files](#writing-wav-files)
-    - [Writing mp3 files](#writing-mp3-files)
+  - [Writing wav files](#writing-wav-files)
+  - [Writing mp3 files](#writing-mp3-files)
   - [**Playing music**](#playing-music)
   - [**Dealing with stereo**](#dealing-with-stereo)
   - [**Creating audio data**](#creating-audio-data)
-    - [Creating audio data with an envelope](#creating-audio-data-with-an-envelope)
-    - [Creating audio data with a custom envelope](#creating-audio-data-with-a-custom-envelope)
+  - [Creating audio data with an envelope](#creating-audio-data-with-an-envelope)
+  - [Creating audio data with a custom envelope](#creating-audio-data-with-a-custom-envelope)
   - [**Finding frequencies from notes and octaves**](#finding-frequencies-from-notes-and-octaves)
-    - [Finding notes with a custom default frequency](#finding-notes-with-a-custom-default-frequency)
+  - [Finding notes with a custom default frequency](#finding-notes-with-a-custom-default-frequency)
   - [**Creating silence**](#creating-silence)
   - [**Cutting audio**](#cutting-audio)
   - [**Additioning audio data**](#additioning-audio-data)
-    - [Additioning audio with a predefined ratio](#additioning-audio-with-a-predefined-ratio)
+  - [Additioning audio with a predefined ratio](#additioning-audio-with-a-predefined-ratio)
   - [**Composing**](#composing)
   - [**Preview**](#preview)
   - [**Frequency analysis**](#frequency-analysis)
   - [**Filters**](#filters)
-    - [Usable Filters](#usable-filters)
-    - [Apply multiple filters at once](#apply-multiple-filters-at-once)
-    - [Changing amplitude](#changing-amplitude)
-    - [Custom repeater filter](#custom-repeater-filter)
-    - [Echo](#echo)
-    - [Reverb](#reverb)
-    - [Flanger](#flanger)
-    - [Envelope](#envelope)
-    - [Custom envelope](#custom-envelope)
-    - [Low frequency oscillation](#low-frequency-oscillation)
-        - [AM](#am)
-        - [FM](#fm)
-    - [LowPass / HighPass / BandPass / RejectBand filters](#lowpass--highpass--bandpass--rejectband-filters)
+  - [Usable Filters](#usable-filters)
+  - [Apply multiple filters at once](#apply-multiple-filters-at-once)
+  - [Changing amplitude](#changing-amplitude)
+  - [Custom repeater filter](#custom-repeater-filter)
+  - [Echo](#echo)
+  - [Reverb](#reverb)
+  - [Flanger](#flanger)
+  - [Envelope](#envelope)
+  - [Custom envelope](#custom-envelope)
+  - [Low frequency oscillation](#low-frequency-oscillation)
+    - [AM](#am)
+    - [FM](#fm)
+  - [LowPass / HighPass / BandPass / RejectBand filters](#lowpass--highpass--bandpass--rejectband-filters)
 - [Footnotes](#footnotes)
   - [Usable notes](#usable-notes)
   - [Possible Waves](#possible-waves)
@@ -227,7 +227,7 @@ The above example creats the following sound:
 ## **Finding frequencies from notes and octaves**
 
 A more simplified way to find the sound you are looking for is trought musical octaves[^1] and notes[^2].
-To call on this form of notation you'll have to use the ``Synth.getNoteFreq (octav:int) (note:Note)`` function to get the right frequency.
+To call on this form of notation you'll have to use the ``Synth.getNoteFreq (note:Note) (octav:int)`` function to get the right frequency.
 
 Example:
 
@@ -247,7 +247,7 @@ let Note = Synth.Note Half Note.C 4 // This returns the frequency a half duratio
 
 In most cases, the frequency of a note is calculated from a default frequency (mostly, 440Hz for the A4 note).
 However, in some cases, you might need to find a note from a different starting frequency.
-This can be done using the ``Synth.getNoteFreqOffset (octav:int) (note:Note) (aFourFreq:Float)``
+This can be done using the ``Synth.getNoteFreqOffset (note:Note) (octav:int) (aFourFreq:Float)``
 
 Example:
 
@@ -500,6 +500,8 @@ The echo filter repeats the same sound with a delay between delays and continous
 
 ``Filter.Echo (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)``
 
+In this case, the delay is the timeperiode between two echos, and NOT the delay from the start of the sound.
+
 Example:
 ```fs
 let synth = Synth() // Init
@@ -513,7 +515,23 @@ The above examples give the following outputs:
 
 ## Reverb
 
-<span style="color: red;">WIP</span>
+Similarly to echo, reverb repeats and readds the same sound with a delay.
+Except, reverb does so with a delay that is shorter then the original sound.
+
+``Filter.Reverb (delayRatio:float) (minAmpRatio:float) (decay:float) (sampleRate:float) (dryData:List<float>)``
+
+Instead of a fixed time, we are using ratio between the the delay and the length of the sound.
+This way, we can just simply input a value between 0 and 1, in which the filter gets more and more pronounce towards 1 instead of needing to play attention to the length of the sound.
+
+Example:
+```fs
+let synth = Synth() // Init
+let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2     // Creating a basic sound with an envelope to make it interresting
+
+let reverb = Filter.Reverb 0.4 0.3 0.8 44100. basicSound
+```
+The above examples give the following outputs:
+![Repeater examples](Reports/Files/reverb.png)
 
 ## Flanger
 
