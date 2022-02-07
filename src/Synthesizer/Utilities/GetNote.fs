@@ -24,4 +24,7 @@ type CalcNoteFreq(note:Note, octave:int, ?a4Freq0:float) =
     member x.Output = 
         CalcNote (float note)
 
+    member x.Offset offset =
+        CalcNote (float note + float offset)
+
 

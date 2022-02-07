@@ -53,6 +53,13 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     member x.Silence duration =
         x.Sound 0 duration Silence
         
+    member x.Chord duration rootNote chordQuality rootOctave =
+        let calc = CalcNoteFreq(rootNote, rootOctave)
+        SoundData().GetChord chordQuality
+        |> List.map (fun offset -> calc.Offset offset)
+        |> List.map (fun freq -> x.Sound freq duration x.waveType)
+        |> Utility.AddMean
+        
     member x.ComposeCutCorner (corner:int) sounds =
         sounds |> List.map(fun x -> Utility.CutCorners corner x) |> List.concat
             
