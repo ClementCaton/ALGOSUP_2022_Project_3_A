@@ -39,7 +39,7 @@ module Utility =
     let AddMaximize = AddMean >> Maximize
 
     let Overdrive multiplicator (x:List<float>) =
-        [for i in x do 
-            if i < (-1. * multiplicator * 256.) then (-1. * multiplicator * 256.) else
-            if i > (1. * multiplicator  * 256.) then (1. * multiplicator * 256.) else
-            i]
+        x |> List.map (
+            min multiplicator
+            >> max (multiplicator * -1.)
+        )
