@@ -188,6 +188,7 @@ Each sound will be played one by one. For the next sound to be played (or to end
 You can create some basic audio using ``Synth.Sound (frequency:float) (duration:Duration) (waveType:BaseWaves)``
 
 Example:
+
 ```fs
 let synth = Synth() // Init
 let newSound = synth.Sound 440. (Seconds 1.) Sin    // Create a 1 second sinwave with a frequence of 440.
@@ -197,6 +198,7 @@ let newSound2 synth.Sound (synth.getNoteFreq 3 Note.F) Half Triangular // Create
 Alternatively, it is possible to directly create a note with the ``synth.Note (duration:Duration) (mNote:Note) (octave:int)``.
 
 Example:
+
 ```fs
 let synth = Synth() // Init
 let newNote = synth.Note Quarter Note.D 5 // Create a D5 quarter note.
@@ -210,6 +212,7 @@ We are using a basic AHDSR envelope:
 ![After](Reports/Files/envelope.png)
 
 Example:
+
 ```fs
 let synth = Synth() // Init
 let sound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5  // Create sound with envelope
@@ -398,7 +401,8 @@ It's possible to create a frequency analysis by using a fourrier transform on an
 ``member x.Fourier (data:List<float>) =
         FrequencyAnalysis.Fourier x.sampleRate data``
 
-Example : 
+Example :
+
 ```fs
 
 ```
@@ -437,7 +441,7 @@ To complement your music, its possible to add filters to your audio data:
   
 ## Apply multiple filters at once
 
-You can use this function to apply multiple filters at once : 
+You can use this function to apply multiple filters at once :
 
 ```fs
 member x.ApplyFilters filters data =
@@ -445,6 +449,7 @@ member x.ApplyFilters filters data =
 ```
 
 Like so :
+
 ```fs
 let x = Synth()
 
@@ -464,6 +469,7 @@ To change the amplitude of a sound, use the ``Filter.ChangeAmplitude (amplitude:
 ```
 
 Like so :
+
 ```fs
 let MusicWithAmplitude = Filter.ChangeAmplitude 0.5 Music
 ```
@@ -477,6 +483,7 @@ This filter is the basis on which we built the Reverb and Echo filters.
 The function looks like this: ``Filter.Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)``
 
 The variables inputed are:
+
 - nbEcho: The number of times the original sound gets repeated.
 - decay: Each time the sound is repeated we jusge the amplitude of the sound using this value
 - delay: The offset added to the echo (multiplies accordingly to the echo ex.: echo 1 will have 1x this value, echo 2 will have 2x this value, etc..)
@@ -484,6 +491,7 @@ The variables inputed are:
 - dryData: The original sound
 
 Example :
+
 ```fs
 let synth = Synth() // Init
 let basicSound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5     // Creating a basic sound with an envelope to make it interresting
@@ -491,6 +499,7 @@ let basicSound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 
 let repeated1 = Filter.Repeater 5 0.6 2.5 44100. basicSound
 let repeated2 = Filter.Repeater 5 0.9 4. 44100. basicSound
 ```
+
 The above examples give the following outputs:
 ![Repeater examples](Reports/Files/repeater.png)
 
@@ -503,6 +512,7 @@ The echo filter repeats the same sound with a delay between delays and continous
 In this case, the delay is the timeperiode between two echos, and NOT the delay from the start of the sound.
 
 Example:
+
 ```fs
 let synth = Synth() // Init
 let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2     // Creating a basic sound with an envelope to make it interresting
@@ -619,15 +629,26 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 
 ## **Definitions**
 
-[^1]: Octaves: A series of eight notes occupying the interval between (and including) two notes, one having twice or half the frequency of vibration of the other.
+[^1]: [Octave](https://en.wikipedia.org/wiki/Octave): A serie of eight notes occupying the interval between (and including) two notes, one having twice or half the frequency of vibration of the other.
 
-[^2]: Notes: A note is a symbol denoting a musical sound.
+[^2]: [Note](https://en.wikipedia.org/wiki/Musical_note): A note is a symbol denoting a musical sound.
 
-[^3]: Wave functions: 
+[^3]: [Basic Waves functions](https://notebookinc.wordpress.com/2016/07/26/formulae-of-the-four-basic-sound-waves/):
+<br> 
+The four basic waves are ->
+
+  The sin wave = the simplest wave with a formula of *sin(2 π  frequency / sampleRate)*
+
+  The square wave = a wave made with an sgn of a sinwave with a formula of *sgn(sinwave)*
+
+  The saw wave = *2(t/p - [1/2+t/p])
+
+  The triangle wave = this wave has the most complicated formula *period/π arcsin[sin(π x)]*
 
 [^4]: Musical durations:  
 
-[^5]: Envelope: 
+[^5]: Envelope: v
 
-[^6]: LFO:
+[^6]: [LFO / Low frequency oscillaton](https://en.wikipedia.org/wiki/Low-frequency_oscillation): Is an oscillator performing under 20Hz to create audio effects such as vibrato and phasing.
 
+[^7]: [Xplot.Plotly](https://fslab.org/XPlot/plotly.html): Is a nuget which allowsto view data in the form of graphs
