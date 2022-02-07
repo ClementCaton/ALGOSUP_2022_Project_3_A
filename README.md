@@ -45,7 +45,6 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 
 ## **Installation**
 
-
 ## **Basic structure**
 
 To interract with the library you'll have to mainly interract with two objects.
@@ -62,6 +61,7 @@ You can open it from your own path using ``Synth.readFromWavWithPath (filePath:s
 These functions return a tuple containing the ``soundData:list<list<float>>``, ``duration:float``, ``sampleRate:int`` and the ``bitsPerSample:int``.
 
 Example:
+
 ```fs
 let inOutputData, inOutputDuration, inOutputSampleRate, inOutputBPSampleRate = synth.ReadFromWav "yourFileName.wav"     // get everything from a file in the Output folder
 
@@ -80,16 +80,18 @@ You can open it from your own path using ``readFromWavWithPath /path-to.mp3`` --
 
 ## Writing wav files
 
-You can save files by writing data into them with the function ``Synth.WriteToWav name music``. This function will put files in the folder "./Output". 
+You can save files by writing data into them with the function ``Synth.WriteToWav name music``. This function will put files in the folder "./Output".
 
 Example :
+
 ```fs
 Synth.WriteToWavWithPath "name.wav" sound// This will save the sound in the file from the path "./Output/name.wav".
 ```
 
-You can also save files by writing data into them with the function ``Synth.WriteToWavWithPath path fileName music``. This function will put files in "path/fileName". 
+You can also save files by writing data into them with the function ``Synth.WriteToWavWithPath path fileName music``. This function will put files in "path/fileName".
 
 Example :
+
 ```fs
 Synth.WriteToWavWithPath "./folder/" "name.wav" sound // This will save the sound in the file from the path "./folder/name.wav".
 ```
@@ -100,35 +102,64 @@ Synth.WriteToWavWithPath "./folder/" "name.wav" sound // This will save the soun
 
 ## **Playing music**
 
+Your Os is automatically detected to use either SFML on windows or afplay on Mac, this function does not support Linux yet.
+
 You can play music from the code ``Synth.PlayWav (offset:float32) data``.
 
 Example :
+
 ```fs
-Synth.PlayWav 0. data // This will play the sound in the variable data with an offset of 0 second.
+Synth.PlayWav (float32 0.) data // This will play the sound in the variable data with an offset of 0 second.
 ```
 
 You can also play music from a file with ``Synth.PlayWavFromPath offset (filePath:string)``
 
 Example :
+
 ```fs
-Synth.PlayWavFromPath 0. "./Output/name.wav" // This will play the sound in the file from the path "./Output/name.wav" with an offset of 0 second.
+Synth.PlayWavFromPath (float32 0.) "./Output/name.wav" // This will play the sound in the file from the path "./Output/name.wav" with an offset of 0 second.
 ```
 
 ## **Dealing with stereo**
 
 <span style="color: red;">WIP</span>
 
-## **Creating basic audio data**
+## **Creating audio data**
 
-You can create some basic audio using ``Synth.
+You can create some basic audio using ``Synth.Sound (frequency:float) (duration:Duration) (waveType:BaseWaves)``
 
-<br>
+Example:
+```fs
+let synth = Synth() // Init
+let newSound = synth.Sound 440. (Seconds 1.) Sin    // Create a 1 second sinwave with a frequence of 440.
+let newSound2 synth.Sound (synth.getNoteFreq 3 Note.F) Half Triangular // Create a triangular F3 half note.
+```
 
-The library supports the creation
+Alternatively, it is possible to directly create a note with the ``synth.Note (duration:Duration) (mNote:Note) (octave:int)``.
+
+Example:
+```fs
+let synth = Synth() // Init
+let newNote = synth.Note Quarter Note.D 5 // Create a D5 quarter note.
+```
 
 ## Creating audio data with an envelope
 
-In order to create a sound with an enveloppe you need to use ``Synth.SoundWithEnveloppe``
+In order to create a sound with an enveloppe you need to use ``Synth.SoundWithEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (sustain:float) (attack:float) (hold:float) (decay:float) (release:float)``.
+
+We are using a basic AHDSR envelope:
+![After](Reports/Files/envelope.png)
+
+Example:
+```fs
+let synth = Synth() // Init
+let sound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5  // Create sound with envelope
+```
+
+The above example creats the following sound:
+![After](Reports/Files/createWithEnv.png)
+
+<sup>* Please note: when we create a new sound with this methode the release adds data at the end of the normal data.</sup>
 
 ## Creating audio data with a custom envelope
 
@@ -140,6 +171,7 @@ A more simplified way to find the sound you are looking for is trought musical o
 To call on this form of notation you'll have to use the ``Synth.getNoteFreq (octav:int) (note:Note)`` function to get the right frequency.
 
 Example:
+
 ```fs
 let Note = Synth.GetNoteFreq Note.C 4 // This returns the frequency of the C4 note
 ```
@@ -147,6 +179,7 @@ let Note = Synth.GetNoteFreq Note.C 4 // This returns the frequency of the C4 no
 Alternatively, you could directly create a SinWave using the ``Synth.note (duration:Duration) (note:Note) (octav:int)``.
 
 Example:
+
 ```fs
 let Note = Synth.Note Half Note.C 4 // This returns the frequency a half duration of the C4 note
 ```
@@ -184,6 +217,7 @@ Cutting audio is simple. You can use the following functions
 - ``Synth.cutEdge (sampleRate:float) (timeStart:float) (timeEnd:float) (data:List<float>)`` : Cuts of both ends of the audio data and returns the middle part
 
 Example:
+
 ```fs
 let a = Synth.note (Seconds 1) Note.A 4
 let b = Synth.note (Seconds 1) Note.B 4
@@ -267,6 +301,7 @@ let Music = Synth.ComposeCutCorner 0 [
 ```
 
 Or with ``composeNoCutCorner``:
+
 ```fs
 let Music = Synth.ComposeNoCutCorner [
     C4;
@@ -284,12 +319,14 @@ These two are equivalents.
 Its possible to create a preview of ant audio loaded into the filter using the ``Synth.preview (title:string) (sound:List<float>)`` function.
 
 Example:
+
 ```fs
 let basic = Synth.note Whole Note.A 2       // reating a basic note
 let cut = Utility.cutCorners 5000 basic     // Making it look a bit more interresting
 
 Synth.preview "Example" cut |> ignore       // Launch preview
 ```
+
 The above example automatically opens the browser with the following image:
 ![Preview](Reports/Files/preview.png)
 
@@ -303,17 +340,17 @@ Tools to zoom/zoom out are also present on the page.
 
 ## Usable Filters
 
-To complement your sounds you can add some filters : 
+To complement your sounds you can add some filters :
 
 - Flanger
 
-- Echo 
+- Echo
 
 - Reverb
 
 - Envelope
 
-- LFO AM 
+- LFO AM
 
 - LFO FM
 
@@ -379,8 +416,7 @@ Filter.ApplyFilters filters data``
 
 # Footnotes
 
-
-## Usable notes 
+## Usable notes
 
 The musical notes available are:
 > ``C``,  ``Cs / Db``, ``D``, ``Ds / Eb``, ``E``, ``F``, ``Fs / Gb``, ``G``, ``Gs / Ab``, ``A``, ``As / Bb``, ``B``
@@ -390,8 +426,9 @@ The musical notes available are:
 The wave types available are:
 > ``Sin``, ``Square``, ``Triangular``, ``Saw``, ``Silence``, ``CustomInstrument``
 
-- The ``CustomInstrument`` value has a value of ``(float -> float -> float -> float -> float -> float)``. This is because the wave functions need to be written as: 
-```fs 
+- The ``CustomInstrument`` value has a value of ``(float -> float -> float -> float -> float -> float)``. This is because the wave functions need to be written as:
+
+```fs
 let waveFunc (frequency:float) (amplitude:float) (verticalShift:float) (phaseShift:float) (timeLength:float) 
 ```
 
@@ -401,10 +438,11 @@ The note durations available are:
 > ``Whole``, ``Half``, ``Quarter``, ``Eighth``, ``Sixteenth``, ``Custom``, ``Seconds``
 
 - The Seconds value takes a float as argument.
-- The Custom value takes a float as its argument. This translates using the formula ``value * 4. * 60. / bpm``.
+- The Custom value takes a float as its argument. This translates using the formula ``value *4.* 60. / bpm``.
 - The tickspead of the durations can be changed by changing the value ``Synth.bpm`` (default 90).
 
 ## see also
+
 Info on [**.mp3 files**](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/blob/main/Informations/INFO%20mp3.md)<br>
 Info on [**.Wav files**](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/blob/main/Informations/INFO.md)<br>
 Link to our [**Trello**](https://trello.com/b/itooTuBY/algosup2022project3a)<br>
@@ -418,4 +456,6 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 
 [^2]: Notes: A note is a symbol denoting a musical sound.
 
-https://user-images.githubusercontent.com/91249762/152002722-5442f1d9-fe37-4373-a82c-815790e3420b.mov
+[^3]: Wave functions: 
+
+[^4]: Musical durations:  
