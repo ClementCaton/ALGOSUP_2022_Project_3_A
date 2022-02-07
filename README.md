@@ -67,7 +67,19 @@ You can open it from your own path using ``readFromWavWithPath /path-to.mp3``
 
 ## Writing wav files
 
-<span style="color: red;">WIP</span>
+You can save files by writing data into them with the function ``Synth.WriteToWav name music``. This function will put files in the folder "./Output". 
+
+Example :
+```fs
+Synth.WriteToWavWithPath "name.wav" sound// This will save the sound in the file from the path "./Output/name.wav".
+```
+
+You can also save files by writing data into them with the function ``Synth.WriteToWavWithPath path fileName music``. This function will put files in "path/fileName". 
+
+Example :
+```fs
+Synth.WriteToWavWithPath "./folder/" "name.wav" sound // This will save the sound in the file from the path "./folder/name.wav".
+```
 
 ## Writing mp3 files
 
@@ -75,7 +87,19 @@ You can open it from your own path using ``readFromWavWithPath /path-to.mp3``
 
 ## **Playing music**
 
-<span style="color: red;">WIP</span>
+You can play music from the code ``Synth.PlayWav (offset:float32) data``.
+
+Example :
+```fs
+Synth.PlayWav 0. data // This will play the sound in the variable data with an offset of 0 second.
+```
+
+You can also play music from a file with ``Synth.PlayWavFromPath offset (filePath:string)``
+
+Example :
+```fs
+Synth.PlayWavFromPath 0. "./Output/name.wav" // This will play the sound in the file from the path "./Output/name.wav" with an offset of 0 second.
+```
 
 ## Usable notes 
 
