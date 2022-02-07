@@ -315,7 +315,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     member x.ApplyFilters filters data =
         Filter.ApplyFilters filters data
 
-    member x.PlayWav (offset:float32) data =
+    member x.PlayWav offset data =
         match int Environment.OSVersion.Platform with
         | 4| 6 -> 
             x.WriteToWavWithPath "./Output/temp_file_storage/" ".tempFile.wav" data
