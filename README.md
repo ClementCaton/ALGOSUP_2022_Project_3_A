@@ -1,5 +1,59 @@
 # ALGOSUP_2022_Project_3_A | Sound Synthesizer
 
+<!-- <details> -->
+<summary><strong id="table_of_contents">Table of Contents</strong></summary>
+
+- [**ALGOSUP_2022_Project_3_A | Sound Synthesizer**](#algosup_2022_project_3_a-sound-synthesizer)
+    - [Project](#project)
+    - [Getting Started](#getting-started)
+    - [Project members](#project-members)
+- [**Project documentation**](#project-documentation)
+    - [**Installation**](#installation)
+        - [.Net CLI](#.net-cli)
+        - [Windows](#windows)
+        - [Package Reference](#package-reference)
+    - [**Basic Structure**](#basic-structure)
+    - [**Reading files**](#reading-files)
+        - [Reading Wav files](#reading-wav-files)
+    - [**Writing to files / Saving**](#writing-to-files-/-saving)
+        - [Writing Wav files](#writing-wav-files)
+    - [**Playing music**](#playing-music)
+    - [**Dealing with stereo**](#dealing-with-stereo)
+    - [**Creating audio data**](#creating-audio-data)
+        - [Creating audio data with an envelope](#creating-audio-data-with-an-envelope)
+        - [Creating audio data with a custom envelope](#creating-audio-data-with-a-custom-envelope)
+    - [**Finding frequencies from notes and octaves**](#finding-frequencies-from-notes-and-octaves)
+        - [Finding notes with a custom default frequency](#finding-notes-with-a-custom-default-frequency)
+    - [**Creating silence**](#creating-silence)
+    - [**Cutting audio**](#cutting-audio)
+    - [**Additioning audio data**](#Additioning-audio-data)
+        - [Additioning audio with a predefined ratio](#additioning-audio-with-a-predefined-ratio)
+    - [**Composing**](#composing)
+    - [**Preview**](#preview)
+    - [**Frequency analysis**](#frequency-analysis)
+    - [**Filters**](#filters)
+        - [Usable Filters](#usable-filters)
+        - [Apply multiple filters at once](#apply-multiple-filters-at-once)
+        - [Changing amplitude](#changing-amplitude)
+        - [Reverb](#reverb)
+        - [Echo](#echo)
+        - [Custom repeater filter](#custom-repeater-filter)
+        - [Flanger](#flanger)
+        - [Envelope](#envelope)
+        - [Custom envelope](#custom-envelope)
+        - [Low frequency oscillation](#low-frequency-oscillation)
+        - [AM](#am)
+        - [FM](#fm)
+        - [LowPass / HighPass / BandPass / RejectBand filters](#lowpass--highpass--bandpass--rejectband-filters)
+    - [Footnotes](#footnotes)
+    - [Usable notes](#usable-notes)
+    - [Possible Waves](#possible-waves)
+    - [Duration of elements](#duration-of-elements)
+    - [Unit Test](#unit-test)
+    - [see also](#see-also)
+    - [Definitions](#definitions)
+<!-- </details> -->
+
 ## **Project:**
 
 The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Robert Pickering*](https://github.com/robertpi) was to create a Sound Synthesizer able to open, modify, create and save sounds.
@@ -17,7 +71,7 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 [*Mathieu Chaput*](https://github.com/Chaput-Mathieu) <br>
 [*Léo Chartier*](https://github.com/leo-chartier)
 
-# Project documentation
+# **Project documentation**
 
 ## Prerequisites
 
@@ -359,7 +413,6 @@ To complement your sounds you can add some filters :
 - Low Pass
 
 - High Pass
-
 ## Apply multiple filters at once
 
 You can use this function to apply multi filters at once : 
@@ -383,10 +436,6 @@ Filter.ApplyFilters filters data``
 ## Custom repeater filter
 
 <span style="color: red;">WIP</span>
-
-## Frequency analysis 
-
-<span style="color: red;">Wip</span>
 
 ## Flanger
 
