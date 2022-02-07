@@ -636,17 +636,7 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 
 [^2]: [Note](https://en.wikipedia.org/wiki/Musical_note): A note is a symbol denoting a musical sound.
 
-[^3]: [Basic Waves functions](https://notebookinc.wordpress.com/2016/07/26/formulae-of-the-four-basic-sound-waves/):
-<br> 
-The four basic waves are ->
-
-  The sin wave = the simplest wave with a formula of *sin(2 π  frequency / sampleRate)*
-
-  The square wave = a wave made with an sgn of a sinwave with a formula of *sgn(sinwave)*
-
-  The saw wave = *2(t/p - [1/2+t/p])
-
-  The triangle wave = this wave has the most complicated formula *period/π arcsin[sin(π x)]*
+[^3]: [Basic Waves functions](https://notebookinc.wordpress.com/2016/07/26/formulae-of-the-four-basic-sound-waves/): A wave function is a mathematical function which can create a wave of a predefined patternm frequency, amplitude, etc.. In the scope of this project we are using the four basic waveforms: Sinusoidal, Square, Triabgular and Saw.
 
 [^4]: Musical durations:  
 
