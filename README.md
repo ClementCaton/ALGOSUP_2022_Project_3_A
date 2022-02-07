@@ -41,6 +41,8 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 
 ``<PackageReference Include="Synthesizer" Version="1.1.0" />``
 
+<br>
+
 ## **Installation**
 
 ## **Basic structure**
@@ -102,12 +104,12 @@ Synth.WriteToWavWithPath "./folder/" "name.wav" sound // This will save the soun
 
 Your Os is automatically detected to use either SFML on windows or afplay on Mac, this function does not support Linux yet.
 
-You can play music from the code ``Synth.PlayWav (offset:float32) data``.
+You can play music from the code ``Synth.PlayWav offset data``.
 
 Example :
 
 ```fs
-Synth.PlayWav (float32 0.) data // This will play the sound in the variable data with an offset of 0 second.
+Synth.PlayWav 0. data // This will play the sound in the variable data with an offset of 0 second.
 ```
 
 You can also play music from a file with ``Synth.PlayWavFromPath offset (filePath:string)``
@@ -115,8 +117,10 @@ You can also play music from a file with ``Synth.PlayWavFromPath offset (filePat
 Example :
 
 ```fs
-Synth.PlayWavFromPath (float32 0.) "./Output/name.wav" // This will play the sound in the file from the path "./Output/name.wav" with an offset of 0 second.
+Synth.PlayWavFromPath 0. "./Output/name.wav" // This will play the sound in the file from the path "./Output/name.wav" with an offset of 0 second.
 ```
+
+Each sound will be played one by one. For the next sound to be played (or to end the program if there aren't any more sounds) you need to press the enter key.
 
 ## **Dealing with stereo**
 
@@ -358,7 +362,22 @@ To complement your sounds you can add some filters :
 
 ## Apply multiple filters at once
 
-<span style="color: red;">WIP</span>
+You can use this function to apply multi filters at once : 
+
+```fs
+member x.ApplyFilters filters data =
+    Filter.ApplyFilters filters data
+```
+
+Like so :
+```fs
+let x = Synth()
+
+let MusicWithFilters = x.ApplyFilters [
+    Filter.ChangeAmplitude 0.5;
+    Filter.LowPass 44100. 400.;
+    Filter.Echo 4 0.7 1.5 44100.] Music
+```
 
 ## Changing amplitude
 
@@ -401,6 +420,9 @@ let repeated2 = Filter.Repeater 10 0.9 4. 44100. basicSound
 
 <span style="color: red;">WIP</span>
 
+## Frequency analysis 
+
+<span style="color: red;">Wip</span>
 
 ## Flanger
 
@@ -456,6 +478,10 @@ The note durations available are:
 - The Seconds value takes a float as argument.
 - The Custom value takes a float as its argument. This translates using the formula ``value *4.* 60. / bpm``.
 - The tickspead of the durations can be changed by changing the value ``Synth.bpm`` (default 90).
+
+## Unit Test
+
+The tests can be found in the Synthesizer.Test project. To run them you'll have to be located in the project folder and run the dotnet test command.
 
 ## see also
 

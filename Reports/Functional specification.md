@@ -2,7 +2,7 @@
 
 ## What is it ?
 
-The objefctive of the project is to create a library capable of sound synthetisation.
+The objective of the project is to create a library capable of sound synthetisation.
 
 The final product must be capable of creating and modifying a large range of musical notes as well as applying a variety of filters and special effects upon them. (Details below)
 
@@ -19,8 +19,11 @@ The saving and loading of .wav files must also be possible at this stage.
 
 ## Detailed functionnality list
 
+The library can create, save and play sound from the code, apply filters, make a frequency analysis 
+
 ## Use cases
- <!-- WIP -->
+
+You can use our libraries if you want to create sound by programming in .NET
 
 ## Definitions
 
