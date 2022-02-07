@@ -45,6 +45,4 @@ module Program =
         synth.Note Quarter Note.C 5
     ]
 
-    synth.WriteToWav "amogus.wav" [music]
-    synth.PlayWav (float32 3) [music] |> ignore 
-    synth.PlayWavFromPath (float32 3) "./Output/440.wav" |> ignore
+    printfn "%A" (synth.ReadFromMP3Header "Silence")

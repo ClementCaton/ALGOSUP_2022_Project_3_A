@@ -52,13 +52,13 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
         else
             ReadWav().Read (File.Open(path+".wav", FileMode.Open))
 
-    member x.ReadFromMP3 (name: string) =
+    member x.ReadFromMP3Header (name: string) =
         if name.Contains(".mp3") then
             readMP3(File.Open("./Output/" + name, FileMode.Open)).mp3Decoding
         else
             readMP3(File.Open("./Output/" + name + ".mp3", FileMode.Open)).mp3Decoding
 
-    member x.ReadFromMP3WithPath (path: string) =
+    member x.ReadFromMP3HeaderWithPath (path: string) =
         if path.Contains(".mp3") then
             readMP3(File.Open(path, FileMode.Open)).mp3Decoding
         else
