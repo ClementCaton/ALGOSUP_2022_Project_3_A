@@ -10,23 +10,12 @@ open Synthesizer
 
 
 module Program =
-    let synth = new Synth()
-    
-    let music = synth.Compose [
-        synth.Note Eighth Note.C 5
-        synth.Note Eighth Note.Eb 5
-        synth.Note Eighth Note.F 5
-        synth.Note Eighth Note.Gb 5
-        synth.Note Eighth Note.F 5
-        synth.Note Eighth Note.Eb 5
-        synth.Note Eighth Note.C 5
-        synth.Note Sixteenth Note.Bb 4
-        synth.Note Sixteenth Note.D 5
-        synth.Note Quarter Note.C 5
-    ]
+    let synth = Synth() // Init
 
-    synth.WriteToWav "amogus.wav" [music]
-    synth.PlayWav (float32 1) [music] |> ignore 
-    let sound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5
-    synth.WriteToWav "env.wav" [sound]
+    let basicSound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5     // Creating a basic sound with an envelope to make it interresting
+    let repeated1 = Filter.Repeater 5 0.6 1.5 44100. basicSound
+    let repeated2 = Filter.Repeater 5 0.9 4. 44100. basicSound
 
+    synth.WriteToWav "basic.wav" [basicSound]
+    synth.WriteToWav "repeated1.wav" [repeated1]
+    synth.WriteToWav "repeated2.wav" [repeated2]
