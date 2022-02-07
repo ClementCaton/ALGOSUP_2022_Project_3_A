@@ -14,11 +14,11 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     member val waveType = defaultArg baseWaveType Sin
         with get, set
     
-    member x.GetNoteFreq octav note =
-        CalcNoteFreq(octav, note).Output
+    member x.GetNoteFreq note octave =
+        CalcNoteFreq(note, octave).Output
 
-    member x.GetNoteFreqOffset octav note aFourFreq =
-        CalcNoteFreq(octav, note, aFourFreq).Output
+    member x.GetNoteFreqOffset note octave aFourFreq =
+        CalcNoteFreq(note, octave, aFourFreq).Output
 
     member x.Sound freq duration waveType =
         let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = x.bpm) // TEMP: Remove bpm
