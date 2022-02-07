@@ -341,9 +341,16 @@ It's possible to create a frequency analysis by using a fourrier transform on an
 ``member x.Fourier (data:List<float>) =
         FrequencyAnalysis.Fourier x.sampleRate data``
 
+Example : 
+```fs
+
+```
+
 The above example automatically opens the browser with the following image :
 
 ![Preview](Reports/Files/Frequency-Analysis.png)
+
+Tools to zoom/zoom out are also present on the page.
 
 ## **Filters**
 
@@ -405,7 +412,7 @@ The variables inputed are:
 - sampleRate: The sampleRate of the sound
 - dryData: The original sound
 
-Example:
+Example :
 ```fs
 let synth = Synth() // Init
 let basicSound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5     // Creating a basic sound with an envelope to make it interresting
@@ -422,14 +429,6 @@ let repeated2 = Filter.Repeater 10 0.9 4. 44100. basicSound
 ## Echo
 
 <span style="color: red;">WIP</span>
-
-## Frequency analysis
-
-<span style="color: red;">WIP</span>
-
-## Frequency analysis 
-
-<span style="color: red;">Wip</span>
 
 ## Flanger
 
