@@ -41,8 +41,9 @@ The project given by [*Algosup*](https://www.algosup.com/fr/index.html) and [*Ro
 
 ``<PackageReference Include="Synthesizer" Version="1.1.0" />``
 
-## **Installation**
+<br>
 
+## **Installation**
 
 ## **Basic structure**
 
@@ -53,104 +54,114 @@ The ``Synth`` object which is the actual sound synthesizer and the ``Filter`` ob
 
 ## Reading wav files
 
-You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav name.Wav``
+You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav (fileName:string)``.
 
-You can open it from your own path using ``readFromWavWithPath /path-to.Wav``
+You can open it from your own path using ``Synth.readFromWavWithPath (filePath:string)``.
+
+These functions return a tuple containing the ``soundData:list<list<float>>``, ``duration:float``, ``sampleRate:int`` and the ``bitsPerSample:int``.
+
+Example:
+
+```fs
+let inOutputData, inOutputDuration, inOutputSampleRate, inOutputBPSampleRate = synth.ReadFromWav "yourFileName.wav"     // get everything from a file in the Output folder
+
+let fromPathData, _, fromPathSampleRate, _ = Synth.readFromWavWithPath "/yourPath/yourFileName.wav"     // get only the sound data and the samplerate from a predefined path
+```
 
 ## Reading mp3 files
 
-You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav name.mp3``
+<span style="color: red;">WIP</span>
 
-You can open it from your own path using ``readFromWavWithPath /path-to.mp3``
+<!-- You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromMp3 name.mp3``
+
+You can open it from your own path using ``readFromWavWithPath /path-to.mp3`` -->
 
 ## **Writing to files / Saving**
 
-<br>
+## Writing wav files
 
-## Usable notes 
+You can save files by writing data into them with the function ``Synth.WriteToWav name music``. This function will put files in the folder "./Output".
 
-You can uses multiples notes to create your sound :
+Example :
 
-- C = -9
+```fs
+Synth.WriteToWavWithPath "name.wav" sound// This will save the sound in the file from the path "./Output/name.wav".
+```
 
-- Cs = -8 | Db = -8
+You can also save files by writing data into them with the function ``Synth.WriteToWavWithPath path fileName music``. This function will put files in "path/fileName".
 
-- D = -7
+Example :
 
-- Ds = -6 | Eb = -6
+```fs
+Synth.WriteToWavWithPath "./folder/" "name.wav" sound // This will save the sound in the file from the path "./folder/name.wav".
+```
 
-- E = -5
-
-- F = -4
-
-- Fs = -3 | Gb = -3
-
-- G = -2
-
-- Gs = -1 | Ab = -1
-
-- A = 0
-
-- As = 1 | Bb = 1
-
-- B = 2
-
-
-## Possible Waves
-
-You can create multiples type of waves in case you want to create differents types of sounds :
-
-
-- Sin
-
-- Square
-
-- Triangular
-
-- Saw
-
-- Silence 
-
-## Duration of elements
-
-You can control the durations of all the elements you use to create sounds : 
-
-- Whole
-
-- Half
-
-- Quarter
-
-- Eighth
-
-- Sixteenth
-
-- Seconds    
-
-
-## Writing to wav files
+## Writing mp3 files
 
 <span style="color: red;">WIP</span>
 
-## Writing to mp3 files
+## **Playing music**
 
-<span style="color: red;">WIP</span>
+Your Os is automatically detected to use either SFML on windows or afplay on Mac, this function does not support Linux yet.
+
+You can play music from the code ``Synth.PlayWav offset data``.
+
+Example :
+
+```fs
+Synth.PlayWav 0. data // This will play the sound in the variable data with an offset of 0 second.
+```
+
+You can also play music from a file with ``Synth.PlayWavFromPath offset (filePath:string)``
+
+Example :
+
+```fs
+Synth.PlayWavFromPath 0. "./Output/name.wav" // This will play the sound in the file from the path "./Output/name.wav" with an offset of 0 second.
+```
+
+Each sound will be played one by one. For the next sound to be played (or to end the program if there aren't any more sounds) you need to press the enter key.
 
 ## **Dealing with stereo**
 
 <span style="color: red;">WIP</span>
 
-## **Creating basic audio data**
+## **Creating audio data**
 
-You can create some basic audio using ``Synth.
+You can create some basic audio using ``Synth.Sound (frequency:float) (duration:Duration) (waveType:BaseWaves)``
 
-<br>
+Example:
+```fs
+let synth = Synth() // Init
+let newSound = synth.Sound 440. (Seconds 1.) Sin    // Create a 1 second sinwave with a frequence of 440.
+let newSound2 synth.Sound (synth.getNoteFreq 3 Note.F) Half Triangular // Create a triangular F3 half note.
+```
 
-The library supports the creation
+Alternatively, it is possible to directly create a note with the ``synth.Note (duration:Duration) (mNote:Note) (octave:int)``.
+
+Example:
+```fs
+let synth = Synth() // Init
+let newNote = synth.Note Quarter Note.D 5 // Create a D5 quarter note.
+```
 
 ## Creating audio data with an envelope
 
-In order to create a sound with an enveloppe you need to use ``Synth.SoundWithEnveloppe
+In order to create a sound with an enveloppe you need to use ``Synth.SoundWithEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (sustain:float) (attack:float) (hold:float) (decay:float) (release:float)``.
+
+We are using a basic AHDSR envelope:
+![After](Reports/Files/envelope.png)
+
+Example:
+```fs
+let synth = Synth() // Init
+let sound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5  // Create sound with envelope
+```
+
+The above example creats the following sound:
+![After](Reports/Files/createWithEnv.png)
+
+<sup>* Please note: when we create a new sound with this methode the release adds data at the end of the normal data.</sup>
 
 ## Creating audio data with a custom envelope
 
@@ -162,6 +173,7 @@ A more simplified way to find the sound you are looking for is trought musical o
 To call on this form of notation you'll have to use the ``Synth.getNoteFreq (octav:int) (note:Note)`` function to get the right frequency.
 
 Example:
+
 ```fs
 let Note = Synth.GetNoteFreq Note.C 4 // This returns the frequency of the C4 note
 ```
@@ -169,6 +181,7 @@ let Note = Synth.GetNoteFreq Note.C 4 // This returns the frequency of the C4 no
 Alternatively, you could directly create a SinWave using the ``Synth.note (duration:Duration) (note:Note) (octav:int)``.
 
 Example:
+
 ```fs
 let Note = Synth.Note Half Note.C 4 // This returns the frequency a half duration of the C4 note
 ```
@@ -206,6 +219,7 @@ Cutting audio is simple. You can use the following functions
 - ``Synth.cutEdge (sampleRate:float) (timeStart:float) (timeEnd:float) (data:List<float>)`` : Cuts of both ends of the audio data and returns the middle part
 
 Example:
+
 ```fs
 let a = Synth.note (Seconds 1) Note.A 4
 let b = Synth.note (Seconds 1) Note.B 4
@@ -289,6 +303,7 @@ let Music = Synth.ComposeCutCorner 0 [
 ```
 
 Or with ``composeNoCutCorner``:
+
 ```fs
 let Music = Synth.ComposeNoCutCorner [
     C4;
@@ -306,12 +321,14 @@ These two are equivalents.
 Its possible to create a preview of ant audio loaded into the filter using the ``Synth.preview (title:string) (sound:List<float>)`` function.
 
 Example:
+
 ```fs
 let basic = Synth.note Whole Note.A 2       // reating a basic note
 let cut = Utility.cutCorners 5000 basic     // Making it look a bit more interresting
 
 Synth.preview "Example" cut |> ignore       // Launch preview
 ```
+
 The above example automatically opens the browser with the following image:
 ![Preview](Reports/Files/preview.png)
 
@@ -325,17 +342,17 @@ Tools to zoom/zoom out are also present on the page.
 
 ## Usable Filters
 
-To complement your sounds you can add some filters : 
+To complement your sounds you can add some filters :
 
 - Flanger
 
-- Echo 
+- Echo
 
 - Reverb
 
 - Envelope
 
-- LFO AM 
+- LFO AM
 
 - LFO FM
 
@@ -345,13 +362,51 @@ To complement your sounds you can add some filters :
 
 ## Apply multiple filters at once
 
-<span style="color: red;">WIP</span>
+You can use this function to apply multi filters at once : 
 
+```fs
+member x.ApplyFilters filters data =
+    Filter.ApplyFilters filters data
+```
 
+Like so :
+```fs
+let x = Synth()
+
+let MusicWithFilters = x.ApplyFilters [
+    Filter.ChangeAmplitude 0.5;
+    Filter.LowPass 44100. 400.;
+    Filter.Echo 4 0.7 1.5 44100.] Music
+```
 
 ## Changing amplitude
 
 <span style="color: red;">WIP</span>
+
+## Custom repeater filter
+
+The repeater filter does exatly what it says on the tin.
+It repeats the inputed data with an offset and readds to the original sound.
+This filter is the basis on which we built the Reverb and Echo filters.
+
+The function looks like this: ``Filter.Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)``
+
+The variables inputed are:
+- nbEcho: The number of times the original sound gets repeated.
+- decay: Each time the sound is repeated we jusge the amplitude of the sound using this value
+- delay: The offset added to the echo (multiplies accordingly to the echo ex.: echo 1 will have 1x this value, echo 2 will have 2x this value, etc..)
+- sampleRate: The sampleRate of the sound
+- dryData: The original sound
+
+Example:
+```fs
+let synth = Synth() // Init
+let basicSound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5     // Creating a basic sound with an envelope to make it interresting
+
+let repeated1 = Filter.Repeater 5 0.6 1.5 44100. basicSound
+
+let repeated2 = Filter.Repeater 10 0.9 4. 44100. basicSound
+```
 
 ## Reverb
 
@@ -361,13 +416,13 @@ To complement your sounds you can add some filters :
 
 <span style="color: red;">WIP</span>
 
-## Custom repeater filter
+## Frequency analysis
 
 <span style="color: red;">WIP</span>
 
 ## Frequency analysis 
 
-
+<span style="color: red;">Wip</span>
 
 ## Flanger
 
@@ -399,6 +454,37 @@ To complement your sounds you can add some filters :
 
 # Footnotes
 
+## Usable notes
+
+The musical notes available are:
+> ``C``,  ``Cs / Db``, ``D``, ``Ds / Eb``, ``E``, ``F``, ``Fs / Gb``, ``G``, ``Gs / Ab``, ``A``, ``As / Bb``, ``B``
+
+## Possible Waves
+
+The wave types available are:
+> ``Sin``, ``Square``, ``Triangular``, ``Saw``, ``Silence``, ``CustomInstrument``
+
+- The ``CustomInstrument`` value has a value of ``(float -> float -> float -> float -> float -> float)``. This is because the wave functions need to be written as:
+
+```fs
+let waveFunc (frequency:float) (amplitude:float) (verticalShift:float) (phaseShift:float) (timeLength:float) 
+```
+
+## Duration of elements
+
+The note durations available are:
+> ``Whole``, ``Half``, ``Quarter``, ``Eighth``, ``Sixteenth``, ``Custom``, ``Seconds``
+
+- The Seconds value takes a float as argument.
+- The Custom value takes a float as its argument. This translates using the formula ``value *4.* 60. / bpm``.
+- The tickspead of the durations can be changed by changing the value ``Synth.bpm`` (default 90).
+
+## Unit Test
+
+The tests can be found in the Synthesizer.Test project. To run them you'll have to be located in the project folder and run the dotnet test command.
+
+## see also
+
 Info on [**.mp3 files**](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/blob/main/Informations/INFO%20mp3.md)<br>
 Info on [**.Wav files**](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/blob/main/Informations/INFO.md)<br>
 Link to our [**Trello**](https://trello.com/b/itooTuBY/algosup2022project3a)<br>
@@ -412,4 +498,6 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 
 [^2]: Notes: A note is a symbol denoting a musical sound.
 
-https://user-images.githubusercontent.com/91249762/152002722-5442f1d9-fe37-4373-a82c-815790e3420b.mov
+[^3]: Wave functions: 
+
+[^4]: Musical durations:  

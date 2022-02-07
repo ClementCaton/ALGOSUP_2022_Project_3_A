@@ -21,7 +21,12 @@ type CalcNoteFreq(note:Note, octav:int, ?a4Freq0:float) =
     //changing to the right note
     let CalcNote step = StartingFreq * (1.05946309436 ** step)
 
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    
     member x.Output = 
         CalcNote (float note)
-
-
