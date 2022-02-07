@@ -97,23 +97,34 @@ module Filter =
             x * (oscillator frequency amplitude verticalShift 0. t)
         )
 
-    let LFO_FM frequency deltaFreq sampleRate (data:List<float>) =
-        failwith "Not working yet"
-        let ac = 1. // Carrier's amplitude
-        let fc = frequency // Carrier's frequency
-        let fd = deltaFreq // frequency deviation = frequency modulator's sensitivity * data's amplitude
+    let LFO_FM (modWave:List<float>) (data:List<float>) (multiplicator:float) =
+        
+        let getShift (startAmp:float) (endAmp:float) (nStep:float)=
+            let fullRange = endAmp - startAmp
+            let step = fullRange / nStep
+            [for i in startAmp .. step .. endAmp do yield i]
 
-        let Integrate n (xs:List<float>) =
-            xs
-            |> List.take (n+1)
-            |> List.sum
-            |> ( * ) (float n) // (float n / float sampleRate)
 
-        List.init (List.length data) (fun i ->
-            let t = float i / sampleRate
-            ac * cos ( 2. * Math.PI * (fc * t + fd * Integrate i data))
-            // https://en.wikipedia.org/wiki/Frequency_modulation#Theory
-        )
+        let rec LFO_FM_inner (modWave:list<float>) (dryData:list<float>) (wetData0:list<float>) =
+            if modWave.Length<dryData.Length then failwith "modWave too short for LFO FM! modWave must have at least the longer of the dryData!"
+            if dryData.Length<=2 then wetData0
+            else 
+                //printfn $"{dryData.Length}"
+
+                let delta = modWave[0] * multiplicator
+
+                let wetData = 
+                    match None with 
+                    | _ when delta>0. -> wetData0 @ (getShift dryData[0] dryData[1] delta)
+                    | _ -> wetData0 @ [dryData[0]]
+
+            
+                match None with
+                | _ when delta>0. -> LFO_FM_inner modWave[1..] dryData[1..] wetData
+                | _ when delta<0. -> LFO_FM_inner modWave[1..] dryData[(int (Math.Abs (Math.Floor delta)))..] wetData
+                | _ -> LFO_FM_inner modWave[1..] dryData[1..] wetData 
+
+        LFO_FM_inner modWave data []
 
     let LowPass sampleRate cutoffFreq (data:List<float>) =
         let RC = 1. / (2. * Math.PI * cutoffFreq)

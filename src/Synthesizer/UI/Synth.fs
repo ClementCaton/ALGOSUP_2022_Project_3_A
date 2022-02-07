@@ -21,14 +21,19 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
         CalcNoteFreq(octav, note, aFourFreq).Output
 
     member x.Sound freq duration waveType =
-        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = x.bpm) // TEMP: Remove bpm
+        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = x.bpm)
         //! The "1." was supposed to be "(data.overDrive)"
         Utility.Overdrive 1. (data.Create(waveType))
 
     member x.SoundWithEnveloppe freq duration waveType sustain attack hold decay release = // time, time, time, amp, time
-        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = x.bpm) // TEMP: Remove bpm
+        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = x.bpm)
         //! The "1." was supposed to be "(data.overDrive)"
         Utility.Overdrive 1. (data.CreateWithEnvelope waveType sustain attack hold decay release)
+
+    member x.SoundWithCustomEnveloppe freq duration waveType (dataPoints: List<float * float>) = // datapoints [(time, amp)]
+        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = x.bpm)
+        //! The "1." was supposed to be "(data.overDrive)"
+        Utility.Overdrive 1. (data.CreateFromDataPoints waveType dataPoints)
 
     member x.WriteToWav name music =
         Directory.CreateDirectory("./Output/") |> ignore
@@ -58,7 +63,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
             
     member x.Compose = x.ComposeCutCorner 100
     
-    member x.ComposeNoCutCorner sounds = List.concat
+    member x.ComposeNoCutCorner (sounds:list<list<float>>) = List.concat sounds
     
     member x.Add sounds = Utility.AddMean sounds
 
@@ -96,3 +101,22 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
 
     member x.ApplyFilters filters data =
         Filter.ApplyFilters filters data
+
+    member x.PlayWav (offset:float32) data =
+        match int Environment.OSVersion.Platform with
+        | 4| 6 -> 
+            x.WriteToWavWithPath "./Output/temp_file_storage/" ".tempFile.wav" data
+            PlayMusic.PlayMac "./Output/temp_file_storage/.tempFile.wav" offset |> ignore
+            File.Delete "./Output/temp_file_storage/.tempFile.wav"
+            Directory.Delete "./Output/temp_file_storage/" |> ignore
+        | _       ->  
+            let stream = new MemoryStream()
+            WriteWav().Write stream data 
+            PlayMusic.PlayWithOffset offset stream |> ignore
+
+    member x.PlayWavFromPath offset (filePath:string) =
+        match int Environment.OSVersion.Platform with
+        | 4| 6 -> 
+            PlayMusic.PlayMac filePath offset |> ignore
+        | _ ->  
+            PlayMusic.PlayWithOffsetFromPath offset filePath
