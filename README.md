@@ -116,13 +116,24 @@ Synth.PlayWavFromPath 0. "./Output/name.wav" // This will play the sound in the 
 
 <span style="color: red;">WIP</span>
 
-## **Creating basic audio data**
+## **Creating audio data**
 
-You can create some basic audio using ``Synth.
+You can create some basic audio using ``Synth.Sound (frequency:float) (duration:Duration) (waveType:BaseWaves)``
 
-<br>
+Example:
+```fs
+let synth = Synth() // Init
+let newSound = synth.Sound 440. (Seconds 1.) Sin    // Create a 1 second sinwave with a frequence of 440.
+let newSound2 synth.Sound (synth.getNoteFreq 3 Note.F) Half Triangular // Create a triangular F3 half note.
+```
 
-The library supports the creation
+Alternatively, it is possible to directly create a note with the ``synth.Note (duration:Duration) (mNote:Note) (octave:int)``.
+
+Example:
+```fs
+let synth = Synth() // Init
+let newNote = synth.Note Quarter Note.D 5 // Create a D5 quarter note.
+```
 
 ## Creating audio data with an envelope
 
