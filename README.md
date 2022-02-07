@@ -53,15 +53,22 @@ The ``Synth`` object which is the actual sound synthesizer and the ``Filter`` ob
 
 ## Reading wav files
 
-You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav name.Wav``
+You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav (fileName:string)``.
 
-You can open it from your own path using ``readFromWavWithPath /path-to.Wav``
+You can open it from your own path using ``Synth.readFromWavWithPath (filePath:string)``.
+
+Example:
+```fs
+
+```
 
 ## Reading mp3 files
 
-You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav name.mp3``
+<span style="color: red;">WIP</span>
 
-You can open it from your own path using ``readFromWavWithPath /path-to.mp3``
+<!-- You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromMp3 name.mp3``
+
+You can open it from your own path using ``readFromWavWithPath /path-to.mp3`` -->
 
 ## **Writing to files / Saving**
 
