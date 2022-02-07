@@ -356,27 +356,31 @@ Tools to zoom/zoom out are also present on the page.
 
 ## Usable Filters
 
-To complement your sounds you can add some filters :
+To complement your music, its possible to add filters to your audio data:
 
-- Flanger
+- Amplitude changer: Changes the amplitude of a given sound.
+  
+- Echo: Repeats and preiodically scales down the sound, creating an echo like effect.
 
-- Echo
+- Reverb: Repeats the sound similarly to the echo effect, but does it so before the sound could finish playing, creating a more vibrant sount.
 
-- Reverb
+- Flanger: Adds a sweeping sound effect to the audio.
 
-- Envelope
+- Envelope: Modifies the way the amplitude of the sound changes over time.
 
-- LFO AM
+- LFO AM: Amplitude modulation using a low frequency oscillator.
 
-- LFO FM
+- LFO FM: Frequency modulation using a low frequency oscillator.
 
-- Low Pass
+- Low Pass: Cuts off frequencies above a given treshold.
 
-- High Pass
+- High Pass: Cuts off frequencies under a given treshold.
 
+- BandPass/RejectBand: Cuts off frequenciest both above and under the given tresholds and inverse.
+  
 ## Apply multiple filters at once
 
-You can use this function to apply multi filters at once : 
+You can use this function to apply multiple filters at once : 
 
 ```fs
 member x.ApplyFilters filters data =
@@ -433,12 +437,24 @@ let repeated2 = Filter.Repeater 5 0.9 4. 44100. basicSound
 The above examples give the following outputs:
 ![Repeater examples](Reports/Files/repeater.png)
 
+## Echo
+
+The echo filter repeats the same sound with a delay between delays and continously weakens the the new sounds creating an echo effect.
+
+``Filter.Echo (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)``
+
+Example:
+```fs
+let synth = Synth() // Init
+let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2     // Creating a basic sound with an envelope to make it interresting
+
+let echo = Filter.Echo 3 0.6 0.25 44100. basicSound
+```
+
+The above examples give the following outputs:
+![Repeater examples](Reports/Files/echo.png)
 
 ## Reverb
-
-<span style="color: red;">WIP</span>
-
-## Echo
 
 <span style="color: red;">WIP</span>
 
@@ -519,3 +535,8 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 [^3]: Wave functions: 
 
 [^4]: Musical durations:  
+
+[^5]: Envelope: 
+
+[^6]: LFO:
+
