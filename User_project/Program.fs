@@ -10,16 +10,7 @@ open Synthesizer
 
 
 module Program =
-    let filters = [
-        Filter.lowPass 44100 500;
-        Filter.highPass 44100 500;
-        Filter.flanger 0.1 0.1 44100;
-    ]
-
-    let input = Synth.add [Synth.note Whole Note.A 2; Synth.note Whole Note.A 3; Synth.note Whole Note.A 4; Synth.note Whole Note.A 5]
-
-    let a = Synth.ApplyFilters filters input
-
+    let synth = Synth()
     (*
     let input = synth.Add [synth.Note Whole Note.A 2; synth.Note Whole Note.A 3; synth.Note Whole Note.A 4; synth.Note Whole Note.A 5]
     printfn "Wanted:   %A" [CalcNoteFreq(Note.A, 2).Output; CalcNoteFreq(Note.A, 3).Output; CalcNoteFreq(Note.A, 4).Output; CalcNoteFreq(Note.A, 5).Output]
@@ -55,5 +46,5 @@ module Program =
     ]
 
     synth.WriteToWav "amogus.wav" [music]
-    synth.platform <- false
     synth.PlayWav (float32 3) [music] |> ignore 
+    synth.PlayWavFromPath (float32 3) "./Output/440.wav" |> ignore
