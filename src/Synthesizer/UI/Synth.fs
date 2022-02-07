@@ -13,10 +13,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
 
     member val waveType = defaultArg baseWaveType Sin
         with get, set
-    
-    member val platform = defaultArg basePlatform true
-        with get, set
-
+        
     member x.GetNoteFreq octav note =
         CalcNoteFreq(octav, note).Output
 
@@ -118,16 +115,14 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
     member x.ApplyFilters filters data =
         Filter.ApplyFilters filters data
 
-    member x.PlayWav (offset:float32) data = 
-        if x.platform then
-            let stream = new MemoryStream()
-            WriteWav().Write stream data 
-            PlayMusic.PlayWithOffset offset stream |> ignore
-        else
+    member x.PlayWav (offset:float32) data =
+        match int Environment.OSVersion.Platform with
+        | 4| 6 -> 
             x.WriteToWavWithPath "./Output/temp_file_storage/" ".tempFile.wav" data
             PlayMusic.PlayMac "./Output/temp_file_storage/.tempFile.wav" offset |> ignore
             File.Delete "./Output/temp_file_storage/.tempFile.wav"
             Directory.Delete "./Output/temp_file_storage/" |> ignore
-
-    member x.PlayWavFromPath offset ((filePath:string)) =
-        PlayMusic.PlayWithOffsetFromPath offset filePath
+        | _       ->  
+            let stream = new MemoryStream()
+            WriteWav().Write stream data 
+            PlayMusic.PlayWithOffset offset stream |> ignore
