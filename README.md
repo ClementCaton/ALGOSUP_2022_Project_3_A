@@ -427,10 +427,12 @@ Example :
 let synth = Synth() // Init
 let basicSound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5     // Creating a basic sound with an envelope to make it interresting
 
-let repeated1 = Filter.Repeater 5 0.6 1.5 44100. basicSound
-
-let repeated2 = Filter.Repeater 10 0.9 4. 44100. basicSound
+let repeated1 = Filter.Repeater 5 0.6 2.5 44100. basicSound
+let repeated2 = Filter.Repeater 5 0.9 4. 44100. basicSound
 ```
+The above examples give the following outputs:
+![Repeater examples](Reports/Files/repeater.png)
+
 
 ## Reverb
 
