@@ -55,10 +55,10 @@ module Filter =
     let Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) = 
         let rec RepeaterInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
             if nbEcho=0 then
-                Utility.Add [dryData; wetData]
+                Utility.AddMean [dryData; wetData]
             else
                 let silence = SoundData(frequency0 = 0, duration0 = (Seconds (delay*float nbEcho)), bpm0 = 114).Create(Silence)
-                let updatedWetData = Utility.Add [wetData; List.concat [silence ; ChangeAmplitude decay dryData]]
+                let updatedWetData = Utility.AddMean [wetData; List.concat [silence ; ChangeAmplitude decay dryData]]
                 RepeaterInner (nbEcho-1) decay delay sampleRate updatedWetData dryData
 
         RepeaterInner nbEcho decay delay sampleRate [] dryData
@@ -197,35 +197,34 @@ module Filter =
             x * (oscillator frequency amplitude verticalShift 0. t)
         )
 
+    let LFO_FM (modWave:List<float>) (data:List<float>) (multiplicator:float) =
+        
+        let getShift (startAmp:float) (endAmp:float) (nStep:float)=
+            let fullRange = endAmp - startAmp
+            let step = fullRange / nStep
+            [for i in startAmp .. step .. endAmp do yield i]
 
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
-    
-    let LFO_FM frequency deltaFreq sampleRate (data:List<float>) =
-        failwith "Not working yet"
-        let ac = 1. // Carrier's amplitude
-        let fc = frequency // Carrier's frequency
-        let fd = deltaFreq // frequency deviation = frequency modulator's sensitivity * data's amplitude
+        let rec LFO_FM_inner (modWave:list<float>) (dryData:list<float>) (wetData0:list<float>) =
+            if modWave.Length<dryData.Length then failwith "modWave too short for LFO FM! modWave must have at least the longer of the dryData!"
+            if dryData.Length<=2 then wetData0
+            else 
+                //printfn $"{dryData.Length}"
 
-        let Integrate n (xs:List<float>) =
-            xs
-            |> List.take (n+1)
-            |> List.sum
-            |> ( * ) (float n) // (float n / float sampleRate)
+                let delta = modWave[0] * multiplicator
 
-        List.init (List.length data) (fun i ->
-            let t = float i / sampleRate
-            ac * cos ( 2. * Math.PI * (fc * t + fd * Integrate i data))
-            // https://en.wikipedia.org/wiki/Frequency_modulation#Theory
-        )
+                let wetData = 
+                    match None with 
+                    | _ when delta>0. -> wetData0 @ (getShift dryData[0] dryData[1] delta)
+                    | _ -> wetData0 @ [dryData[0]]
 
+            
+                match None with
+                | _ when delta>0. -> LFO_FM_inner modWave[1..] dryData[1..] wetData
+                | _ when delta<0. -> LFO_FM_inner modWave[1..] dryData[(int (Math.Abs (Math.Floor delta)))..] wetData
+                | _ -> LFO_FM_inner modWave[1..] dryData[1..] wetData 
+
+        LFO_FM_inner modWave data []
 
 
     /// <summary>
@@ -306,7 +305,6 @@ module Filter =
         let lowPassData = HighPass sampleRate lowFreq data
         let highPassData = LowPass sampleRate highFreq data
         Utility.AddMean [lowPassData; highPassData]
-
 
 
     /// <summary>
