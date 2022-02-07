@@ -21,14 +21,19 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
         CalcNoteFreq(octav, note, aFourFreq).Output
 
     member x.Sound freq duration waveType =
-        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = x.bpm) // TEMP: Remove bpm
+        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = x.bpm)
         //! The "1." was supposed to be "(data.overDrive)"
         Utility.Overdrive 1. (data.Create(waveType))
 
     member x.SoundWithEnveloppe freq duration waveType sustain attack hold decay release = // time, time, time, amp, time
-        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = x.bpm) // TEMP: Remove bpm
+        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = x.bpm)
         //! The "1." was supposed to be "(data.overDrive)"
         Utility.Overdrive 1. (data.CreateWithEnvelope waveType sustain attack hold decay release)
+
+    member x.SoundWithCustomEnveloppe freq duration waveType (dataPoints: List<float * float>) = // datapoints [(time, amp)]
+        let data = SoundData(frequency0 = freq, duration0 = duration, bpm0 = x.bpm)
+        //! The "1." was supposed to be "(data.overDrive)"
+        Utility.Overdrive 1. (data.CreateFromDataPoints waveType dataPoints)
 
     member x.WriteToWav name music =
         Directory.CreateDirectory("./Output/") |> ignore
