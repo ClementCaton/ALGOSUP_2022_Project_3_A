@@ -93,6 +93,23 @@ module Utility =
     let AddMaximize (data:List<List<float>>) = data |> AddMean |> Maximize
 
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    
+    let AddSimple (sounds:list<list<float>>) = 
+        let size = sounds |> List.map List.length |> List.max
+        let expand sound = List.append sound (List.replicate (size - List.length sound) 0.)
+        let add (values:List<float>) = 
+            let sum = List.sum values
+            if sum>1. then 1.
+            else sum
+
+        sounds |> List.map expand |> List.transpose |>  List.map add
+
+
 
     /// <summary>
     /// Clamps the values between +/- the given limit
@@ -101,8 +118,8 @@ module Utility =
     /// <param name="data">Data to clamp</param>
     /// <returns>Data with overdrive effect</returns>
     
-    let Overdrive multiplier (data:List<float>) =
-        [for i in data do 
-            if i < (-1. * multiplier * 256.) then (-1. * multiplier * 256.) else
-            if i > (1. * multiplier  * 256.) then (1. * multiplier * 256.) else
-            i]
+    let Overdrive (multiplier:float) (x:List<float>) =
+        x |> List.map (
+            min multiplier
+            >> max (multiplier * -1.)
+        )

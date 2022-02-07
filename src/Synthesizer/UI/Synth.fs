@@ -327,7 +327,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
         match int Environment.OSVersion.Platform with
         | 4| 6 -> 
             x.WriteToWavWithPath "./Output/temp_file_storage/" ".tempFile.wav" data
-            PlayMusic.PlayMac "./Output/temp_file_storage/.tempFile.wav" offset |> ignore
+            PlayMusic.PlayMac offset "./Output/temp_file_storage/.tempFile.wav" |> ignore
             File.Delete "./Output/temp_file_storage/.tempFile.wav"
             Directory.Delete "./Output/temp_file_storage/" |> ignore
         | _       ->  
@@ -346,6 +346,6 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     member x.PlayWavFromPath (offset:float) (filePath:string) =
         match int Environment.OSVersion.Platform with
         | 4| 6 -> 
-            PlayMusic.PlayMac filePath offset |> ignore
+            PlayMusic.PlayMac offset filePath |> ignore
         | _ ->  
             PlayMusic.PlayWithOffsetFromPath (float32 offset) filePath

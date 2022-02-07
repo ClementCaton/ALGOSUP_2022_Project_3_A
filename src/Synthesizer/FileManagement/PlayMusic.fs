@@ -7,29 +7,28 @@ module PlayMusic
 
 
     /// <summary>
-    /// Plays a stream with an offset on Windows
+    /// Play sound from a stream that contains sound data
     /// </summary>
-    /// <param name="offset">When to start playing in seconds</param>
-    /// <param name="stream">Stream to play</param>
+    /// <param name="offset">The second at which the sound starts to play</param>
+    /// <param name="stream">The stream containing the data</param>
     
     let PlayWithOffset (offset:float32) (stream:Stream) =     //if the offset is > to the length of the music it will start from the beginning
         let music = new Music(stream)
-        let timeOffset = Time.FromSeconds(offset)
+        let timeOffset = Time.FromSeconds(float32(offset))
         music.PlayingOffset <- timeOffset
         music.Play()
-        ignore (System.Console.ReadLine()) // press enter to end it // thread.sleep(1) could be another solution
+        ignore (System.Console.ReadLine())  //This line allows the sfml to play until the user press the enter key
     
 
 
     /// <summary>
     /// Plays a stream with an offset on Mac
     /// </summary>
-    /// <param name="file">Path of the file to play</param>
     /// <param name="offset">When to start playing in seconds</param>
+    /// <param name="file">Path of the file to play</param>
     
-    let PlayMac (file:string) (offset:float) =
+    let PlayMac (offset:float) (file:string) =
         Process.Start("afplay", file + " -t " + string offset)
-
 
 
     /// <summary>
@@ -38,7 +37,7 @@ module PlayMusic
     /// <param name="stream">Stream to play</param>
     
     let Play stream =
-        PlayWithOffset (float32(0.)) stream
+        PlayWithOffset 0. stream
 
 
 

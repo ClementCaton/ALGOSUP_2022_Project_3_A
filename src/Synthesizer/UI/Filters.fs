@@ -53,15 +53,15 @@ module Filter =
     /// <returns></returns>
     
     let Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) = 
-        let rec RepeaterInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
-            if nbEcho=0 then
-                Utility.AddMean [dryData; wetData]
+        let rec RepeaterInner (currentEcho:int) (totalEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
+            if currentEcho>=totalEcho then
+                Utility.AddSimple [dryData; wetData]
             else
-                let silence = SoundData(frequency0 = 0, duration0 = (Seconds (delay*float nbEcho)), bpm0 = 114).Create(Silence)
-                let updatedWetData = Utility.AddMean [wetData; List.concat [silence ; ChangeAmplitude decay dryData]]
-                RepeaterInner (nbEcho-1) decay delay sampleRate updatedWetData dryData
+                let silence = SoundData(frequency0 = 0, duration0 = (Seconds (delay*float (currentEcho+1))), bpm0 = 114).Create(Silence)
+                let updatedWetData = Utility.AddSimple [wetData; List.concat [silence; (ChangeAmplitude decay dryData)]]
+                RepeaterInner (currentEcho+1) totalEcho (decay*decay) delay sampleRate updatedWetData dryData
 
-        RepeaterInner nbEcho decay delay sampleRate [] dryData
+        RepeaterInner 0 nbEcho decay delay sampleRate [] dryData
 
 
 
