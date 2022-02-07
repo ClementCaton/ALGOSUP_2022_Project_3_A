@@ -362,9 +362,20 @@ To complement your sounds you can add some filters :
 
 You can use this function to apply multi filters at once : 
 
-``member x.ApplyFilters filters data =
-Filter.ApplyFilters filters data``
+```fs
+member x.ApplyFilters filters data =
+    Filter.ApplyFilters filters data
+```
 
+Like so :
+```fs
+let x = Synth()
+
+let MusicWithFilters = x.ApplyFilters [
+    Filter.ChangeAmplitude 0.5;
+    Filter.LowPass 44100. 400.;
+    Filter.Echo 4 0.7 1.5 44100.] Music
+```
 
 ## Changing amplitude
 
