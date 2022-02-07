@@ -53,21 +53,44 @@ The ``Synth`` object which is the actual sound synthesizer and the ``Filter`` ob
 
 ## Reading wav files
 
-You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav name.Wav``
+You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav (fileName:string)``.
 
-You can open it from your own path using ``readFromWavWithPath /path-to.Wav``
+You can open it from your own path using ``Synth.readFromWavWithPath (filePath:string)``.
+
+These functions return a tuple containing the ``soundData:list<list<float>>``, ``duration:float``, ``sampleRate:int`` and the ``bitsPerSample:int``.
+
+Example:
+```fs
+let inOutputData, inOutputDuration, inOutputSampleRate, inOutputBPSampleRate = synth.ReadFromWav "yourFileName.wav"     // get everything from a file in the Output folder
+
+let fromPathData, _, fromPathSampleRate, _ = Synth.readFromWavWithPath "/yourPath/yourFileName.wav"     // get only the sound data and the samplerate from a predefined path
+```
 
 ## Reading mp3 files
 
-You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromWav name.mp3``
+<span style="color: red;">WIP</span>
 
-You can open it from your own path using ``readFromWavWithPath /path-to.mp3``
+<!-- You can extract data from a wav file in the default ``/Output/`` folder using ``Synth.ReadFromMp3 name.mp3``
+
+You can open it from your own path using ``readFromWavWithPath /path-to.mp3`` -->
 
 ## **Writing to files / Saving**
 
 ## Writing wav files
 
-<span style="color: red;">WIP</span>
+You can save files by writing data into them with the function ``Synth.WriteToWav name music``. This function will put files in the folder "./Output". 
+
+Example :
+```fs
+Synth.WriteToWavWithPath "name.wav" sound// This will save the sound in the file from the path "./Output/name.wav".
+```
+
+You can also save files by writing data into them with the function ``Synth.WriteToWavWithPath path fileName music``. This function will put files in "path/fileName". 
+
+Example :
+```fs
+Synth.WriteToWavWithPath "./folder/" "name.wav" sound // This will save the sound in the file from the path "./folder/name.wav".
+```
 
 ## Writing mp3 files
 
@@ -75,67 +98,19 @@ You can open it from your own path using ``readFromWavWithPath /path-to.mp3``
 
 ## **Playing music**
 
-<span style="color: red;">WIP</span>
+You can play music from the code ``Synth.PlayWav (offset:float32) data``.
 
-## Usable notes 
+Example :
+```fs
+Synth.PlayWav 0. data // This will play the sound in the variable data with an offset of 0 second.
+```
 
-You can uses multiples notes to create your sound :
+You can also play music from a file with ``Synth.PlayWavFromPath offset (filePath:string)``
 
-- C = -9
-
-- Cs = -8 | Db = -8
-
-- D = -7
-
-- Ds = -6 | Eb = -6
-
-- E = -5
-
-- F = -4
-
-- Fs = -3 | Gb = -3
-
-- G = -2
-
-- Gs = -1 | Ab = -1
-
-- A = 0
-
-- As = 1 | Bb = 1
-
-- B = 2
-
-
-## Possible Waves
-
-You can create multiples type of waves in case you want to create differents types of sounds :
-
-
-- Sin
-
-- Square
-
-- Triangular
-
-- Saw
-
-- Silence 
-
-## Duration of elements
-
-You can control the durations of all the elements you use to create sounds : 
-
-- Whole
-
-- Half
-
-- Quarter
-
-- Eighth
-
-- Sixteenth
-
-- Seconds    
+Example :
+```fs
+Synth.PlayWavFromPath 0. "./Output/name.wav" // This will play the sound in the file from the path "./Output/name.wav" with an offset of 0 second.
+```
 
 ## **Dealing with stereo**
 
@@ -400,6 +375,32 @@ To complement your sounds you can add some filters :
 
 # Footnotes
 
+
+## Usable notes 
+
+The musical notes available are:
+> ``C``,  ``Cs / Db``, ``D``, ``Ds / Eb``, ``E``, ``F``, ``Fs / Gb``, ``G``, ``Gs / Ab``, ``A``, ``As / Bb``, ``B``
+
+## Possible Waves
+
+The wave types available are:
+> ``Sin``, ``Square``, ``Triangular``, ``Saw``, ``Silence``, ``CustomInstrument``
+
+- The ``CustomInstrument`` value has a value of ``(float -> float -> float -> float -> float -> float)``. This is because the wave functions need to be written as: 
+```fs 
+let waveFunc (frequency:float) (amplitude:float) (verticalShift:float) (phaseShift:float) (timeLength:float) 
+```
+
+## Duration of elements
+
+The note durations available are:
+> ``Whole``, ``Half``, ``Quarter``, ``Eighth``, ``Sixteenth``, ``Custom``, ``Seconds``
+
+- The Seconds value takes a float as argument.
+- The Custom value takes a float as its argument. This translates using the formula ``value * 4. * 60. / bpm``.
+- The tickspead of the durations can be changed by changing the value ``Synth.bpm`` (default 90).
+
+## see also
 Info on [**.mp3 files**](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/blob/main/Informations/INFO%20mp3.md)<br>
 Info on [**.Wav files**](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/blob/main/Informations/INFO.md)<br>
 Link to our [**Trello**](https://trello.com/b/itooTuBY/algosup2022project3a)<br>
