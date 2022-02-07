@@ -124,10 +124,10 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
             WriteWav().Write stream data 
             PlayMusic.PlayWithOffset offset stream |> ignore
         else
-            x.WriteToWavWithPath ".Output/temp_file_storage/" ".tempFile.wav" data
-            PlayMusic.PlayMac ".Output/temp_file_storage/.tempFile.wav" offset |> ignore
-            File.Delete ".Output/temp_file_storage/.tempFile.wav"
-            Directory.Delete ".Output/temp_file_storage/" |> ignore
+            x.WriteToWavWithPath "./Output/temp_file_storage/" ".tempFile.wav" data
+            PlayMusic.PlayMac "./Output/temp_file_storage/.tempFile.wav" offset |> ignore
+            File.Delete "./Output/temp_file_storage/.tempFile.wav"
+            Directory.Delete "./Output/temp_file_storage/" |> ignore
 
-    member x.PlayWavFromPath offset ((filePath:string)) = 
+    member x.PlayWavFromPath offset ((filePath:string)) =
         PlayMusic.PlayWithOffsetFromPath offset filePath
