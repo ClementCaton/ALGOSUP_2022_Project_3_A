@@ -143,7 +143,21 @@ let newNote = synth.Note Quarter Note.D 5 // Create a D5 quarter note.
 
 ## Creating audio data with an envelope
 
-In order to create a sound with an enveloppe you need to use ``Synth.SoundWithEnveloppe
+In order to create a sound with an enveloppe you need to use ``Synth.SoundWithEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (sustain:float) (attack:float) (hold:float) (decay:float) (release:float)``.
+
+We are using a basic AHDSR envelope:
+![After](Reports/Files/envelope.png)
+
+Example:
+```fs
+let synth = Synth() // Init
+let sound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5  // Create sound with envelope
+```
+
+The above example creats the following sound:
+![After](Reports/Files/createWithEnv.png)
+
+<sup>* Please note: when we create a new sound with this methode the release adds data at the end of the normal data.</sup>
 
 ## Creating audio data with a custom envelope
 
