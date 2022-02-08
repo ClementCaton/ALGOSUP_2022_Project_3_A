@@ -167,7 +167,7 @@ Each sound will be played one by one. For the next sound to be played (or to end
 
 ## Dealing with stereo
 
-Working with stereo is rather simple.<br>
+Working with stereo[^10] is rather simple.<br>
 Whenever data is getting written the input needs to be a list of lists and every time we read data the output will also be a list of list.
 
 Each of the inner lists represent the audio data in a different channel.
@@ -208,7 +208,7 @@ let newNote = synth.Note Quarter Note.D 5 // Create a D5 quarter note.
 
 In order to create a sound with an envelope you need to use ``synth.SoundWithEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (sustain:float) (attack:float) (hold:float) (decay:float) (release:float)``.
 
-We are using a basic AHDSR envelope :
+We are using a basic AHDSR[^6] envelope[^7] :
 
 ![After](Reports/Files/envelope.png)
 
@@ -447,7 +447,7 @@ These two are equivalents.
 
 ## Preview
 
-It is possible to create a preview of an audio loaded into the filter using the ``synth.Preview (title:string) (sound:List<float>)`` function.
+It is possible to create a preview of an audio loaded into the filter using the ``synth.Preview (title:string) (sound:List<float>)`` function with Xplot.Plotly[^9].
 
 Example :
 
@@ -514,7 +514,7 @@ To complement your music, its possible to add filters to your audio data :
 
 - Envelope : Modifies the way the amplitude of the sound changes over time.
 
-- LFO AM : Amplitude modulation using a low frequency oscillator.
+- LFO[^8] AM : Amplitude modulation using a low frequency oscillator.
 
 - LFO FM : Frequency modulation using a low frequency oscillator.
 
@@ -721,7 +721,7 @@ They are used like so :
 The musical notes available are :
 > ``C``,  ``Cs / Db``, ``D``, ``Ds / Eb``, ``E``, ``F``, ``Fs / Gb``, ``G``, ``Gs / Ab``, ``A``, ``As / Bb``, ``B``
 
-## Wave functions
+## Wave functions[^3]
 
 The wave types available are :
 > ``Sin``, ``Square``, ``Triangular``, ``Saw``, ``Silence``, ``CustomInstrument``
@@ -734,7 +734,7 @@ let WaveFunc (frequency:float) (amplitude:float) (verticalShift:float) (phaseShi
 
 ## Duration of elements
 
-The note durations available are :
+The note durations[^5] available are :
 > ``Whole``, ``Half``, ``Quarter``, ``Eighth``, ``Sixteenth``, ``Custom``, ``Seconds``
 
 - The Seconds value takes a float as argument.
@@ -760,11 +760,12 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 
 [^2]: [Note](https://en.wikipedia.org/wiki/Musical_note) : A note is a symbol denoting a musical sound.
 
-[^3]: [beat](https://en.wikipedia.org/wiki/Beat_(music)): Beats is some sort of rythm; 2 beat per second is like a tempo, it will happen two time in a second
+[^3]: [Basic Waves functions](https://www.musictheory.net/lessons/11):<br>A wave function is a mathematical function which can create a wave of a predefined pattern frequency, amplitude, etc.. In the scope of this project we are using the four basic waveforms: Sinusoidal, Square, Triangular and Saw.<br>The four basic waves are -><br><br>The sin wave = the simplest wave with a formula of *sin(2 π  frequency / sampleRate)* <br><br>The square wave = a wave made with an sgn of a sinwave with a formula of *sgn(sinwave)*<br><br>The saw wave = has a form close to a triangle, it has a right angle at the end of its decreasing part *2(t/p - [1/2+t/p]*<br><br>The triangle wave = this wave has the most complicated formula *period/π arcsin[sin(π x)]*
 
-[^4]: [Basic Waves functions](https://www.musictheory.net/lessons/11):<br>A wave function is a mathematical function which can create a wave of a predefined pattern frequency, amplitude, etc.. In the scope of this project we are using the four basic waveforms: Sinusoidal, Square, Triangular and Saw.<br>The four basic waves are -><br><br>The sin wave = the simplest wave with a formula of *sin(2 π  frequency / sampleRate)* <br><br>The square wave = a wave made with an sgn of a sinwave with a formula of *sgn(sinwave)*<br><br>The saw wave = has a form close to a triangle, it has a right angle at the end of its decreasing part *2(t/p - [1/2+t/p]*<br><br>The triangle wave = this wave has the most complicated formula *period/π arcsin[sin(π x)]*
+[^4]: [beat](https://en.wikipedia.org/wiki/Beat_(music)): Beats is a sort of rythm; 2 beat per second is like a tempo, it will happen two time in a second
 
-[^5]: Musical durations:  
+[^5]: Musical durations: <br>
+Musical duration is measured in beats[^4] <br>
 ``Whole last 4 beats``<br> ``Half last 2 beats``<br> ``Quarter last 1 beat``<br> ``Eighth last 1/2 beat``<br> ``Sixteenth last 1/4 beat``<br> ``Custom depends of the number of beat``<br> ``Seconds last the number of beats in the number of seconds written``
 
 [^6]: AHDSR: <br>An Envelope parameters -><br> Attack is the time taken for initial run-up of level from nil to peak, beginning when the key is pressed.<br><br>Hold time allows you to adjust the time that the peak amplitude level is held before the decay stage of the envelope begins.<br><br>
