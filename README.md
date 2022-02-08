@@ -256,7 +256,7 @@ synth.WriteToWav "custEnvSound.wav" [custEnvSound]
 
 The output already looks a bit more interresting:
 
-![Simple envelope](Reports/Files/customEnv-1.PNG)
+![Custom envelope](Reports/Files/customEnv-1.PNG)
 
 A better way of doing this would be to outright create a function for the new envelope:
 
@@ -677,7 +677,7 @@ synth.WriteToWav "custEnvSound3.wav" [custEnvSound3]
 ```
 
 This way the new, completielly personalised, envelope can easily be applied to a large number of notes.
-![Custom envelope final](Reports/Files/custEnv.PNG)
+![Custom envelope final](Reports/Files/custEnv.png)
 
 ### Low frequency oscillation
 
