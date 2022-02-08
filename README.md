@@ -29,6 +29,8 @@
   - [Cutting audio](#cutting-audio)
   - [Superposing audio data](#superposing-audio-data)
     - [Superposing audio with a predefined ratio](#superposing-audio-with-a-predefined-ratio)
+    - [Superposing audio with a custom ratio](#superposing-audio-with-a-custom-ratio)
+    - [Superposing audio without ratios](#superposing-audio-without-ratios)
   - [Composing](#composing)
   - [Preview](#preview)
   - [Frequency analysis](#frequency-analysis)
