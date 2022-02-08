@@ -9,11 +9,11 @@
 - [Project documentation](#project-documentation)
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
+  - [Download](#download)
       - [.Net CLI](#net-cli)
-      - [Windows](#windows)
+      - [Nuget](#nuget)
       - [Package Reference](#package-reference)
-    - [Installation](#installation)
-    - [Basic structure](#basic-structure)
+  - [**Basic structure**](#basic-structure)
   - [Reading files](#reading-files)
     - [Reading wav files](#reading-wav-files)
     - [Reading mp3 files](#reading-mp3-files)
@@ -35,7 +35,7 @@
   - [Preview](#preview)
   - [Frequency analysis](#frequency-analysis)
   - [Filters](#filters)
-    - [Usable Filters](#usable-filters)
+    - [Currently accessible Filters](#currently-accessible-filters)
     - [Apply multiple filters at once](#apply-multiple-filters-at-once)
     - [Changing amplitude](#changing-amplitude)
     - [Custom repeater filter](#custom-repeater-filter)
@@ -53,7 +53,7 @@
   - [Wave functions](#wave-functions)
   - [Duration of elements](#duration-of-elements)
   - [Unit Test](#unit-test)
-  - [see also](#see-also)
+  - [See Also](#see-also)
   - [**Definitions**](#definitions)
 <!-- </details> -->
 
@@ -189,7 +189,22 @@ Each sound will be played one by one. For the next sound to be played (or to end
 
 ## Dealing with stereo
 
-<span style="color: red;">WIP</span>
+Working with stereo is rather simple.<br>
+Whenever data is getting written the input needs to be a list of lists and every time we read data the output will also be a list of list.
+
+Each of the inner lists represent the audio data in a different channel.
+
+For example if we want to write a .wav file with two channels that would look like this:
+```fs
+let synth = Synth() // Init
+let sound1 = synth.SoundWithEnveloppe 440. (Seconds 2.) Sin 0.5 0.5 0.5 0.5 0.5  // First audio
+let sound2 = synth.SoundWithEnveloppe 440. (Seconds 2.) Sin 0.5 0.2 0.3 0.4 0.5  // Second audio
+
+synth.WriteToWav "stereo.wav" [sound1; sound2]  // Writing file with two channels
+```
+
+This will create the following audio file:
+![Stereo](Reports/Files/stereo.png)
 
 ## Creating audio data
 
@@ -221,6 +236,7 @@ We are using a basic AHDSR envelope :
 Example:
 
 ```fs
+let synth = Synth()
 let sound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5  // Create sound with envelope
 ```
 
