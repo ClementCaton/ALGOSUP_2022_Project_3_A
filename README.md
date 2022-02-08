@@ -7,11 +7,11 @@
   - [Project](#project)
   - [Project members](#project-members)
 - [Project documentation](#project-documentation)
-  - [Getting Started](#getting-started)
   - [Features in developpment](#features-in-developpment)
     - [MP3 developpment](#mp3-developpment)
+  - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
-  - [Download](#download)
+    - [Download](#download)
       - [.Net CLI](#net-cli)
   - [**Basic structure**](#basic-structure)
   - [Reading files](#reading-files)
@@ -50,7 +50,7 @@
     - [LowPass / HighPass / BandPass / RejectBand filters](#lowpass--highpass--bandpass--rejectband-filters)
 - [Footnotes](#footnotes)
   - [Musical notes](#musical-notes)
-  - [Wave functions](#wave-functions)
+  - [Wave functions[^3]](#wave-functions3)
   - [Duration of elements](#duration-of-elements)
   - [Unit Test](#unit-test)
   - [See Also](#see-also)
@@ -90,7 +90,7 @@ You can simply download our lastest builds by the NuGet platform by these comman
 
 #### .Net CLI
 
-``dotnet add package Synthesizer --version 1.1.0``
+``dotnet add package Synthesizer``
 
 ## **Basic structure**
 
@@ -256,7 +256,7 @@ synth.WriteToWav "custEnvSound.wav" [custEnvSound]
 
 The output already looks a bit more interresting:
 
-![Simple envelope](Reports/Files/customEnv-1.PNG)
+![Custom envelope](Reports/Files/customEnv-1.PNG)
 
 A better way of doing this would be to outright create a function for the new envelope:
 
@@ -613,7 +613,20 @@ The above examples give the following outputs:
 
 ### Flanger
 
-<span style="color: red;">WIP</span>
+The flange filter is used to add kind of sweeping sound to the audio.
+``Filter.Flanger (delay:float) (speed:float) (sampleRate:float) (bpm:float) (dryData:List<float>)``
+
+Example:
+```fs
+    let synth = Synth() // Init
+    let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2 // Creating a basic sound with an envelope to make it interesting
+    let flanger = Filter.Flanger 20. 0.4 44100. 114. basicSound //Adding filter
+    
+    synth.WriteToWav "basic.wav" [basicSound]
+    synth.WriteToWav "flanger.wav" [flanger]
+```
+The results are:
+![Flanger](Reports/Files/flanger.png)
 
 ### Envelope
 
@@ -664,7 +677,7 @@ synth.WriteToWav "custEnvSound3.wav" [custEnvSound3]
 ```
 
 This way the new, completielly personalised, envelope can easily be applied to a large number of notes.
-![Custom envelope final](Reports/Files/custEnv.PNG)
+![Custom envelope final](Reports/Files/custEnv.png)
 
 ### Low frequency oscillation
 
@@ -707,7 +720,7 @@ synth.WriteToWav "modWave.wav" [modWave]
 synth.WriteToWav "fm.wav" [fm]
 ```
 The output is:
-![LFO FM](Reports/Files/lfo_fm.PNG)
+![LFO FM](Reports/Files/lfo_fm.png)
 
 
 ### LowPass / HighPass / BandPass / RejectBand filters

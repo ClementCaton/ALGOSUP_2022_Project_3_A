@@ -5,7 +5,7 @@
     <Platforms>AnyCPU;x64</Platforms>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>Synthesizer</PackageId>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <Authors>TheoDct, ClementCaton, leo.chartier, CHAPUT-Mathieu, Louisdechoulot, Molnar-Ivan</Authors>
     <Company>ALGOSUP</Company>
     <Product>Synthesizer</Product>
@@ -13,13 +13,13 @@
     <Copyright>MIT</Copyright>
     <PackageProjectUrl>https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A</PackageProjectUrl>
     <PackageIcon>logo.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadmeFile>Nuget README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Sound, Synthesizer, F#, .NET, dotnet, modulation, fourier, ALGOSUP, Echo, Flanger, Filter, SoundWave, Reverb,</PackageTags>
     <PackageReleaseNotes>add Filters</PackageReleaseNotes>
-	<AssemblyVersion>1.2.0.0</AssemblyVersion>
-	<FileVersion>1.2.0.0</FileVersion>
+	<AssemblyVersion>1.2.1.0</AssemblyVersion>
+	<FileVersion>1.2.1.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>    
     <Compile Include="Utilities/FrequencyAnalyser.fs" />
@@ -42,7 +42,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\..\..\..\ALGOSUP_2022_Project_3_A\README.md">
+    <None Include="..\..\..\..\ALGOSUP_2022_Project_3_A\Reports\Nuget README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
