@@ -72,19 +72,19 @@ The project given by [*Algosup*](https://www.algosup.com/index.html) and [*Rober
 
 # Project documentation
 
-## Getting Started
-
 ## Features in developpment
 
 ### MP3 developpment
 
 We need to complete the MP3 features, we are supposed to be able to compress and create sounds in MP3, you can already look at your data inside your mp3 files and check the progress inside the [mp3-compression branch](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/tree/compression-mp3)
 
+## Getting Started
+
 ### Prerequisites
 
 Download .NET 6.0 or newer
 
-## Download
+### Download
 
 You can simply download our lastest builds by the NuGet platform by these command
 
@@ -182,7 +182,7 @@ let sound2 = synth.SoundWithEnveloppe 440. (Seconds 2.) Sin 0.5 0.2 0.3 0.4 0.5 
 synth.WriteToWav "stereo.wav" [sound1; sound2]  // Writing file with two channels
 ```
 
-This will create the following audio file:
+This will create the following audio file :
 ![Stereo](Reports/Files/stereo.png)
 
 ## Creating audio data
@@ -386,7 +386,7 @@ Example:
 let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
 let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
 
-let added = Utility.AddFactor [sound1;sound2]
+let added = Utility.AddSimple [sound1;sound2]
 ```
 
 ## Composing
