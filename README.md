@@ -720,7 +720,7 @@ synth.WriteToWav "modWave.wav" [modWave]
 synth.WriteToWav "fm.wav" [fm]
 ```
 The output is:
-![LFO FM](Reports/Files/lfo_fm.PNG)
+![LFO FM](Reports/Files/lfo_fm.png)
 
 
 ### LowPass / HighPass / BandPass / RejectBand filters
