@@ -168,7 +168,7 @@ module Filter =
     /// <param name=""></param>
     /// <returns></returns>
     
-    let Envelope sustain attack hold0 decay0 release0 (sampleRate:float) (data:List<float>) = //release substracts from hold because I don't have the data for the release periode
+    let Envelope (sustain:float) (attack:float) (hold0:float) (decay0:float) (release0) (sampleRate:float) (data:List<float>) = //release substracts from hold because I don't have the data for the release periode
         let hold = hold0 + attack
         let decay = hold + decay0
         let release = (float data.Length/float sampleRate) - release0

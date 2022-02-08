@@ -10,9 +10,9 @@
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
   - [Download](#download)
-    - [.Net CLI](#net-cli)
-    - [Nuget](#nuget)
-    - [Package Reference](#package-reference)
+      - [.Net CLI](#net-cli)
+      - [Nuget](#nuget)
+      - [Package Reference](#package-reference)
   - [**Basic structure**](#basic-structure)
   - [Reading files](#reading-files)
     - [Reading wav files](#reading-wav-files)
@@ -601,11 +601,54 @@ The results are:
 
 ### Envelope
 
-<span style="color: red;">WIP</span>
+Just like when we create a sound, we can make an envelope to make the amplitude of a  given audio data follow certain patterns.
+
+We are still using a basic AHDSR envelope :
+
+![Envelope explanation](Reports/Files/envelope.png)
+
+``Filter.Envelope (sustain:float) (attack:float) (hold0:float) (decay0:float) (release0) (sampleRate:float) (data:List<float>)``
+
+Example:
+
+```fs
+let synth = Synth()
+let basic = synth.Note (Seconds 3.) Note.A 4
+let env = Filter.Envelope 0.5 0.5 0.5 0.5 0.5 44100. basic
+
+synth.WriteToWav "basic.wav" [basic]
+synth.WriteToWav "env.wav" [env]
+```
+
+The above example creates the following sound:
+![After](Reports/Files/env.png)
+
+<sup>* Please note: when adding an envelope on top of an already existing sound using this method, the release is accounted into the already existing data and the length of the data does not change.</sup>
 
 ### Custom envelope
 
-<span style="color: red;">WIP</span>
+Just like on creation, it is rather simple to insert a custom pattern into the anvelope.
+This is done using the  ``Filter.CustomEnvelope (dataPoints0: List<float * float>) (sampleRate:float) (data:List<float>)`` function.
+
+For example, to create a simple filter that starts at 0 then rises to the maximum amplitude at the middle of the sound, then falls back to 0:
+
+```fs
+let synth = Synth() // Init
+
+let exampleCustomEnvelope (data:List<float>) (sampleRate:float) =
+    Filter.CustomEnvelope [(0., 0.); ((float data.Length / sampleRate / 2.), 1.); ((float data.Length / sampleRate), 0.)] sampleRate data
+
+let custEnvSound1 = exampleCustomEnvelope (synth.Note (Seconds 1) Note.A 4) 44100.
+let custEnvSound2 = exampleCustomEnvelope (synth.Note (Seconds 2) Note.B 4) 44100.
+let custEnvSound3 = exampleCustomEnvelope (synth.Note (Seconds 3) Note.C 4) 44100.
+
+synth.WriteToWav "custEnvSound1.wav" [custEnvSound1]
+synth.WriteToWav "custEnvSound2.wav" [custEnvSound2]
+synth.WriteToWav "custEnvSound3.wav" [custEnvSound3]
+```
+
+This way the new, completielly personalised, envelope can easily be applied to a large number of notes.
+![Custom envelope final](Reports/Files/custEnv.PNG)
 
 ### Low frequency oscillation
 
