@@ -516,7 +516,7 @@ let MusicWithAmplitude = Filter.ChangeAmplitude 0.5 Music
 ### Custom repeater filter
 
 The repeater filter does exactly what it says on the tin.
-It repeats the inputted data with an offset and readds to the original sound.
+It repeats the inputted data with an offset and reads to the original sound.
 This filter is the basis on which we built the Reverb and Echo filters.
 
 The function looks like this: ``Filter.Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)``
@@ -562,7 +562,7 @@ The above examples give the following outputs:
 
 ### Reverb
 
-Similarly to echo, reverb repeats and readds the same sound with a delay.
+Similarly to echo, reverb repeats and reads the same sound with a delay.
 Except, reverb does so with a delay that is shorter then the original sound.
 
 ``Filter.Reverb (delayRatio:float) (minAmpRatio:float) (decay:float) (sampleRate:float) (dryData:List<float>)``
