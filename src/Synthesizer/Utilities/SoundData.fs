@@ -11,6 +11,10 @@ type Duration =
     | Sixteenth
     | Custom of float
     | Seconds of float
+
+type ChordQuality =
+    | Minor
+    | Major
     
 type BaseWaves =
     | Sin
@@ -150,3 +154,8 @@ type SoundData(
         let release = duration + release0
 
         x.CreateFromDataPoints waveType [(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (duration, sustain); (release, 0.)]
+    
+    member x.GetChord chordQuality =
+        match chordQuality with
+        | Minor -> [0; 3; 7]
+        | Major -> [0; 4; 7]

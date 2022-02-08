@@ -21,7 +21,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
     /// <param name="note">Value of the note</param>
     /// <returns>Frequency of the note</returns>
     
-    member x.GetNoteFreq (octave:int) (note:Note) =
+    member x.GetNoteFreq (note:Note) (octave:int) =
         CalcNoteFreq(note, octave).Output
 
 
@@ -33,10 +33,9 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
     /// <param name="note">Value of the note</param>
     /// <param name="aFourFreq">Frequency of A4</param>
     /// <returns>Frequency of the note</returns>
-    
+
     member x.GetNoteFreqOffset (octave:int) (note:Note) (aFourFreq:float) =
         CalcNoteFreq(note, octave, aFourFreq).Output
-
 
 
     /// <summary>
@@ -160,6 +159,24 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
     
     member x.Silence (duration:Duration) =
         x.Sound 0 duration Silence
+
+
+
+    /// <summary>
+    /// Creates a chord with different notes 
+    /// </summary>
+    /// <param name="duration">Duration of the chord</param>
+    /// <param name="rootNote">Base note value for the chord</param>
+    /// <param name="chordQuality">Type of chord</param>
+    /// <param name="rootOctave">Octave of the base note</param>
+    /// <returns>Sound with the cord</returns>
+        
+    member x.Chord (duration:Duration) (rootNote:Note) (chordQuality:ChordQuality) (rootOctave:int) =
+        let calc = CalcNoteFreq(rootNote, rootOctave)
+        SoundData().GetChord chordQuality
+        |> List.map (fun offset -> calc.Offset offset)
+        |> List.map (fun freq -> x.Sound freq duration x.waveType)
+        |> Utility.AddMean
     
 
 
