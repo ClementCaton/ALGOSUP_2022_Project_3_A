@@ -386,7 +386,7 @@ Example:
 let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
 let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
 
-let added = Utility.AddFactor [sound1;sound2]
+let added = Utility.AddSimple [sound1;sound2]
 ```
 
 ## Composing
