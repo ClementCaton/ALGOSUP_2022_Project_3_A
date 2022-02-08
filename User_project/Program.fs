@@ -11,17 +11,14 @@ open Synthesizer
 
 module Program =
     let synth = Synth() // Init
-    let basicSound = synth.Note (Seconds 1) Note.A 4
 
-    let exampleCustomEnvelope (note:Note) (octav:int) (duration:float) =
-        synth.SoundWithCustomEnveloppe (synth.GetNoteFreq note octav) (Seconds duration) Sin [(0., 0.); ((duration/2.), 1.); (duration, 0.)]
+    let exampleCustomEnvelope (data:List<float>) (sampleRate:float) =
+        Filter.CustomEnvelope [(0., 0.); ((float data.Length / sampleRate / 2.), 1.); ((float data.Length / sampleRate), 0.)] sampleRate data
 
-    let custEnvSound1 = exampleCustomEnvelope Note.A 4 1.
-    let custEnvSound2 = exampleCustomEnvelope Note.B 6 2.
-    let custEnvSound3 = exampleCustomEnvelope Note.D 3 3.
+    let custEnvSound1 = exampleCustomEnvelope (synth.Note (Seconds 1) Note.A 4) 44100.
+    let custEnvSound2 = exampleCustomEnvelope (synth.Note (Seconds 2) Note.B 4) 44100.
+    let custEnvSound3 = exampleCustomEnvelope (synth.Note (Seconds 3) Note.C 4) 44100.
 
-    synth.WriteToWav "basic.wav" [basicSound]
     synth.WriteToWav "custEnvSound1.wav" [custEnvSound1]
     synth.WriteToWav "custEnvSound2.wav" [custEnvSound2]
     synth.WriteToWav "custEnvSound3.wav" [custEnvSound3]
-    
