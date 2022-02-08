@@ -39,7 +39,12 @@ type WriteWav(
                 [| for k in 0..(bytesPerSample-1) do byte (corrected/(256.**k)) |]
             | _ -> failwithf "Invalid number of bytes per sample: %i. Valid values: 1, 2, 3, 4" bytesPerSample
         
-        let transposed = data |> List.transpose
+        let size = data |> List.map List.length |> List.max
+        let expand sound = List.append sound (List.replicate (size - List.length sound) 0.)
+        let transposed =
+            data
+            |> List.map expand
+            |> List.transpose
         let byteData = [| for sample in transposed do yield! [| for channel in sample do yield! ToBytes channel |] |]
 
         let encode = new System.Text.UTF32Encoding() 
