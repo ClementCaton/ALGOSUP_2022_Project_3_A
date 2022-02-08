@@ -54,7 +54,12 @@ type WriteWav(
         let byteRate = sampleRate * nbChannels * bytesPerSample
         let blockAlign = uint16 (nbChannels * bytesPerSample)
         
-        let transposed = data |> List.transpose
+        let size = data |> List.map List.length |> List.max
+        let expand sound = List.append sound (List.replicate (size - List.length sound) 0.)
+        let transposed =
+            data
+            |> List.map expand
+            |> List.transpose
         let byteData = [| for sample in transposed do yield! [| for channel in sample do yield! ToBytes channel |] |]
         
         let encode = new System.Text.UTF32Encoding()
