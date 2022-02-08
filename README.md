@@ -8,18 +8,16 @@
   - [Project members](#project-members)
 - [Project documentation](#project-documentation)
   - [Getting Started](#getting-started)
+  - [Features in developpment](#features-in-developpment)
+    - [MP3 developpment](#mp3-developpment)
     - [Prerequisites](#prerequisites)
   - [Download](#download)
       - [.Net CLI](#net-cli)
-      - [Nuget](#nuget)
-      - [Package Reference](#package-reference)
   - [**Basic structure**](#basic-structure)
   - [Reading files](#reading-files)
     - [Reading wav files](#reading-wav-files)
-    - [Reading mp3 files](#reading-mp3-files)
   - [Writing to files / Saving](#writing-to-files--saving)
     - [Writing wav files](#writing-wav-files)
-    - [Writing mp3 files](#writing-mp3-files)
   - [Playing music](#playing-music)
   - [Dealing with stereo](#dealing-with-stereo)
   - [Creating audio data](#creating-audio-data)
@@ -59,7 +57,7 @@
 
 ## Project
 
-The project given by [*Algosup*](https://www.algosup.com/index.html) and [*Robert Pickering*](https://github.com/robertpi) was to create a Sound Synthesizer able to open, modify, create and save sounds written in F#.
+The project given by [*Algosup*](https://www.algosup.com/index.html) and [*Robert Pickering*](https://github.com/robertpi) was to create a Sound Synthesizer able to open, modify, create and save sounds, written in F#.
 
 ## Project members
 
@@ -74,33 +72,23 @@ The project given by [*Algosup*](https://www.algosup.com/index.html) and [*Rober
 
 ## Getting Started
 
+## Features in developpment
+
+### MP3 developpment
+
+We need to complete the MP3 features, we are supposed to be able to compress and create sounds in MP3, you can already look at your data inside your mp3 files and check the progress inside the [mp3-compression branch](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/tree/compression-mp3)
+
 ### Prerequisites
 
 Download .NET 6.0 or newer
 
 ## Download
 
-You can simply download our lastest builds by the NuGet platfom then use these commands
-
-<br>
+You can simply download our lastest builds by the NuGet platform by these command
 
 #### .Net CLI
 
 ``dotnet add package Synthesizer --version 1.1.0``
-
-<br>
-
-#### Nuget
-
-``Install-Package Synthesizer -Version 1.1.0``
-
-<br>
-
-#### Package Reference
-
-``<PackageReference Include="Synthesizer" Version="1.1.0" />``
-
-<br>
 
 ## **Basic structure**
 
@@ -133,14 +121,6 @@ let inOutputData, inOutputDuration, inOutputSampleRate, inOutputBPSampleRate = s
 let fromPathData, _, fromPathSampleRate, _ = synth.readFromWavWithPath "/yourPath/yourFileName.wav" // get only the sound data and the sample rate from a predefined path
 ```
 
-### Reading mp3 files
-
-<span style="color: red;">WIP</span>
-
-<!-- You can extract data from a wav file in the default ``/Output/`` folder using ``synth.ReadFromMp3 name.mp3``
-
-You can open it from your own path using ``readFromWavWithPath /path-to.mp3`` -->
-
 ## Writing to files / Saving
 
 ### Writing wav files
@@ -160,10 +140,6 @@ Example :
 ```fs
 synth.WriteToWavWithPath "./folder/" "name.wav" sound // This will save the sound in the file from the path "./folder/name.wav".
 ```
-
-### Writing mp3 files
-
-<span style="color: red;">WIP</span>
 
 ## Playing music
 
@@ -386,7 +362,7 @@ The solution was to add in a filter that gradually lowers the amplitude of the n
 |          Before cutCorner             |          After cutCorner            |
 |:------------------------------------:|:-----------------------------------:|
 | ![Before](Reports/Files/cut_b.png)  | ![After](Reports/Files/cut_a.png)  |
-<sup>* for the shake of the example, the filter has been exaggerated</sup>
+<sup>* for the sake of the example, the filter has been exaggerated</sup>
 
 Therefore; the ``synth.Compose (sounds:List<float>)`` function has a default cutCorner value of 100 (this means it cuts away from the first and last 100 bytes from each note).
 
@@ -423,7 +399,7 @@ With zero value :
 let Music = synth.ComposeCutCorner 0 [ C4; C4; D4; Silence; B5 ]
 ```
 
-Or with ``synth.ComposeNoCutCorner (sounds:List<float>)``:
+Or with ``synth.ComposeNoCutCorner (sounds:List<float>)`` :
 
 ```fs
 let Music = synth.ComposeNoCutCorner [ C4;  C4; D4; Silence; B5 ]
@@ -448,7 +424,7 @@ The above example automatically opens the browser with the following image :
 
 ![Preview](Reports/Files/preview.png)
 
-Tools to zoom/zoom out are also present on the page.
+Tools to zoom in/zoom out are also present on the page.
 
 ## Frequency analysis
 
@@ -488,27 +464,27 @@ will output `Frequencies: [220.0457771; 440.0915541; 879.8466468]`
 
 ### Currently accessible Filters
 
-To complement your music, its possible to add filters to your audio data:
+To complement your music, its possible to add filters to your audio data :
 
-- Amplitude changer: Changes the amplitude of a given sound.
+- Amplitude changer : Changes the amplitude of a given sound.
   
-- Echo: Repeats and periodically scales down the sound, creating an echo like effect.
+- Echo : Repeats and periodically scales down the sound, creating an echo like effect.
 
-- Reverb: Repeats the sound similarly to the echo effect, but does it so before the sound could finish playing, creating a more vibrant sound.
+- Reverb : Repeats the sound similarly to the echo effect, but does it so before the sound could finish playing, creating a more vibrant sound.
 
-- Flanger: Adds a sweeping sound effect to the audio.
+- Flanger : Adds a sweeping sound effect to the audio.
 
-- Envelope: Modifies the way the amplitude of the sound changes over time.
+- Envelope : Modifies the way the amplitude of the sound changes over time.
 
-- LFO AM: Amplitude modulation using a low frequency oscillator.
+- LFO AM : Amplitude modulation using a low frequency oscillator.
 
-- LFO FM: Frequency modulation using a low frequency oscillator.
+- LFO FM : Frequency modulation using a low frequency oscillator.
 
-- Low Pass: Cuts off frequencies above a given threshold.
+- Low Pass : Cuts off frequencies above a given threshold.
 
-- High Pass: Cuts off frequencies under a given threshold.
+- High Pass : Cuts off frequencies under a given threshold.
 
-- BandPass/RejectBand: Cuts off frequencies both above and under the given thresholds and inverse.
+- BandPass/RejectBand : Cuts off frequencies both above and under the given thresholds and inverse.
   
 ### Apply multiple filters at once
 
@@ -532,15 +508,15 @@ let MusicWithAmplitude = Filter.ChangeAmplitude 0.5 Music
 ### Custom repeater filter
 
 The repeater filter does exactly what it says on the tin.
-It repeats the inputted data with an offset and readds to the original sound.
+It repeats the inputted data with an offset and reads to the original sound.
 This filter is the basis on which we built the Reverb and Echo filters.
 
-The function looks like this: ``Filter.Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)``
+The function looks like this : ``Filter.Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)``
 
 The variables inputed are :
 
 - nbEcho : The number of times the original sound gets repeated.
-- decay : Each time the sound is repeated we jusge the amplitude of the sound using this value
+- decay : Each time the sound is repeated we adjust the amplitude of the sound using this value
 - delay : The offset added to the echo (multiplies accordingly to the echo ex : echo 1 will have 1x this value, echo 2 will have 2x this value, etc..)
 - sampleRate : The sampleRate of the sound
 - dryData : The original sound
@@ -554,7 +530,7 @@ let repeated1 = Filter.Repeater 5 0.6 2.5 44100. basicSound
 let repeated2 = Filter.Repeater 5 0.9 4. 44100. basicSound
 ```
 
-The above examples give the following outputs:
+The above examples give the following outputs :
 ![Repeater examples](Reports/Files/repeater.png)
 
 ### Echo
@@ -565,7 +541,7 @@ The echo filter repeats the same sound with a delay between delays and continuou
 
 In this case, the delay is the time period between two echos, and NOT the delay from the start of the sound.
 
-Example:
+Example :
 
 ```fs
 let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2 // Creating a basic sound with an envelope to make it interesting
@@ -573,12 +549,12 @@ let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 
 let echo = Filter.Echo 3 0.6 0.25 44100. basicSound
 ```
 
-The above examples give the following outputs:
+The above examples give the following outputs :
 ![Repeater examples](Reports/Files/echo.png)
 
 ### Reverb
 
-Similarly to echo, reverb repeats and readds the same sound with a delay.
+Similarly to echo, reverb repeats and reads the same sound with a delay.
 Except, reverb does so with a delay that is shorter then the original sound.
 
 ``Filter.Reverb (delayRatio:float) (minAmpRatio:float) (decay:float) (sampleRate:float) (dryData:List<float>)``
@@ -603,11 +579,54 @@ The above examples give the following outputs:
 
 ### Envelope
 
-<span style="color: red;">WIP</span>
+Just like when we create a sound, we can make an envelope to make the amplitude of a  given audio data follow certain patterns.
+
+We are still using a basic AHDSR envelope :
+
+![Envelope explanation](Reports/Files/envelope.png)
+
+``Filter.Envelope (sustain:float) (attack:float) (hold0:float) (decay0:float) (release0) (sampleRate:float) (data:List<float>)``
+
+Example:
+
+```fs
+let synth = Synth()
+let basic = synth.Note (Seconds 3.) Note.A 4
+let env = Filter.Envelope 0.5 0.5 0.5 0.5 0.5 44100. basic
+
+synth.WriteToWav "basic.wav" [basic]
+synth.WriteToWav "env.wav" [env]
+```
+
+The above example creates the following sound:
+![After](Reports/Files/env.png)
+
+<sup>* Please note: when adding an envelope on top of an already existing sound using this method, the release is accounted into the already existing data and the length of the data does not change.</sup>
 
 ### Custom envelope
 
-<span style="color: red;">WIP</span>
+Just like on creation, it is rather simple to insert a custom pattern into the anvelope.
+This is done using the  ``Filter.CustomEnvelope (dataPoints0: List<float * float>) (sampleRate:float) (data:List<float>)`` function.
+
+For example, to create a simple filter that starts at 0 then rises to the maximum amplitude at the middle of the sound, then falls back to 0:
+
+```fs
+let synth = Synth() // Init
+
+let exampleCustomEnvelope (data:List<float>) (sampleRate:float) =
+    Filter.CustomEnvelope [(0., 0.); ((float data.Length / sampleRate / 2.), 1.); ((float data.Length / sampleRate), 0.)] sampleRate data
+
+let custEnvSound1 = exampleCustomEnvelope (synth.Note (Seconds 1) Note.A 4) 44100.
+let custEnvSound2 = exampleCustomEnvelope (synth.Note (Seconds 2) Note.B 4) 44100.
+let custEnvSound3 = exampleCustomEnvelope (synth.Note (Seconds 3) Note.C 4) 44100.
+
+synth.WriteToWav "custEnvSound1.wav" [custEnvSound1]
+synth.WriteToWav "custEnvSound2.wav" [custEnvSound2]
+synth.WriteToWav "custEnvSound3.wav" [custEnvSound3]
+```
+
+This way the new, completielly personalised, envelope can easily be applied to a large number of notes.
+![Custom envelope final](Reports/Files/custEnv.PNG)
 
 ### Low frequency oscillation
 
@@ -661,12 +680,12 @@ They are used like so :
 
 ## Musical notes
 
-The musical notes available are:
+The musical notes available are :
 > ``C``,  ``Cs / Db``, ``D``, ``Ds / Eb``, ``E``, ``F``, ``Fs / Gb``, ``G``, ``Gs / Ab``, ``A``, ``As / Bb``, ``B``
 
 ## Wave functions
 
-The wave types available are:
+The wave types available are :
 > ``Sin``, ``Square``, ``Triangular``, ``Saw``, ``Silence``, ``CustomInstrument``
 
 - The ``CustomInstrument`` value has a value of ``(float -> float -> float -> float -> float -> float)``. This is because the wave functions need to be written as:
@@ -677,7 +696,7 @@ let WaveFunc (frequency:float) (amplitude:float) (verticalShift:float) (phaseShi
 
 ## Duration of elements
 
-The note durations available are:
+The note durations available are :
 > ``Whole``, ``Half``, ``Quarter``, ``Eighth``, ``Sixteenth``, ``Custom``, ``Seconds``
 
 - The Seconds value takes a float as argument.
@@ -701,16 +720,24 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 
 [^1]: [Octave](https://en.wikipedia.org/wiki/Octave): A series of eight notes occupying the interval between (and including) two notes, one having twice or half the frequency of vibration of the other.
 
-[^2]: [Note](https://en.wikipedia.org/wiki/Musical_note): A note is a symbol denoting a musical sound.
+[^2]: [Note](https://en.wikipedia.org/wiki/Musical_note) : A note is a symbol denoting a musical sound.
 
-[^3]: [Basic Waves functions](https://notebookinc.wordpress.com/2016/07/26/formulae-of-the-four-basic-sound-waves/):<br>A wave function is a mathematical function which can create a wave of a predefined pattern frequency, amplitude, etc.. In the scope of this project we are using the four basic waveforms: Sinusoidal, Square, Triangular and Saw.<br>The four basic waves are -><br><br>The sin wave = the simplest wave with a formula of *sin(2 π  frequency / sampleRate)* <br><br>The square wave = a wave made with an sgn of a sinwave with a formula of *sgn(sinwave)*<br><br>The saw wave = has a form close to a triangle, it has a right angle at the end of its decreasing part *2(t/p - [1/2+t/p]<br><br>The triangle wave = this wave has the most complicated formula*period/π arcsin[sin(π x)]*
+[^3]: [beat](https://en.wikipedia.org/wiki/Beat_(music)): Beats is some sort of rythm; 2 beat per second is like a tempo, it will happen two time in a second
 
-[^4]: Musical durations:  
+[^4]: [Basic Waves functions](https://www.musictheory.net/lessons/11):<br>A wave function is a mathematical function which can create a wave of a predefined pattern frequency, amplitude, etc.. In the scope of this project we are using the four basic waveforms: Sinusoidal, Square, Triangular and Saw.<br>The four basic waves are -><br><br>The sin wave = the simplest wave with a formula of *sin(2 π  frequency / sampleRate)* <br><br>The square wave = a wave made with an sgn of a sinwave with a formula of *sgn(sinwave)*<br><br>The saw wave = has a form close to a triangle, it has a right angle at the end of its decreasing part *2(t/p - [1/2+t/p]*<br><br>The triangle wave = this wave has the most complicated formula *period/π arcsin[sin(π x)]*
 
-[^5]: Envelope: v
+[^5]: Musical durations:  
+``Whole last 4 beats``<br> ``Half last 2 beats``<br> ``Quarter last 1 beat``<br> ``Eighth last 1/2 beat``<br> ``Sixteenth last 1/4 beat``<br> ``Custom depends of the number of beat``<br> ``Seconds last the number of beats in the number of seconds written``
 
-[^6]: [LFO / Low frequency oscillator](https://en.wikipedia.org/wiki/Low-frequency_oscillation): Is an oscillator performing under 20Hz to create audio effects such as vibrato and phasing.
+[^6]: AHDSR: <br>An Envelope parameters -><br> Attack is the time taken for initial run-up of level from nil to peak, beginning when the key is pressed.<br><br>Hold time allows you to adjust the time that the peak amplitude level is held before the decay stage of the envelope begins.<br><br>
+Decay is the time taken for the subsequent run down from the attack level to the designated sustain level.<br><br>
+Sustain is the level during the main sequence of the sound's duration, until the key is released.<br><br>
+Release is the time taken for the level to decay from the sustain level to zero after the key is released
 
-[^7]: [Xplot.Plotly](https://fslab.org/XPlot/plotly.html): Is a nuget which allowsto view data in the form of graphs
+[^7]: [Envelope](https://theproaudiofiles.com/synthesis-101-envelope-parameters-uses/): The envelope is the way a sound change over time. It usually enables you to control the wave forms with the AHDSR parameters.
 
-[^8]: Stereo:  e
+[^8]: [LFO / Low frequency oscillator](https://en.wikipedia.org/wiki/Low-frequency_oscillation): Is an oscillator performing under 20Hz to create audio effects such as vibrato and phasing.
+
+[^9]: [Xplot.Plotly](https://fslab.org/XPlot/plotly.html): Is a nuget which allowsto view data in the form of graphs
+
+[^10]: [Stereo](https://en.wikipedia.org/wiki/Stereophonic_sound): Stereo in opposition to mono, is a sound using multiple audio source (usually 2) to recreate a multi-directional / 3D-sound.

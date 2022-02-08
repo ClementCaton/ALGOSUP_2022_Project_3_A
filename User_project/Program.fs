@@ -11,8 +11,14 @@ open Synthesizer
 
 module Program =
     let synth = Synth() // Init
-    let sound1 = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5  // First audio
-    let sound2 = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.2 0.3 0.4 0.5  // Second audio
 
-    synth.WriteToWav "stereo.wav" [sound1; sound2]  // Writing file with two channels
-    
+    let exampleCustomEnvelope (data:List<float>) (sampleRate:float) =
+        Filter.CustomEnvelope [(0., 0.); ((float data.Length / sampleRate / 2.), 1.); ((float data.Length / sampleRate), 0.)] sampleRate data
+
+    let custEnvSound1 = exampleCustomEnvelope (synth.Note (Seconds 1) Note.A 4) 44100.
+    let custEnvSound2 = exampleCustomEnvelope (synth.Note (Seconds 2) Note.B 4) 44100.
+    let custEnvSound3 = exampleCustomEnvelope (synth.Note (Seconds 3) Note.C 4) 44100.
+
+    synth.WriteToWav "custEnvSound1.wav" [custEnvSound1]
+    synth.WriteToWav "custEnvSound2.wav" [custEnvSound2]
+    synth.WriteToWav "custEnvSound3.wav" [custEnvSound3]
