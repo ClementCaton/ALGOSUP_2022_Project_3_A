@@ -349,11 +349,11 @@ let second = synth.CutMiddle 1. 2. full  // Cuts the first and the last 2 notes,
 
 ## Superposing audio data
 
-You can add different sounds together to get a 3rd that is the result of the operation. You have different functions to add sounds to help you easily get what you want.
+You can superpose different sounds together to get a 3rd that is the result of the operation. You have different functions to superpose sounds to help you easily get what you want.
 
 ### Superposing audio with a predefined ratio
 
-There is the function ``synth.Add sounds``. The variable sounds is a List<List<float>> containing the list of sounds that will be added together. This function will add the sounds together and average the values depending on the number of waves added.
+There is the function ``synth.Add sounds``. The variable sounds is a List<List<float>> containing the list of sounds that will be superposed together. This function will superpose the sounds together and average the values depending on the number of waves superposed.
 
 Example:
 ```fs
@@ -366,7 +366,7 @@ let added = synth.Add [sound1;sound2;sound3]
 
 ### Superposing audio with a custom ratio
 
-There is the function ``Utility.AddFactor (map:List<Tuple<List<float>, float>>)``. The variable map contains a list of tuple containing the sounds the user wants to add together and the ratio of the sound.
+There is the function ``Utility.AddFactor (map:List<Tuple<List<float>, float>>)``. The variable map contains a list of tuple containing the sounds the user wants to superpose together and the ratio of the sound.
 
 Example:
 ```fs
@@ -376,6 +376,7 @@ let sound3 = synth.Compose [synth.Note Eighth Note.A 1]
 
 let added = Utility.AddFactor [(sound1,0.2);(sound2,0.5);(sound3,0.3)]
 ```
+
 It is recomended that the total ratios the user uses is equal to 1. Otherwise the user can use the function ``Utility.Maximize data``. This function will take the data of a sound and modify it so that the amplitude goes from -1 to 1.
 
 ### Superposing audio without ratios
