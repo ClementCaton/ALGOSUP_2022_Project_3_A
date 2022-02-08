@@ -34,11 +34,11 @@ type SoundData(
 
 
     /// <summary>
-    /// 
+    /// Converts a Duration in seconds
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="durationType">Duration to convert</param>
+    /// <param name="bpm">Tempo of the music</param>
+    /// <returns>Duration in seconds</returns>
     
     let GetDuration durationType bpm =
         match durationType with
@@ -62,21 +62,10 @@ type SoundData(
 
 
     /// <summary>
-    /// 
+    /// Converts a duration in seconds to the number of samples corresponding
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    
-    let ToByte x = x/2. * 255. |> byte
-    //https://www.geogebra.org/m/NS9DJf4S
-
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="sec">Duration in seconds</param>
+    /// <returns>Number of samples</returns>
     
     let SecTobyte (sec:float) =
         sec * sampleRate
@@ -84,10 +73,10 @@ type SoundData(
 
 
     /// <summary>
-    /// 
+    /// Converts a wave type to the generator function
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="waveType">Form of the wave</param>
+    /// <returns>Wave generator</returns>
     
     let WaveFunc waveType = 
         match waveType with
@@ -101,10 +90,10 @@ type SoundData(
 
 
     /// <summary>
-    /// 
+    /// Creates a note from a wave type
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="waveType">Form of the wave to use</param>
+    /// <returns>Generated note</returns>
     
     member x.Create waveType =
         let a = List.init arraySize (fun i -> ((WaveFunc waveType) frequency amplitude verticalShift phaseShift (float i/sampleRate)))
@@ -115,8 +104,8 @@ type SoundData(
     /// <summary>
     /// 
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
+    /// <param name="waveType"></param>
+    /// <param name="dataPoints0"></param>
     /// <returns></returns>
     
     member x.CreateFromDataPoints waveType (dataPoints0: List<float * float>) = // (time, amp)
@@ -134,15 +123,15 @@ type SoundData(
 
 
     /// <summary>
-    /// 
+    /// Creates an envelope note
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="waveType">Sound generator</param>
+    /// <param name="sustain">Sustain duration</param>
+    /// <param name="attack">Attack duration</param>
+    /// <param name="hold0">Hold duration</param>
+    /// <param name="decay0">Decay amplitude</param>
+    /// <param name="release0">Release duration</param>
+    /// <returns>Enveloped note</returns>
     
     member x.CreateWithEnvelope waveType sustain attack hold0 decay0 release0 =  // time, time, time, amp, time
         let hold = hold0 + attack

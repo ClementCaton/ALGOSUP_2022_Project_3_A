@@ -8,6 +8,10 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     member val bpm = defaultArg baseBpm 90.
         with get, set
     
+    member x.SetBpm newBpm =
+        x.bpm <- newBpm
+        List.empty<float>
+    
     member val sampleRate = defaultArg baseSampleRate 44100.
         with get, set
 
@@ -23,7 +27,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     /// <param name="note">Value of the note</param>
     /// <returns>Frequency of the note</returns>
     
-    member x.GetNoteFreq (note:Note) (octave:int)=
+    member x.GetNoteFreq (note:Note) (octave:int) =
         CalcNoteFreq(note, octave).Output
 
 
@@ -63,20 +67,21 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     /// <param name="frequency">Frequency of the note</param>
     /// <param name="duration">Duration of the sound</param>
     /// <param name="waveType">Sound generator</param>
-    /// <param name="sustain">Sustain amplitude</param>
+    /// <param name="sustain">Sustain duration</param>
     /// <param name="attack">Attack duration</param>
     /// <param name="hold">Hold duration</param>
-    /// <param name="decay">Decay durqtion</param>
+    /// <param name="decay">Decay amplitude</param>
     /// <param name="release">Release duration</param>
     /// <returns>Enveloped sound</returns>
     
-    member x.SoundWithEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (sustain:float) (attack:float) (hold:float) (decay:float) (release:float) =
-        let data = SoundData(frequency0 = frequency, duration0 = duration, bpm0 = x.bpm)
+    member x.SoundWithEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (sustain:float) (attack:float) (hold:float) (decay:float) (release:float) = // time, time, time, amp, time
+        let data = SoundData(frequency0 = frequency, duration0 = duration, bpm0 = x.bpm) // TEMP: Remove bpm
         //! The "1." was supposed to be "(data.overDrive)"
         Utility.Overdrive 1. (data.CreateWithEnvelope waveType sustain attack hold decay release)
 
 
-       /// <summary>
+
+    /// <summary>
     /// Creates a sound with a single note in a custom envelope
     /// </summary>
     /// <param name="frequency">Frequency of the note</param>
@@ -328,7 +333,15 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     member x.ApplyFilters filters data =
         Filter.ApplyFilters filters data
 
-    member x.PlayWav offset data =
+
+
+    /// <summary>
+    /// Plays a .wav file from raw data with an offset
+    /// </summary>
+    /// <param name="offset">When to start playing in seconds</param>
+    /// <param name="data">Data of the sound to play</param>
+
+    member x.PlayWav (offset:float) data =
         match int Environment.OSVersion.Platform with
         | 4| 6 -> 
             x.WriteToWavWithPath "./Output/temp_file_storage/" ".tempFile.wav" data
@@ -340,7 +353,15 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
             WriteWav().Write stream data 
             PlayMusic.PlayWithOffset offset stream |> ignore
 
-    member x.PlayWavFromPath offset (filePath:string) =
+
+
+    /// <summary>
+    /// Plays a .wav file from a path with an offset
+    /// </summary>
+    /// <param name="offset">When to start playing in seconds</param>
+    /// <param name="filePath">Path of the file</param>
+
+    member x.PlayWavFromPath (offset:float) (filePath:string) =
         match int Environment.OSVersion.Platform with
         | 4| 6 -> 
             PlayMusic.PlayMac offset filePath |> ignore
