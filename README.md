@@ -1,6 +1,6 @@
 # ALGOSUP_2022_Project_3_A | Sound Synthesizer
 
-<!-- <details> -->
+<details>
 <summary><strong id="table_of_contents">Table of Contents</strong></summary>
 
 - [ALGOSUP_2022_Project_3_A | Sound Synthesizer](#algosup_2022_project_3_a--sound-synthesizer)
@@ -29,6 +29,8 @@
   - [Cutting audio](#cutting-audio)
   - [Superposing audio data](#superposing-audio-data)
     - [Superposing audio with a predefined ratio](#superposing-audio-with-a-predefined-ratio)
+    - [Superposing audio with a custom ratio](#superposing-audio-with-a-custom-ratio)
+    - [Superposing audio without ratios](#superposing-audio-without-ratios)
   - [Composing](#composing)
   - [Preview](#preview)
   - [Frequency analysis](#frequency-analysis)
@@ -53,12 +55,11 @@
   - [Unit Test](#unit-test)
   - [See Also](#see-also)
   - [**Definitions**](#definitions)
-<!-- </details> -->
+</details>
 
 ## Project
 
 The project given by [*Algosup*](https://www.algosup.com/index.html) and [*Robert Pickering*](https://github.com/robertpi) was to create a Sound Synthesizer able to open, modify, create and save sounds, written in F#.
-
 
 ## Project members
 
@@ -71,27 +72,25 @@ The project given by [*Algosup*](https://www.algosup.com/index.html) and [*Rober
 
 # Project documentation
 
-## Getting Started
+## Features in developpment
 
-## Features in developpment 
-
-### MP3 developpment 
+### MP3 developpment
 
 We need to complete the MP3 features, we are supposed to be able to compress and create sounds in MP3, you can already look at your data inside your mp3 files and check the progress inside the [mp3-compression branch](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/tree/compression-mp3)
+
+## Getting Started
 
 ### Prerequisites
 
 Download .NET 6.0 or newer
 
-## Download
+### Download
 
-You can simply download our lastest builds by the NuGet platform by these command 
+You can simply download our lastest builds by the NuGet platform by these command
 
 #### .Net CLI
 
 ``dotnet add package Synthesizer --version 1.1.0``
-
-
 
 ## **Basic structure**
 
@@ -168,7 +167,7 @@ Each sound will be played one by one. For the next sound to be played (or to end
 
 ## Dealing with stereo
 
-Working with stereo is rather simple.<br>
+Working with stereo[^10] is rather simple.<br>
 Whenever data is getting written the input needs to be a list of lists and every time we read data the output will also be a list of list.
 
 Each of the inner lists represent the audio data in a different channel.
@@ -183,7 +182,7 @@ let sound2 = synth.SoundWithEnveloppe 440. (Seconds 2.) Sin 0.5 0.2 0.3 0.4 0.5 
 synth.WriteToWav "stereo.wav" [sound1; sound2]  // Writing file with two channels
 ```
 
-This will create the following audio file:
+This will create the following audio file :
 ![Stereo](Reports/Files/stereo.png)
 
 ## Creating audio data
@@ -209,7 +208,7 @@ let newNote = synth.Note Quarter Note.D 5 // Create a D5 quarter note.
 
 In order to create a sound with an envelope you need to use ``synth.SoundWithEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (sustain:float) (attack:float) (hold:float) (decay:float) (release:float)``.
 
-We are using a basic AHDSR envelope :
+We are using a basic AHDSR[^6] envelope[^7] :
 
 ![After](Reports/Files/envelope.png)
 
@@ -348,11 +347,47 @@ let second = synth.CutMiddle 1. 2. full  // Cuts the first and the last 2 notes,
 
 ## Superposing audio data
 
-<span style="color: red;">WIP</span>
+You can superpose different sounds together to get a 3rd that is the result of the operation. You have different functions to superpose sounds to help you easily get what you want.
 
 ### Superposing audio with a predefined ratio
 
-<span style="color: red;">WIP</span>
+There is the function ``synth.Add sounds``. The variable sounds is a List<List<float>> containing the list of sounds that will be superposed together. This function will superpose the sounds together and average the values depending on the number of waves superposed.
+
+Example:
+```fs
+let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
+let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
+let sound3 = synth.Compose [synth.Note Eighth Note.A 1]
+
+let added = synth.Add [sound1;sound2;sound3]
+```
+
+### Superposing audio with a custom ratio
+
+There is the function ``Utility.AddFactor (map:List<Tuple<List<float>, float>>)``. The variable map contains a list of tuple containing the sounds the user wants to superpose together and the ratio of the sound.
+
+Example:
+```fs
+let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
+let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
+let sound3 = synth.Compose [synth.Note Eighth Note.A 1]
+
+let added = Utility.AddFactor [(sound1,0.2);(sound2,0.5);(sound3,0.3)]
+```
+
+It is recomended that the total ratios the user uses is equal to 1. Otherwise the user can use the function ``Utility.Maximize data``. This function will take the data of a sound and modify it so that the amplitude goes from -1 to 1.
+
+### Superposing audio without ratios
+
+There is the function ``AddSimple (sounds:list<list<float>>)``. This function will return the highest absolute value of the data. 
+
+Example:
+```fs
+let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
+let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
+
+let added = Utility.AddSimple [sound1;sound2]
+```
 
 ## Composing
 
@@ -412,7 +447,7 @@ These two are equivalents.
 
 ## Preview
 
-It is possible to create a preview of an audio loaded into the filter using the ``synth.Preview (title:string) (sound:List<float>)`` function.
+It is possible to create a preview of an audio loaded into the filter using the ``synth.Preview (title:string) (sound:List<float>)`` function with Xplot.Plotly[^9].
 
 Example :
 
@@ -431,21 +466,37 @@ Tools to zoom in/zoom out are also present on the page.
 
 ## Frequency analysis
 
-It's possible to create a frequency analysis by using a Fourier transform on an audio file using :
-``member x.Fourier (data:List<float>) =
+It's possible to do frequency analysis by using a Fourier transform on an audio file using :
+``Synth.Fourier (data:List<float>) =
         FrequencyAnalysis.Fourier x.sampleRate data``
 
 Example :
 
 ```fs
+let A345 = synth.Add [
+    synth.Note Whole Note.A 3
+    synth.Note Whole Note.A 4
+    synth.Note Whole Note.A 5
+]
 
+let analysis = synth.Fourier A345
+synth.PreviewMap "Analysis of A3, A4, A5" analysis
 ```
 
-The above example automatically opens the browser with the following image :
+The above example automatically opens the browser with the following graph:
 
 ![Preview](Reports/Files/Frequency-Analysis.png)
 
-Tools to zoom in/zoom out are also present on the page.
+> Note: Tools to zoom and move are present on the page.
+
+To extract the main harmonics from the analysis, use `FrequencyAnalyser.LocalMaxValuesIndices (threshold: float) (map: Map<float, float>)`
+
+For example, with the previous code, running
+```fs
+let frequencies = FrequencyAnalysis.LocalMaxValuesIndices 0.2 analysis
+printfn "Frequencies: %A" frequencies
+```
+will output `Frequencies: [220.0457771; 440.0915541; 879.8466468]`
 
 ## Filters
 
@@ -463,7 +514,7 @@ To complement your music, its possible to add filters to your audio data :
 
 - Envelope : Modifies the way the amplitude of the sound changes over time.
 
-- LFO AM : Amplitude modulation using a low frequency oscillator.
+- LFO[^8] AM : Amplitude modulation using a low frequency oscillator.
 
 - LFO FM : Frequency modulation using a low frequency oscillator.
 
@@ -621,7 +672,19 @@ This way the new, completielly personalised, envelope can easily be applied to a
 
 #### AM
 
-<span style="color: red;">WIP</span>
+The Amplitude Modulation using a Low Frequency Oscillator (LFO AM) also called tremolo changes, as the name, implies the frequency of a sound based on a small frequency.
+This allows for a kind of wobble effect, alternating the amplitude between its maxima in a sinusoidal fashion.
+
+The function takes not only the modulating frequency as parameter but also the new lower and upper bounds (usually -1. and 1.) and the music's sample rate.
+
+Here is an usage example:
+
+```fs
+let basic = synth.Note (Seconds 10.) Note.A 4
+let sound = Filter.LFO_AM 60. -1. 1. (int synth.sampleRate) basic
+```
+
+![LFO AM Example](Reports/Files/LFO_AM.png)
 
 #### FM
 
@@ -678,7 +741,7 @@ They are used like so :
 The musical notes available are :
 > ``C``,  ``Cs / Db``, ``D``, ``Ds / Eb``, ``E``, ``F``, ``Fs / Gb``, ``G``, ``Gs / Ab``, ``A``, ``As / Bb``, ``B``
 
-## Wave functions
+## Wave functions[^3]
 
 The wave types available are :
 > ``Sin``, ``Square``, ``Triangular``, ``Saw``, ``Silence``, ``CustomInstrument``
@@ -691,7 +754,7 @@ let WaveFunc (frequency:float) (amplitude:float) (verticalShift:float) (phaseShi
 
 ## Duration of elements
 
-The note durations available are :
+The note durations[^5] available are :
 > ``Whole``, ``Half``, ``Quarter``, ``Eighth``, ``Sixteenth``, ``Custom``, ``Seconds``
 
 - The Seconds value takes a float as argument.
@@ -717,14 +780,23 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 
 [^2]: [Note](https://en.wikipedia.org/wiki/Musical_note) : A note is a symbol denoting a musical sound.
 
-[^3]: [Basic Waves functions](https://notebookinc.wordpress.com/2016/07/26/formulae-of-the-four-basic-sound-waves/) :<br>A wave function is a mathematical function which can create a wave of a predefined pattern frequency, amplitude, etc.. In the scope of this project we are using the four basic waveforms: Sinusoidal, Square, Triangular and Saw.<br>The four basic waves are -><br><br>The sin wave = the simplest wave with a formula of *sin(2 π  frequency / sampleRate)* <br><br>The square wave = a wave made with an sgn of a sinwave with a formula of *sgn(sinwave)*<br><br>The saw wave = has a form close to a triangle, it has a right angle at the end of its decreasing part *2(t/p - [1/2+t/p]<br><br>The triangle wave = this wave has the most complicated formula*period/π arcsin[sin(π x)]*
+[^3]: [Basic Waves functions](https://www.musictheory.net/lessons/11):<br>A wave function is a mathematical function which can create a wave of a predefined pattern frequency, amplitude, etc.. In the scope of this project we are using the four basic waveforms: Sinusoidal, Square, Triangular and Saw.<br>The four basic waves are -><br><br>The sin wave = the simplest wave with a formula of *sin(2 π  frequency / sampleRate)* <br><br>The square wave = a wave made with an sgn of a sinwave with a formula of *sgn(sinwave)*<br><br>The saw wave = has a form close to a triangle, it has a right angle at the end of its decreasing part *2(t/p - [1/2+t/p]*<br><br>The triangle wave = this wave has the most complicated formula *period/π arcsin[sin(π x)]*
 
-[^4]: Musical durations :  
+[^4]: [beat](https://en.wikipedia.org/wiki/Beat_(music)): Beats is a sort of rythm; 2 beat per second is like a tempo, it will happen two time in a second
 
-[^5]: Envelope : v
+[^5]: Musical durations: <br>
+Musical duration is measured in beats[^4] <br>
+``Whole last 4 beats``<br> ``Half last 2 beats``<br> ``Quarter last 1 beat``<br> ``Eighth last 1/2 beat``<br> ``Sixteenth last 1/4 beat``<br> ``Custom depends of the number of beat``<br> ``Seconds last the number of beats in the number of seconds written``
 
-[^6]: [LFO / Low frequency oscillator](https://en.wikipedia.org/wiki/Low-frequency_oscillation) : Is an oscillator performing under 20Hz to create audio effects such as vibrato and phasing.
+[^6]: AHDSR: <br>An Envelope parameters -><br> Attack is the time taken for initial run-up of level from nil to peak, beginning when the key is pressed.<br><br>Hold time allows you to adjust the time that the peak amplitude level is held before the decay stage of the envelope begins.<br><br>
+Decay is the time taken for the subsequent run down from the attack level to the designated sustain level.<br><br>
+Sustain is the level during the main sequence of the sound's duration, until the key is released.<br><br>
+Release is the time taken for the level to decay from the sustain level to zero after the key is released
 
-[^7]: [Xplot.Plotly](https://fslab.org/XPlot/plotly.html) : Is a nuget which allowsto view data in the form of graphs
+[^7]: [Envelope](https://theproaudiofiles.com/synthesis-101-envelope-parameters-uses/): The envelope is the way a sound change over time. It usually enables you to control the wave forms with the AHDSR parameters.
 
-[^8]: Stereo :  e
+[^8]: [LFO / Low frequency oscillator](https://en.wikipedia.org/wiki/Low-frequency_oscillation): Is an oscillator performing under 20Hz to create audio effects such as vibrato and phasing.
+
+[^9]: [Xplot.Plotly](https://fslab.org/XPlot/plotly.html): Is a nuget which allowsto view data in the form of graphs
+
+[^10]: [Stereo](https://en.wikipedia.org/wiki/Stereophonic_sound): Stereo in opposition to mono, is a sound using multiple audio source (usually 2) to recreate a multi-directional / 3D-sound.
