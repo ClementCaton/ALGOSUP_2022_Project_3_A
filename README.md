@@ -59,7 +59,7 @@
 
 ## Project
 
-The project given by [*Algosup*](https://www.algosup.com/index.html) and [*Robert Pickering*](https://github.com/robertpi) was to create a Sound Synthesizer able to open, modify, create and save sounds written in F#.
+The project given by [*Algosup*](https://www.algosup.com/index.html) and [*Robert Pickering*](https://github.com/robertpi) was to create a Sound Synthesizer library able to open, modify, create and save sounds written in F#.
 
 ## Project members
 
