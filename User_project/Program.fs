@@ -1,4 +1,4 @@
-﻿namespace Synthesizer
+namespace Synthesizer
 
 open System.IO
 //open SFML.Audio
@@ -10,15 +10,39 @@ open Synthesizer
 
 
 module Program =
-    let synth = Synth() // Init
+    let synth = Synth()
+    (*
+    let input = synth.Add [synth.Note Whole Note.A 2; synth.Note Whole Note.A 3; synth.Note Whole Note.A 4; synth.Note Whole Note.A 5]
+    printfn "Wanted:   %A" [CalcNoteFreq(Note.A, 2).Output; CalcNoteFreq(Note.A, 3).Output; CalcNoteFreq(Note.A, 4).Output; CalcNoteFreq(Note.A, 5).Output]
+    synth.WriteToWav "A345.wav" [input]
+    let output = synth.Fourier 44100. input
+    let freq = FrequencyAnalysis.LocalMaxValuesIndices 0.25 output
+    let amplitudes = output |> Map.filter (fun f _ -> List.contains f freq)
+    //printfn "%f %f %f %f" (List.average input) (List.average output) (List.sum input) (List.sum output)
+    printfn "Obtained: %A" freq
+    printfn "Amplitudes: %A" amplitudes
+    synth.PreviewMap "A 3,4,5 Analysis" output |> ignore
+    *)
 
-    let exampleCustomEnvelope (data:List<float>) (sampleRate:float) =
-        Filter.CustomEnvelope [(0., 0.); ((float data.Length / sampleRate / 2.), 1.); ((float data.Length / sampleRate), 0.)] sampleRate data
 
-    let custEnvSound1 = exampleCustomEnvelope (synth.Note (Seconds 1) Note.A 4) 44100.
-    let custEnvSound2 = exampleCustomEnvelope (synth.Note (Seconds 2) Note.B 4) 44100.
-    let custEnvSound3 = exampleCustomEnvelope (synth.Note (Seconds 3) Note.C 4) 44100.
+    // Among Us Drip
+    // https://musescore.com/user/5032516/scores/6519100
+    let DottedQuarter = Custom (1./4. * 1.5)
+    let TripletEighth = Custom (1./8. * 2./3.)
+    synth.bpm <- 94.
+    synth.waveType <- Triangular
 
-    synth.WriteToWav "custEnvSound1.wav" [custEnvSound1]
-    synth.WriteToWav "custEnvSound2.wav" [custEnvSound2]
-    synth.WriteToWav "custEnvSound3.wav" [custEnvSound3]
+    let music = synth.Compose [
+        synth.Note Eighth Note.C 5
+        synth.Note Eighth Note.Eb 5
+        synth.Note Eighth Note.F 5
+        synth.Note Eighth Note.Gb 5
+        synth.Note Eighth Note.F 5
+        synth.Note Eighth Note.Eb 5
+        synth.Note DottedQuarter Note.C 5
+        synth.Note Sixteenth Note.Bb 4
+        synth.Note Sixteenth Note.D 5
+        synth.Note Quarter Note.C 5
+    ]
+
+    //printfn "%A" (synth.ReadFromMP3Header "Silence")

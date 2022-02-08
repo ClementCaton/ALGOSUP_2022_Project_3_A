@@ -38,23 +38,25 @@ let SoundTest() =
 open System.IO
 [<Test>]
 let WriteToWavTest() =
-    synth.WriteToWav "wave.wav" [synth.Sound 440. one Sin]
-    Assert.IsTrue(File.Exists("./Output/wave.wav"))
+    synth.WriteToWav "WriteToWavTest.wav" [synth.Sound 440. one Sin]
+    Assert.IsTrue(File.Exists("./Output/WriteToWavTest.wav"))
 
 [<Test>]
 let WriteToWavWithPathTest() =
-    synth.WriteToWavWithPath "./Output" "wave.wav" [synth.Sound 440. one Sin]
-    Assert.IsTrue(File.Exists("./Output/wave.wav"))
+    synth.WriteToWavWithPath "./Output/" "WriteToWavWithPathTest.wav" [synth.Sound 440. one Sin]
+    Assert.IsTrue(File.Exists("./Output/WriteToWavWithPathTest.wav"))
 
 [<Test>]
 let ReadFromWavTest() =
-    let theFile = synth.ReadFromWav "wave.wav"
+    synth.WriteToWav "ReadFromWavTest.wav" [synth.Sound 440. one Sin]
+    let theFile = synth.ReadFromWav "ReadFromWavTest.wav"
     Assert.That(theFile, Is.InstanceOf<List<List<float>> * float * int * int>())
 
     
 [<Test>]
 let ReadFromWavFromPathTest() =
-    let theFile = synth.ReadFromWavWithPath "Output/wave.wav"
+    synth.WriteToWavWithPath "./Output/" "ReadFromWavFromPathTest.wav" [synth.Sound 440. one Sin]
+    let theFile = synth.ReadFromWavWithPath "Output/ReadFromWavFromPathTest.wav"
     Assert.That(theFile, Is.InstanceOf<List<List<float>> * float * int * int>())
 
 [<Test>]

@@ -3,7 +3,7 @@ namespace Synthesizer
 open System
 open System.IO
 
-type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
+type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?basePlatform:bool) =
 
     member val bpm = defaultArg baseBpm 90.
         with get, set
@@ -17,8 +17,6 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
 
     member val waveType = defaultArg baseWaveType Sin
         with get, set
-    
-
 
     /// <summary>
     /// Calculates a frequency with the base A4=440 Hz
@@ -41,8 +39,8 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     /// <returns>Frequency of the note</returns>
     
     member x.GetNoteFreqOffset (note:Note) (octave:int) (aFourFreq:float) =
+    
         CalcNoteFreq(note, octave, aFourFreq).Output
-
 
 
     /// <summary>
@@ -120,7 +118,17 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
         use stream = File.Create(path + filename)
         WriteWav().Write (stream) (music)
 
+    member x.ReadFromMP3Header (name: string) =
+        if name.Contains(".mp3") then
+            readMP3(File.Open("./Output/" + name, FileMode.Open)).mp3Decoding
+        else
+            readMP3(File.Open("./Output/" + name + ".mp3", FileMode.Open)).mp3Decoding
 
+    member x.ReadFromMP3HeaderWithPath (path: string) =
+        if path.Contains(".mp3") then
+            readMP3(File.Open(path, FileMode.Open)).mp3Decoding
+        else
+            readMP3(File.Open(path+".mp3", FileMode.Open)).mp3Decoding
 
     /// <summary>
     /// Reads a music from a .wav file
@@ -128,8 +136,11 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     /// <param name="filename">Name of the input file</param>
     /// <returns>Music from the file</returns>
     
-    member x.ReadFromWav (filename:string) =
-        ReadWav().Read (File.Open("./Output/"+filename, FileMode.Open))
+    member x.ReadFromWav (name: string) =
+        if name.Contains(".wav") then
+            ReadWav().Read (File.Open("./Output/"+name, FileMode.Open))
+        else
+            ReadWav().Read (File.Open("./Output/"+name+".wav", FileMode.Open))
 
 
 
@@ -139,10 +150,11 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     /// <param name="filepath">Path of the input file</param>
     /// <returns>Music from the file</returns>
     
-    member x.ReadFromWavWithPath (filepath:string) =
-        ReadWav().Read (File.Open(filepath, FileMode.Open))
-
-
+    member x.ReadFromWavWithPath (path: string) =
+        if path.Contains(".wav") then
+            ReadWav().Read (File.Open(path, FileMode.Open))
+        else
+            ReadWav().Read (File.Open(path+".wav", FileMode.Open))
 
     /// <summary>
     /// Creates a sound with a single note
@@ -166,6 +178,24 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     
     member x.Silence (duration:Duration) =
         x.Sound 0 duration Silence
+
+
+
+    /// <summary>
+    /// Creates a chord with different notes 
+    /// </summary>
+    /// <param name="duration">Duration of the chord</param>
+    /// <param name="rootNote">Base note value for the chord</param>
+    /// <param name="chordQuality">Type of chord</param>
+    /// <param name="rootOctave">Octave of the base note</param>
+    /// <returns>Sound with the cord</returns>
+        
+    member x.Chord (duration:Duration) (rootNote:Note) (chordQuality:ChordQuality) (rootOctave:int) =
+        let calc = CalcNoteFreq(rootNote, rootOctave)
+        SoundData().GetChord chordQuality
+        |> List.map (fun offset -> calc.Offset offset)
+        |> List.map (fun freq -> x.Sound freq duration x.waveType)
+        |> Utility.AddMean
     
 
 
@@ -345,13 +375,13 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
         match int Environment.OSVersion.Platform with
         | 4| 6 -> 
             x.WriteToWavWithPath "./Output/temp_file_storage/" ".tempFile.wav" data
-            PlayMusic.PlayMac offset "./Output/temp_file_storage/.tempFile.wav" |> ignore
+            PlayMusic.PlayMac offset "./Output/temp_file_storage/.tempFile.wav" 
             File.Delete "./Output/temp_file_storage/.tempFile.wav"
-            Directory.Delete "./Output/temp_file_storage/" |> ignore
+            Directory.Delete "./Output/temp_file_storage/"
         | _       ->  
             let stream = new MemoryStream()
             WriteWav().Write stream data 
-            PlayMusic.PlayWithOffset offset stream |> ignore
+            PlayMusic.PlayWithOffset offset stream 
 
 
 
@@ -364,6 +394,6 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves) =
     member x.PlayWavFromPath (offset:float) (filePath:string) =
         match int Environment.OSVersion.Platform with
         | 4| 6 -> 
-            PlayMusic.PlayMac offset filePath |> ignore
+            PlayMusic.PlayMac offset ("./Output/" + filePath)
         | _ ->  
-            PlayMusic.PlayWithOffsetFromPath offset filePath
+            PlayMusic.PlayWithOffsetFromPath offset ("./Output/" + filePath)
