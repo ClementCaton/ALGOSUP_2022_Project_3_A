@@ -448,7 +448,7 @@ The above example automatically opens the browser with the following image :
 
 ![Preview](Reports/Files/preview.png)
 
-Tools to zoom/zoom out are also present on the page.
+Tools to zoom in/zoom out are also present on the page.
 
 ## Frequency analysis
 
