@@ -90,7 +90,7 @@ You can simply download our lastest builds by the NuGet platform by these comman
 
 #### .Net CLI
 
-``dotnet add package Synthesizer --version 1.1.0``
+``dotnet add package Synthesizer``
 
 ## **Basic structure**
 
