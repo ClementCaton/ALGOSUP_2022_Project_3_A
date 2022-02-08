@@ -21,10 +21,10 @@ type WriteWav(
 
 
     /// <summary>
-    /// 
+    /// Generate bytes a single sample
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="x">Sample value</param>
+    /// <returns>Sample as a list of bytes</returns>
     
     let ToBytes x =
         match bytesPerSample with
@@ -41,11 +41,10 @@ type WriteWav(
 
 
     /// <summary>
-    /// 
+    /// Writes raw data to a WAV stream
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="stream">Stream to write to</param>
+    /// <param name="data">Music to write</param>
     
     member x.Write stream (data: List<List<float>>) =
         if pcmFormat <> 1 then failwithf "Invalid pcm format %i" pcmFormat

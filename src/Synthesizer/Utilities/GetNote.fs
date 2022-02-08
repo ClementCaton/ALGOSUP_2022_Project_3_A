@@ -27,9 +27,9 @@ type CalcNoteFreq(note:Note, octave:int, ?a4Freq0:float) =
 
 
     /// <summary>
-    /// 
+    /// Get the resulting frequency
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Frequency of the note</returns>
     
     member x.Output = 
         CalcNote (float note)

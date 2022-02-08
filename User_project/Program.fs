@@ -1,4 +1,4 @@
-﻿namespace Synthesizer
+namespace Synthesizer
 
 open System.IO
 //open SFML.Audio
@@ -24,25 +24,10 @@ module Program =
     synth.PreviewMap "A 3,4,5 Analysis" output |> ignore
     *)
 
+    let basic = synth.Note (Seconds 2.) Note.A 4
+    let modWave = synth.Sound 100. (Seconds 2.) Sin
+    let fm = Filter.LFO_FM modWave 2. basic
+    synth.WriteToWav "basic.wav" [basic]
+    synth.WriteToWav "modWave.wav" [modWave]
+    synth.WriteToWav "fm.wav" [fm]
 
-    // Among Us Drip
-    // https://musescore.com/user/5032516/scores/6519100
-    let DottedQuarter = Custom (1./4. * 1.5)
-    let TripletEighth = Custom (1./8. * 2./3.)
-    synth.bpm <- 94.
-    synth.waveType <- Triangular
-
-    let music = synth.Compose [
-        synth.Note Eighth Note.C 5
-        synth.Note Eighth Note.Eb 5
-        synth.Note Eighth Note.F 5
-        synth.Note Eighth Note.Gb 5
-        synth.Note Eighth Note.F 5
-        synth.Note Eighth Note.Eb 5
-        synth.Note DottedQuarter Note.C 5
-        synth.Note Sixteenth Note.Bb 4
-        synth.Note Sixteenth Note.D 5
-        synth.Note Quarter Note.C 5
-    ]
-
-    //printfn "%A" (synth.ReadFromMP3Header "Silence")

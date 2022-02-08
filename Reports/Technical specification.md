@@ -1,21 +1,19 @@
 # Technical Specifications
 
-##### **Tuesday 11 January**
-
 ###### Last Updated
 
-##### **Friday 14 January**
+##### **Monday 07 February**
 
 <br>
 <br>
 
 ### Team
 
-Clement Caton, Louis de Choulot, Ivan Molnar, Mathieu Chaput, Leo Chartier, Theo Diancourt
+[Clement Caton](https://github.com/ClementCaton), [Louis de Choulot](https://github.com/Louis-de-Lavenne-de-Choulot), [Ivan Molnar](https://github.com/ivan-molnar), [Mathieu Chaput](https://github.com/Chaput-Mathieu), [Leo Chartier](https://github.com/leo-chartier), [Theo Diancourt](https://github.com/TheoDct)
 
 ### Reviewers
 
-Franck Jeannin, Robert Pickering
+[Franck Jeannin](https://github.com/frje), [Robert Pickering](https://github.com/robertpi)
 
 ### Context
 
@@ -36,23 +34,28 @@ The context of the project is to create a library that could be used by a develo
 
 <br>
 
-dotnet 6.0
+- DotNET 6.0
 
 ## Risks
 
-- Multiplatform sound playing
+- Compatibility with all of operating systems
+- Won't be able to finish all the tasks
 
 ## Device Compatibility
 
-*MacOS*<br>
-*Windows*
+- *MacOS*<br>
+- *Windows*
 
 ### Download at
 
-[**Github**](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A)
+[**Github**](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A)<br>
 [**Nuget**](https://www.nuget.org/packages/Synthesizer/)
 
+<br>
+
 ## Terminology
+
+<br>
 
 ### Library
 
@@ -60,11 +63,19 @@ dotnet 6.0
 
 #### [Synthesis / Synthesizer](https://en.wikipedia.org/wiki/Synthesizer)
 
+<br>
+
 ### Octave
+
+<br>
 
     An octave (eighth) is the interval between one musical pitch and another with double its frequency. 
 
+<br>
+
 ## Scope
+
+<br>
 
     |           Scope          |
     |--------------------------|
@@ -78,14 +89,23 @@ dotnet 6.0
 
 ## Out of scope
 
+<br>
+
+
     |       Out of scope       |
     |--------------------------|
     | Long term support        |
 
 ## Test Plan
 
-We will do TDD all the way through the project
+<br>
+
+We will do TDD all the way through the project to keep our code working well.
+
+<br>
 
 ## User Access
 
-The client will have access to an Library containing all the necessary functions to use the functionalities of a synthesizer.
+<br>
+
+The client will have access to a library containing all the functions necessary to use the features of a synthesizer.
