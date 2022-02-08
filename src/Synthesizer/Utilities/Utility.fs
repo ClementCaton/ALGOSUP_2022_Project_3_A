@@ -42,10 +42,10 @@ module Utility =
 
 
     /// <summary>
-    /// 
+    /// Changes the amplitude to have the maximum be 1
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="data">Data to amplify</param>
+    /// <returns>Maximized data</returns>
         
     let Maximize data =
         let factor = data |> List.map abs |> List.max |> ( / ) 1.
@@ -55,14 +55,14 @@ module Utility =
 
 
     /// <summary>
-    /// 
+    /// Superpose different data with a weight
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="map">List map of data and weights to superpose</param>
+    /// <returns>Superposed data</returns>
 
     let AddFactor (map:List<Tuple<List<float>, float>>) =
         let size = map |> List.map fst |> List.map List.length |> List.max
-        let expand sound = List.append sound (List.replicate (size - List.length sound) 0.)
+        let expand data = List.append data (List.replicate (size - List.length data) 0.)
         map
         |> List.unzip
         ||> List.map2 (fun data factor -> data |> List.map (( * ) factor) )
@@ -73,35 +73,36 @@ module Utility =
 
 
     /// <summary>
-    /// 
+    /// Superpose different data
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="data">List of data to superpose</param>
+    /// <returns>Superposed data</returns>
     
-    let AddMean sounds =
-        let mean = 1. / (float (List.length sounds))
-        sounds |> List.map (fun sound -> sound, mean) |> AddFactor
+    let AddMean (data:List<List<float>>) =
+        let mean = 1. / (float (List.length data))
+        data |> List.map (fun d -> d, mean) |> AddFactor
 
 
 
     /// <summary>
-    /// 
+    /// Superpose different data with maximum amplitude
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="data">List of data to superpose</param>
+    /// <returns>Superposed data</returns>
     
-    let AddMaximize = AddMean >> Maximize
+    let AddMaximize (data:List<List<float>>) = data |> AddMean |> Maximize
 
 
 
     /// <summary>
-    /// 
+    /// Clamps the values between +/- the given limit
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="multiplier">Limit of the overdrive</param>
+    /// <param name="data">Data to clamp</param>
+    /// <returns>Data with overdrive effect</returns>
     
-    let Overdrive multiplicator (x:List<float>) =
-        [for i in x do 
-            if i < (-1. * multiplicator * 256.) then (-1. * multiplicator * 256.) else
-            if i > (1. * multiplicator  * 256.) then (1. * multiplicator * 256.) else
+    let Overdrive multiplier (data:List<float>) =
+        [for i in data do 
+            if i < (-1. * multiplier * 256.) then (-1. * multiplier * 256.) else
+            if i > (1. * multiplier  * 256.) then (1. * multiplier * 256.) else
             i]

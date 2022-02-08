@@ -19,12 +19,11 @@ module FrequencyAnalysis =
 
 
     /// <summary>
-    /// 
+    /// Recursive FFT algorithm using complex numbers
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="">List of complex numbers</param>
+    /// <returns>List of indices and complex amplitudes</returns>
     
-    // Note: The following FFT algorithm is actually used for IFFT, thus there is a static negative sign in the complex exponent
     let rec FFT = function
     | []  -> []
     | [x] -> [x] 
@@ -44,13 +43,13 @@ module FrequencyAnalysis =
 
 
     /// <summary>
-    /// 
+    /// Makes a Fourier analysis
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="sampleRate">Sample rate of the data</param>
+    /// <param name="x">Data to analyse</param>
+    /// <returns>Map of frequencies and amplitudes</returns>
     
-    let Fourier sampleRate (x: List<float>) =
+    let Fourier (sampleRate: float) (x: List<float>) =
         let n =
             x
             |> List.length
@@ -76,11 +75,11 @@ module FrequencyAnalysis =
 
 
     /// <summary>
-    /// 
+    /// Filters maximum frequencies based on their amplitudes
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="threshold">Minimum amplitude</param>
+    /// <param name="map">Map of frequencies to amplitudes to filter</param>
+    /// <returns>Filtered frequencies</returns>
     
     let LocalMaxValuesIndices (threshold: float) (map: Map<float, float>) =
         // The threshold is the percentage between the bottom and the top where all point below are discarded to remove noise
