@@ -701,10 +701,15 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 [^5]: Musical durations:  
 ``Whole last 4 beats``<br> ``Half last 2 beats``<br> ``Quarter last 1 beat``<br> ``Eighth last 1/2 beat``<br> ``Sixteenth last 1/4 beat``<br> ``Custom depends of the number of beat``<br> ``Seconds last the number of beats in the number of seconds written``
 
-[^6]: Envelope:
+[^6]: AHDSR: <br>An Envelope parameters -><br> Attack is the time taken for initial run-up of level from nil to peak, beginning when the key is pressed.<br><br>Hold time allows you to adjust the time that the peak amplitude level is held before the decay stage of the envelope begins.<br><br>
+Decay is the time taken for the subsequent run down from the attack level to the designated sustain level.<br><br>
+Sustain is the level during the main sequence of the sound's duration, until the key is released.<br><br>
+Release is the time taken for the level to decay from the sustain level to zero after the key is released
 
-[^7]: [LFO / Low frequency oscillator](https://en.wikipedia.org/wiki/Low-frequency_oscillation): Is an oscillator performing under 20Hz to create audio effects such as vibrato and phasing.
+[^7]: [Envelope](https://theproaudiofiles.com/synthesis-101-envelope-parameters-uses/): The envelope is the way a sound change over time. It usually enables you to control the wave forms with the AHDSR parameters.
 
-[^8]: [Xplot.Plotly](https://fslab.org/XPlot/plotly.html): Is a nuget which allowsto view data in the form of graphs
+[^8]: [LFO / Low frequency oscillator](https://en.wikipedia.org/wiki/Low-frequency_oscillation): Is an oscillator performing under 20Hz to create audio effects such as vibrato and phasing.
 
-[^9]: Stereo:  e
+[^9]: [Xplot.Plotly](https://fslab.org/XPlot/plotly.html): Is a nuget which allowsto view data in the form of graphs
+
+[^10]: [Stereo](https://en.wikipedia.org/wiki/Stereophonic_sound): Stereo in opposition to mono, is a sound using multiple audio source (usually 2) to recreate a multi-directional / 3D-sound.
