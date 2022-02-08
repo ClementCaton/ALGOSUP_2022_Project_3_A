@@ -36,7 +36,7 @@
   - [Frequency analysis](#frequency-analysis)
   - [Filters](#filters)
     - [Currently accessible Filters](#currently-accessible-filters)
-    - [Apply multiple filters at once](#apply-multiple-filters-at-once)
+    - [Applying multiple filters at once](#applying-multiple-filters-at-once)
     - [Changing amplitude](#changing-amplitude)
     - [Custom repeater filter](#custom-repeater-filter)
     - [Echo](#echo)
@@ -490,7 +490,7 @@ To complement your music, its possible to add filters to your audio data:
 
 - BandPass/RejectBand: Cuts off frequencies both above and under the given thresholds and inverse.
   
-### Apply multiple filters at once
+### Applying multiple filters at once
 
 You can use this function to apply multiple filters at once like so :
 
@@ -577,7 +577,21 @@ The above examples give the following outputs:
 
 ### Flanger
 
-<span style="color: red;">WIP</span>
+The flange filter is used to add kind of sweeping sound to the audio.
+``Filter.Flanger (delay:float) (speed:float) (sampleRate:float) (bpm:float) (dryData:List<float>)``
+
+Example:
+```fs
+    let synth = Synth() // Init
+    let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2 // Creating a basic sound with an envelope to make it interesting
+    let flanger = Filter.Flanger 20. 0.4 44100. 114. basicSound //Adding filter
+    
+    synth.WriteToWav "basic.wav" [basicSound]
+    synth.WriteToWav "flanger.wav" [flanger]
+```
+The results are:
+![Flanger](Reports/Files/flanger.png)
+
 
 ### Envelope
 

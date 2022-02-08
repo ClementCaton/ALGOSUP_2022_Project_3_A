@@ -10,9 +10,9 @@ open Synthesizer
 
 
 module Program =
-    let synth = Synth() // Init
-    let sound1 = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5  // First audio
-    let sound2 = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.2 0.3 0.4 0.5  // Second audio
-
-    synth.WriteToWav "stereo.wav" [sound1; sound2]  // Writing file with two channels
+    let synth = Synth()
+    let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2 // Creating a basic sound with an envelope to make it interesting
+    let flanger = Filter.Flanger 20. 0.4 44100. 114. basicSound
     
+    synth.WriteToWav "basic.wav" [basicSound]
+    synth.WriteToWav "flanger.wav" [flanger]
