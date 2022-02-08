@@ -386,7 +386,7 @@ The solution was to add in a filter that gradually lowers the amplitude of the n
 |          Before cutCorner             |          After cutCorner            |
 |:------------------------------------:|:-----------------------------------:|
 | ![Before](Reports/Files/cut_b.png)  | ![After](Reports/Files/cut_a.png)  |
-<sup>* for the shake of the example, the filter has been exaggerated</sup>
+<sup>* for the sake of the example, the filter has been exaggerated</sup>
 
 Therefore; the ``synth.Compose (sounds:List<float>)`` function has a default cutCorner value of 100 (this means it cuts away from the first and last 100 bytes from each note).
 
