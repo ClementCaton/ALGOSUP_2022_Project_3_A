@@ -36,7 +36,7 @@
   - [Frequency analysis](#frequency-analysis)
   - [Filters](#filters)
     - [Currently accessible Filters](#currently-accessible-filters)
-    - [Applying multiple filters at once](#applying-multiple-filters-at-once)
+    - [Apply multiple filters at once](#apply-multiple-filters-at-once)
     - [Changing amplitude](#changing-amplitude)
     - [Custom repeater filter](#custom-repeater-filter)
     - [Echo](#echo)
@@ -494,7 +494,7 @@ To complement your music, its possible to add filters to your audio data:
 
 - BandPass/RejectBand: Cuts off frequencies both above and under the given thresholds and inverse.
   
-### Applying multiple filters at once
+### Apply multiple filters at once
 
 You can use this function to apply multiple filters at once like so :
 
@@ -524,7 +524,7 @@ The function looks like this: ``Filter.Repeater (nbEcho:int) (decay:float) (dela
 The variables inputed are :
 
 - nbEcho : The number of times the original sound gets repeated.
-- decay : Each time the sound is repeated we jusge the amplitude of the sound using this value
+- decay : Each time the sound is repeated we adjust the amplitude of the sound using this value
 - delay : The offset added to the echo (multiplies accordingly to the echo ex : echo 1 will have 1x this value, echo 2 will have 2x this value, etc..)
 - sampleRate : The sampleRate of the sound
 - dryData : The original sound
@@ -583,21 +583,7 @@ The above examples give the following outputs:
 
 ### Flanger
 
-The flange filter is used to add kind of sweeping sound to the audio.
-``Filter.Flanger (delay:float) (speed:float) (sampleRate:float) (bpm:float) (dryData:List<float>)``
-
-Example:
-```fs
-    let synth = Synth() // Init
-    let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2 // Creating a basic sound with an envelope to make it interesting
-    let flanger = Filter.Flanger 20. 0.4 44100. 114. basicSound //Adding filter
-    
-    synth.WriteToWav "basic.wav" [basicSound]
-    synth.WriteToWav "flanger.wav" [flanger]
-```
-The results are:
-![Flanger](Reports/Files/flanger.png)
-
+<span style="color: red;">WIP</span>
 
 ### Envelope
 
