@@ -10,9 +10,9 @@
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
   - [Download](#download)
-    - [.Net CLI](#net-cli)
-    - [Nuget](#nuget)
-    - [Package Reference](#package-reference)
+      - [.Net CLI](#net-cli)
+      - [Nuget](#nuget)
+      - [Package Reference](#package-reference)
   - [**Basic structure**](#basic-structure)
   - [Reading files](#reading-files)
     - [Reading wav files](#reading-wav-files)
@@ -452,21 +452,37 @@ Tools to zoom/zoom out are also present on the page.
 
 ## Frequency analysis
 
-It's possible to create a frequency analysis by using a Fourier transform on an audio file using :
-``member x.Fourier (data:List<float>) =
+It's possible to do frequency analysis by using a Fourier transform on an audio file using :
+``Synth.Fourier (data:List<float>) =
         FrequencyAnalysis.Fourier x.sampleRate data``
 
 Example :
 
 ```fs
+let A345 = synth.Add [
+    synth.Note Whole Note.A 3
+    synth.Note Whole Note.A 4
+    synth.Note Whole Note.A 5
+]
 
+let analysis = synth.Fourier A345
+synth.PreviewMap "Analysis of A3, A4, A5" analysis
 ```
 
-The above example automatically opens the browser with the following image:
+The above example automatically opens the browser with the following graph:
 
 ![Preview](Reports/Files/Frequency-Analysis.png)
 
-Tools to zoom/zoom out are also present on the page.
+> Note: Tools to zoom and move are present on the page.
+
+To extract the main harmonics from the analysis, use `FrequencyAnalyser.LocalMaxValuesIndices (threshold: float) (map: Map<float, float>)`
+
+For example, with the previous code, running
+```fs
+let frequencies = FrequencyAnalysis.LocalMaxValuesIndices 0.2 analysis
+printfn "Frequencies: %A" frequencies
+```
+will output `Frequencies: [220.0457771; 440.0915541; 879.8466468]`
 
 ## Filters
 
@@ -599,7 +615,19 @@ The above examples give the following outputs:
 
 #### AM
 
-<span style="color: red;">WIP</span>
+The Amplitude Modulation using a Low Frequency Oscillator (LFO AM) also called tremolo changes, as the name, implies the frequency of a sound based on a small frequency.
+This allows for a kind of wobble effect, alternating the amplitude between its maxima in a sinusoidal fashion.
+
+The function takes not only the modulating frequency as parameter but also the new lower and upper bounds (usually -1. and 1.) and the music's sample rate.
+
+Here is an usage example:
+
+```fs
+let basic = synth.Note (Seconds 10.) Note.A 4
+let sound = Filter.LFO_AM 60. -1. 1. (int synth.sampleRate) basic
+```
+
+![LFO AM Example](Reports/Files/LFO_AM.png)
 
 #### FM
 
