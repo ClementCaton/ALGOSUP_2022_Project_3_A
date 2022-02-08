@@ -12,7 +12,7 @@
     - [MP3 developpment](#mp3-developpment)
     - [Prerequisites](#prerequisites)
   - [Download](#download)
-      - [.Net CLI](#net-cli)
+    - [.Net CLI](#net-cli)
   - [**Basic structure**](#basic-structure)
   - [Reading files](#reading-files)
     - [Reading wav files](#reading-wav-files)
@@ -59,7 +59,6 @@
 
 The project given by [*Algosup*](https://www.algosup.com/index.html) and [*Robert Pickering*](https://github.com/robertpi) was to create a Sound Synthesizer able to open, modify, create and save sounds, written in F#.
 
-
 ## Project members
 
 [*Ivan Molnar*](https://github.com/ivan-molnar) <br>
@@ -73,9 +72,9 @@ The project given by [*Algosup*](https://www.algosup.com/index.html) and [*Rober
 
 ## Getting Started
 
-## Features in developpment 
+## Features in developpment
 
-### MP3 developpment 
+### MP3 developpment
 
 We need to complete the MP3 features, we are supposed to be able to compress and create sounds in MP3, you can already look at your data inside your mp3 files and check the progress inside the [mp3-compression branch](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/tree/compression-mp3)
 
@@ -85,13 +84,11 @@ Download .NET 6.0 or newer
 
 ## Download
 
-You can simply download our lastest builds by the NuGet platform by these command 
+You can simply download our lastest builds by the NuGet platform by these command
 
 #### .Net CLI
 
 ``dotnet add package Synthesizer --version 1.1.0``
-
-
 
 ## **Basic structure**
 
@@ -697,14 +694,17 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 
 [^2]: [Note](https://en.wikipedia.org/wiki/Musical_note) : A note is a symbol denoting a musical sound.
 
-[^3]: [Basic Waves functions](https://notebookinc.wordpress.com/2016/07/26/formulae-of-the-four-basic-sound-waves/) :<br>A wave function is a mathematical function which can create a wave of a predefined pattern frequency, amplitude, etc.. In the scope of this project we are using the four basic waveforms: Sinusoidal, Square, Triangular and Saw.<br>The four basic waves are -><br><br>The sin wave = the simplest wave with a formula of *sin(2 π  frequency / sampleRate)* <br><br>The square wave = a wave made with an sgn of a sinwave with a formula of *sgn(sinwave)*<br><br>The saw wave = has a form close to a triangle, it has a right angle at the end of its decreasing part *2(t/p - [1/2+t/p]<br><br>The triangle wave = this wave has the most complicated formula*period/π arcsin[sin(π x)]*
+[^3]: [beat](https://en.wikipedia.org/wiki/Beat_(music)): Beats is some sort of rythm; 2 beat per second is like a tempo, it will happen two time in a second
 
-[^4]: Musical durations :  
+[^4]: [Basic Waves functions](https://www.musictheory.net/lessons/11):<br>A wave function is a mathematical function which can create a wave of a predefined pattern frequency, amplitude, etc.. In the scope of this project we are using the four basic waveforms: Sinusoidal, Square, Triangular and Saw.<br>The four basic waves are -><br><br>The sin wave = the simplest wave with a formula of *sin(2 π  frequency / sampleRate)* <br><br>The square wave = a wave made with an sgn of a sinwave with a formula of *sgn(sinwave)*<br><br>The saw wave = has a form close to a triangle, it has a right angle at the end of its decreasing part *2(t/p - [1/2+t/p]*<br><br>The triangle wave = this wave has the most complicated formula *period/π arcsin[sin(π x)]*
 
-[^5]: Envelope : v
+[^5]: Musical durations:  
+``Whole last 4 beats``<br> ``Half last 2 beats``<br> ``Quarter last 1 beat``<br> ``Eighth last 1/2 beat``<br> ``Sixteenth last 1/4 beat``<br> ``Custom depends of the number of beat``<br> ``Seconds last the number of beats in the number of seconds written``
 
-[^6]: [LFO / Low frequency oscillator](https://en.wikipedia.org/wiki/Low-frequency_oscillation) : Is an oscillator performing under 20Hz to create audio effects such as vibrato and phasing.
+[^6]: Envelope:
 
-[^7]: [Xplot.Plotly](https://fslab.org/XPlot/plotly.html) : Is a nuget which allowsto view data in the form of graphs
+[^7]: [LFO / Low frequency oscillator](https://en.wikipedia.org/wiki/Low-frequency_oscillation): Is an oscillator performing under 20Hz to create audio effects such as vibrato and phasing.
 
-[^8]: Stereo :  e
+[^8]: [Xplot.Plotly](https://fslab.org/XPlot/plotly.html): Is a nuget which allowsto view data in the form of graphs
+
+[^9]: Stereo:  e
