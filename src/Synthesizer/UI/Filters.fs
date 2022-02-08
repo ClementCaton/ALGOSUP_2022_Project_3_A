@@ -198,7 +198,7 @@ module Filter =
             x * (oscillator frequency amplitude verticalShift 0. t)
         )
 
-    let LFO_FM (modWave:List<float>) (data:List<float>) (multiplicator:float) =
+    let LFO_FM (modWave:List<float>) (multiplicator:float) (data:List<float>) =
         
         let getShift (startAmp:float) (endAmp:float) (nStep:float)=
             let fullRange = endAmp - startAmp

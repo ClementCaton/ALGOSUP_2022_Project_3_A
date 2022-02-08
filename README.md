@@ -625,7 +625,27 @@ This way the new, completielly personalised, envelope can easily be applied to a
 
 #### FM
 
-<span style="color: red;">WIP</span>
+As the name implies, Frequency modulation alternatively increases and decreases the frequency of the input data.
+``Filter.LFO_FM (modWave:List<float>) (multiplicator:float) (data:List<float>)``
+
+The ``modWave`` stands for an inputed wave which the function will follow to modulate the inputed data.
+The ``multiplicator`` is there to help control how strong the effect of the filter is.
+
+Example:
+```fs
+let synth = Synth() // Init
+
+let basic = synth.Note (Seconds 2.) Note.A 4      // Creating a basic note
+let modWave = synth.Sound 100. (Seconds 2.) Sin   // Creating a modWave of 100Hz
+let fm = Filter.LFO_FM modWave 2. basic           // Applying the LFO FM filter
+
+synth.WriteToWav "basic.wav" [basic]
+synth.WriteToWav "modWave.wav" [modWave]
+synth.WriteToWav "fm.wav" [fm]
+```
+The output is:
+![LFO FM](Reports/Files/lfo_fm.PNG)
+
 
 ### LowPass / HighPass / BandPass / RejectBand filters
 
