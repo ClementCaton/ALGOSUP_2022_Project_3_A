@@ -106,11 +106,11 @@ type SoundData(
 
 
     /// <summary>
-    /// 
+    /// Creates a wave with a specific envelope shape
     /// </summary>
-    /// <param name="waveType"></param>
-    /// <param name="dataPoints0"></param>
-    /// <returns></returns>
+    /// <param name="waveType">Generator for the base wave</param>
+    /// <param name="dataPoints0">Times and amplitudes for the envelope</param>
+    /// <returns>New shaped sound</returns>
     
     member x.CreateFromDataPoints waveType (dataPoints0: List<float * float>) = // (time, amp)
         let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
@@ -143,6 +143,14 @@ type SoundData(
         let release = duration + release0
 
         x.CreateFromDataPoints waveType [(0., 0.); (attack, 1.); (hold, 1.); (decay, sustain); (duration, sustain); (release, 0.)]
+
+        
+
+    /// <summary>
+    /// Get note offsets for a chord
+    /// </summary>
+    /// <param name="chordQuality">Type of chord</param>
+    /// <returns>List of offsets in semitones</returns>
     
     member x.GetChord chordQuality =
         match chordQuality with

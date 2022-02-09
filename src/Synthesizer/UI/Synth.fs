@@ -47,6 +47,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
         CalcNoteFreq(note, octave, aFourFreq).Output
 
 
+
     /// <summary>
     /// Creates a sound with a single note
     /// It is recommended to use the method Note instead
@@ -97,6 +98,8 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
         //! The "1." was supposed to be "(data.overDrive)"
         Utility.Overdrive 1. (data.CreateFromDataPoints waveType dataPoints)
 
+
+
     /// <summary>
     /// Writes a music to a .wav file.
     /// </summary>
@@ -122,17 +125,35 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
         use stream = File.Create(path + filename)
         WriteWav().Write (stream) (music)
 
+
+
+    /// <summary>
+    /// Get information on an MP3 file
+    /// </summary>
+    /// <param name="name">Name of the MP3 file</param>
+    /// <returns>Data stored in the MP3 header</returns>
+
     member x.ReadFromMP3Header (name: string) =
         if name.Contains(".mp3") then
             readMP3(File.Open("./Output/" + name, FileMode.Open)).mp3Decoding
         else
             readMP3(File.Open("./Output/" + name + ".mp3", FileMode.Open)).mp3Decoding
 
+
+
+    /// <summary>
+    /// Get information on an MP3 file with a specific path
+    /// </summary>
+    /// <param name="path">Path to the MP3 file</param>
+    /// <returns>Data stored in the MP3 header</returns>
+
     member x.ReadFromMP3HeaderWithPath (path: string) =
         if path.Contains(".mp3") then
             readMP3(File.Open(path, FileMode.Open)).mp3Decoding
         else
             readMP3(File.Open(path+".mp3", FileMode.Open)).mp3Decoding
+
+
 
     /// <summary>
     /// Reads a music from a .wav file
@@ -159,6 +180,8 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
             ReadWav().Read (File.Open(path, FileMode.Open))
         else
             ReadWav().Read (File.Open(path+".wav", FileMode.Open))
+
+
 
     /// <summary>
     /// Creates a sound with a single note

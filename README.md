@@ -7,8 +7,8 @@
   - [Project](#project)
   - [Project members](#project-members)
 - [Project documentation](#project-documentation)
-  - [Features in developpment](#features-in-developpment)
-    - [MP3 developpment](#mp3-developpment)
+  - [Features in development](#features-in-development)
+    - [MP3 development](#mp3-development)
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Download](#download)
@@ -24,6 +24,7 @@
   - [Creating audio data](#creating-audio-data)
     - [Creating audio data with an envelope](#creating-audio-data-with-an-envelope)
     - [Creating audio data with a custom envelope](#creating-audio-data-with-a-custom-envelope)
+    - [Creating audio data with a chord](#creating-audio-data-with-a-chord)
   - [Finding frequencies from notes and octaves](#finding-frequencies-from-notes-and-octaves)
     - [Finding notes with a custom default frequency](#finding-notes-with-a-custom-default-frequency)
   - [Creating silence](#creating-silence)
@@ -56,6 +57,7 @@
   - [Unit Test](#unit-test)
   - [See Also](#see-also)
   - [**Definitions**](#definitions)
+
 </details>
 
 ## Project
@@ -73,9 +75,9 @@ The project was prposed by [*Algosup*](https://www.algosup.com/index.html) and [
 
 # Project documentation
 
-## Features in developpment
+## Features in development
 
-### MP3 developpment
+### MP3 development
 
 MP3 features are still in developpement. We are supposed to be able to compress and decompress MP3 files. It is already possible look at audio data in mp3 files and check the progress inside the [mp3-compression branch](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/tree/compression-mp3)
 
@@ -87,7 +89,8 @@ Download .NET 6.0 or newer
 
 ### Download
 
-You can simply download our lastest builds by the NuGet platform with this command :
+You can simply download our latest build through the NuGet platform with this command : 
+
 
 #### .Net CLI
 
@@ -207,10 +210,10 @@ For example if we want to write a .wav file with two channels that would look li
 
 ```fs
 let synth = Synth() // Init
-let sound1 = synth.SoundWithEnveloppe 440. (Seconds 2.) Sin 0.5 0.5 0.5 0.5 0.5  // First audio
-let sound2 = synth.SoundWithEnveloppe 440. (Seconds 2.) Sin 0.5 0.2 0.3 0.4 0.5  // Second audio
+let channel1 = synth.SoundWithEnveloppe 440. (Seconds 2.) Sin 0.5 0.5 0.5 0.5 0.5  // First audio
+let channel2 = synth.SoundWithEnveloppe 440. (Seconds 2.) Sin 0.5 0.2 0.3 0.4 0.5  // Second audio
 
-synth.WriteToWav "stereo.wav" [sound1; sound2]  // Writing file with two channels
+synth.WriteToWav "stereo.wav" [channel1; channel2]  // Writing file with two channels
 ```
 
 This will create the following audio file :
@@ -257,14 +260,15 @@ The above example creates the following sound :
 
 ### Creating audio data with a custom envelope
 
-Its possible to create sounds with more ezoteric envelopes using the ``Synth.SoundWithCustomEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (dataPoints: List<float * float>)`` function.
+Its possible to create sounds with more esoteric envelopes using the ``Synth.SoundWithCustomEnveloppe (frequency:float) (duration:Duration) (waveType:BaseWaves) (dataPoints: List<float * float>)`` function.
 
 The ``dataPoints`` variable refers to a list of coordinates for which the envelope will "nudge" the sound towards.
 It contains a list of tuples, each tuple represents a point in time first and an amplitude second.
 
 For the shake of an example, lets create a simple envelope that only rises up from 0 to 1 and than back again to 0 :
 
-First of all, a simple sound withoun an envelope so we'll have a point of reference :
+First of all, a simple sound without an envelope so we'll have a point of reference :
+
 
 ```fs
 let synth = Synth() // Init
@@ -273,10 +277,10 @@ let basicSound = synth.Note (Seconds 1) Note.A 4
 synth.WriteToWav "basic.wav" [basicSound]
 ```
 
-This, of course, live us with a straight blob of a sinusoidal soundwave with a duration of 1 second :
-![Simple sinwave](Reports/Files/customEnv-0.PNG)
+This, of course, leaves us with a straight blob of a sinusoidal sound wave with a duration of 1 second :
+![Simple sin wave](Reports/Files/customEnv-0.PNG)
 
-Now if we do the same thing but with our envelope that would look a little like this :
+Now if we do the same thing but with our envelope that would look like this:
 
 ```fs
 let synth = Synth() // Init
@@ -294,8 +298,8 @@ A better way of doing this would be to outright create a function for the new en
 ```fs
 let synth = Synth() // Init
 
-let exampleCustomEnvelope (note:Note) (octav:int) (duration:float) =
-    synth.SoundWithCustomEnveloppe (synth.GetNoteFreq note octav) (Seconds duration) Sin [(0., 0.); ((duration/2.), 1.); (duration, 0.)]
+let exampleCustomEnvelope (note:Note) (octave:int) (duration:float) =
+    synth.SoundWithCustomEnveloppe (synth.GetNoteFreq note octave) (Seconds duration) Sin [(0., 0.); ((duration/2.), 1.); (duration, 0.)]
 
 let custEnvSound1 = exampleCustomEnvelope Note.A 4 1.
 let custEnvSound2 = exampleCustomEnvelope Note.B 6 2.
@@ -306,8 +310,35 @@ synth.WriteToWav "custEnvSound2.wav" [custEnvSound2]
 synth.WriteToWav "custEnvSound3.wav" [custEnvSound3]
 ```
 
-This way the new, completielly personalised, envelope can easily be applied to a large number of notes.
+This way the new, completely personalized, envelope can easily be applied to a large number of notes.
 ![Custom envelope final](Reports/Files/customEnv-2.PNG)
+
+### Creating audio data with a chord
+
+A chord is a superposition of multiple notes, generally forming a nice sound in the ear.
+
+There are currently only two types/qualities of chord possible: `Minor` and `Major`.
+
+While a minor chord has, going upward in frequencies, a spacing of 3 then 4 and sounds "sad",
+a major chord has spacing of 4 then 3 and sound "happy".
+
+For example, to create a `Am3`, you may use
+
+```fs
+let Am3 = synth.Chord Quarter Note.A Minor 3
+```
+
+which is the equivalent of this
+
+```fs
+let Am3 = synth.Add [
+    synth.Note Quarter Note.A 3
+    synth.Note Quarter Note.C 4
+    synth.Note Quarter Note.E 4
+]
+```
+
+<sup>see the `Add` definition [thereafter](#superposing-audio-with-a-predefined-ratio)</sup>
 
 ## Finding frequencies from notes and octaves
 
@@ -378,13 +409,14 @@ let second = synth.CutMiddle 1. 2. full  // Cuts the first and the last 2 notes,
 
 ## Superposing audio data
 
-You can superpose different sounds together to get a 3rd that is the result of the operation. You have different functions to superpose sounds to help you easily get what you want.
+You can superpose different sounds together to get a 3rd that is the result of the operation. You have different functions to superpose sounds to help you to easily get what you want.
 
 ### Superposing audio with a predefined ratio
 
-There is the function ``synth.Add sounds``. The variable sounds is a List<List<float>> containing the list of sounds that will be superposed together. This function will superpose the sounds together and average the values depending on the number of waves superposed.
+There is the function ``synth.Add sounds``. The variable sounds is a ``List<List<float>>`` containing the list of sounds that will be superposed together. This function will superpose the sounds together and average the values depending on the number of waves superposed.
 
 Example :
+
 ```fs
 let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
 let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
@@ -395,9 +427,10 @@ let added = synth.Add [sound1;sound2;sound3]
 
 ### Superposing audio with a custom ratio
 
-There is the function ``Utility.AddFactor (map:List<Tuple<List<float>, float>>)``. The variable map contains a list of tuple containing the sounds the user wants to superpose together and the ratio of the sound.
+There is the function ``Utility.AddFactor (map:List<Tuple<List<float>, float>>)``. The variable map contains a list of tuple containing the sounds the user wants to superpose together and the ratio for each of the sound.
 
 Example :
+
 ```fs
 let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
 let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
@@ -406,13 +439,14 @@ let sound3 = synth.Compose [synth.Note Eighth Note.A 1]
 let added = Utility.AddFactor [(sound1,0.2);(sound2,0.5);(sound3,0.3)]
 ```
 
-It is recomended that the total ratios the user uses is equal to 1. Otherwise the user can use the function ``Utility.Maximize data``. This function will take the data of a sound and modify it so that the amplitude goes from -1 to 1.
+It is recommended that the total ratios the user uses is equal to 1. Otherwise the user can use the function ``Utility.Maximize data``. This function will take the data of a sound and modify it so that the amplitude goes from -1 to 1.
 
 ### Superposing audio without ratios
 
-There is the function ``AddSimple (sounds:list<list<float>>)``. This function will return the highest absolute value of the data. 
+There is the function ``AddSimple (sounds:list<list<float>>)``. This function will return the highest absolute value of the data.
 
 Example :
+
 ```fs
 let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
 let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
@@ -423,8 +457,8 @@ let added = Utility.AddSimple [sound1;sound2]
 ## Composing
 
 One thing you have to be aware of is the ``CutCorners`` function.
-When we first created the compose function we encountered a strange, small sound between each end every note.
-This sound was caused by the notes ending on a not-zero amplitude.
+When we first created the compose function we encountered a strange, small chaotic sound between each end every note.
+This sound was caused by the notes which ending was a not-zero amplitude.
 
 The solution was to add in a filter that gradually lowers the amplitude of the notes start and end to 0.
 
@@ -522,10 +556,12 @@ The above example automatically opens the browser with the following graph :
 To extract the main harmonics from the analysis, use `FrequencyAnalyser.LocalMaxValuesIndices (threshold: float) (map: Map<float, float>)`
 
 For example, with the previous code, running
+
 ```fs
 let frequencies = FrequencyAnalysis.LocalMaxValuesIndices 0.2 analysis
 printfn "Frequencies: %A" frequencies
 ```
+
 will output `Frequencies: [220.0457771; 440.0915541; 879.8466468]`
 
 ## Filters
@@ -576,12 +612,15 @@ let MusicWithAmplitude = synth.ChangeAmplitude 0.5 Music
 ### Custom repeater filter
 
 The repeater filter does exactly what it says on the tin.
-It repeats the inputed data with an offset and reads to the original sound.
+
+
+It repeats the input data with an offset and add it to the original sound.
+
 This filter is the basis on which we built the Reverb and Echo filters.
 
 The function looks like this : ``Synth.Repeater (nbEcho:int) (decay:float) (delay:float) (dryData:List<float>)``
 
-The variables inputed are :
+The variables inputted are :
 
 - nbEcho : The number of times the original sound gets repeated.
 - decay : Each time the sound is repeated we adjust the amplitude of the sound using this value
@@ -621,13 +660,13 @@ The above examples give the following outputs :
 
 ### Reverb
 
-Similarly to echo, reverb repeats and reads the same sound with a delay.
-Except, reverb does so with a delay that is shorter then the original sound.
+Similarly to echo, reverb repeats and play the same sound with a delay.
+Except, reverb does so with a delay that is shorter than the original sound.
 
 ``Synth.Reverb (delayRatio:float) (minAmpRatio:float) (decay:float) (dryData:List<float>)``
 
-Instead of a fixed time, we are using ratio between the the delay and the length of the sound.
-This way, we can just simply input a value between 0 and 1, in which the filter gets more and more pronounce towards 1 instead of needing to play attention to the length of the sound.
+Instead of a fixed time, we are using ratio between the delay and the length of the sound.
+This way, we can just simply input a value between 0 and 1, in which the filter gets more and more pronounce towards 1 instead of needing to pay attention to the length of the sound.
 
 Example :
 
@@ -646,6 +685,7 @@ The flange filter is used to add kind of sweeping sound to the audio.
 ``Synth.Flanger (delay:float) (speed:float) (dryData:List<float>)``
 
 Example :
+
 ```fs
     let synth = Synth() // Init
     let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2 // Creating a basic sound with an envelope to make it interesting
@@ -654,12 +694,14 @@ Example :
     synth.WriteToWav "basic.wav" [basicSound]
     synth.WriteToWav "flanger.wav" [flanger]
 ```
+
 The results are :
+
 ![Flanger](Reports/Files/flanger.png)
 
 ### Envelope
 
-Just like when we create a sound, we can make an envelope to make the amplitude of a  given audio data follow certain patterns.
+Just like when we create a sound, we can make an envelope to make the amplitude of a given audio data follow certain patterns.
 
 We are still using a basic AHDSR envelope :
 
@@ -685,6 +727,7 @@ The above example creates the following sound :
 
 ### Custom envelope
 
+
 Just like on creation, it is rather simple to insert a custom pattern into the anvelope.
 This is done using the  ``Synth.CustomEnvelope (dataPoints0: List<float * float>) (data:List<float>)`` function.
 
@@ -705,17 +748,15 @@ synth.WriteToWav "custEnvSound2.wav" [custEnvSound2]
 synth.WriteToWav "custEnvSound3.wav" [custEnvSound3]
 ```
 
-This way the new, completielly personalised, envelope can easily be applied to a large number of notes.
+This way the new, completely personalized, envelope can easily be applied to a large number of notes.
 ![Custom envelope final](Reports/Files/custEnv.png)
 
 ### Low frequency oscillation
 
-<span style="color: red;">WIP</span>
-
 #### AM
 
 The Amplitude Modulation using a Low Frequency Oscillator (LFO AM) also called tremolo changes, as the name, implies the frequency of a sound based on a small frequency.
-This allows for a kind of wobble effect, alternating the amplitude between its maxima in a sinusoidal fashion.
+This allows for a kind of wobble effect, alternating the amplitude between its maximum in a sinusoidal fashion.
 
 The function takes not only the modulating frequency as parameter but also the new lower and upper bounds (usually -1. and 1.) and the music's sample rate.
 
@@ -731,12 +772,14 @@ let sound = synth.LFO_AM 60. -1. 1. basic
 #### FM
 
 As the name implies, Frequency modulation alternatively increases and decreases the frequency of the input data.
+
 ``Synth.LFO_FM (modWave:List<float>) (multiplicator:float) (data:List<float>)``
 
-The ``modWave`` stands for an inputed wave which the function will follow to modulate the inputed data.
-The ``multiplicator`` is there to help control how strong the effect of the filter is.
+The ``modWave`` stands for an input wave which the function will follow to modulate the input data.
+The ``multiplier`` is there to help control how strong the effect of the filter is.
 
 Example :
+
 ```fs
 let synth = Synth() // Init
 
@@ -749,14 +792,14 @@ synth.WriteToWav "modWave.wav" [modWave]
 synth.WriteToWav "fm.wav" [fm]
 ```
 The output is :
-![LFO FM](Reports/Files/lfo_fm.png)
 
+![LFO FM](Reports/Files/lfo_fm.png)
 
 ### LowPass / HighPass / BandPass / RejectBand filters
 
 These are 4 filters applicable to the audio data.
 
-They are used to cut off frequencies above a given threshold, below a given threshold, both above and below a given threshold, or both above and below a given threshold and inverse.
+They are used to cut off frequencies above a given threshold, below a given threshold, both above and below a given threshold, or both above and below a given threshold then inversed.
 
 They are used like so :
 
@@ -824,7 +867,7 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 
 [^3]: [Basic Waves functions](https://www.musictheory.net/lessons/11) :<br>A wave function is a mathematical function which can create a wave of a predefined pattern frequency, amplitude, etc.. In the scope of this project we are using the four basic waveforms: Sinusoidal, Square, Triangular and Saw.<br>The four basic waves are -><br><br>The sin wave = the simplest wave with a formula of *sin(2 π  frequency / sampleRate)* <br><br>The square wave = a wave made with an sgn of a sinwave with a formula of *sgn(sinwave)*<br><br>The saw wave = has a form close to a triangle, it has a right angle at the end of its decreasing part *2(t/p - [1/2+t/p]*<br><br>The triangle wave = this wave has the most complicated formula *period/π arcsin[sin(π x)]*
 
-[^4]: [beat](https://en.wikipedia.org/wiki/Beat_(music)) : Beats is a sort of rythm; 2 beat per second is like a tempo, it will happen two time in a second
+[^4]: [beat](https://en.wikipedia.org/wiki/Beat_(music)) : Beats is a sort of rythm; 2 beat per second is like a tempo, it will happen twice in a second
 
 [^5]: Musical durations : <br>
 Musical duration is measured in beats[^4] <br>
@@ -844,4 +887,3 @@ Release is the time taken for the level to decay from the sustain level to zero 
 [^10]: [Stereo](https://en.wikipedia.org/wiki/Stereophonic_sound) : Stereo in opposition to mono, is a sound using multiple audio source (usually 2) to recreate a multi-directional / 3D-sound.
 
 [^11]: [Sample rate](https://www.vocitec.com/docs-tools/blog/sampling-rates-sample-depths-and-bit-rates-basic-audio-concepts#:~:text=The%20sampling%20rate%20refers%20to,a%20specific%20point%20in%20time.) : The sampling rate refers to the number of samples of audio recorded every second. 
-

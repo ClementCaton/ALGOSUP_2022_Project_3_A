@@ -4,21 +4,25 @@ open System
 module Utility =
     
     /// <summary>
-    /// 
+    /// Removes the beginning of a sound and only keep the end
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="sampleRate">Sample rate of the sound</param>
+    /// <param name="time">When to stop cutting the sound</param>
+    /// <param name="data">Sound to cut</param>
+    /// <returns>Trimmed sound</returns>
     
-    let CutStart (sampleRate:float) time (data:List<float>) = 
+    let CutStart (sampleRate:float) (time:float) (data:List<float>) = 
         data[int (sampleRate * time) .. data.Length]
 
 
 
     /// <summary>
-    /// 
+    /// Removes the end of a sound and only keep the beginning
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="sampleRate">Sample rate of the sound</param>
+    /// <param name="time">When to start cutting the sound</param>
+    /// <param name="data">Sound to cut</param>
+    /// <returns>Trimmed sound</returns>
     
     let CutEnd (sampleRate:float) time (data:List<float>) = 
         data[0 .. data.Length - int (sampleRate * time)-1] //need to add another time for the end
@@ -26,10 +30,11 @@ module Utility =
 
 
     /// <summary>
-    /// 
+    /// Fades in and out a sound linearly
     /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="limit0">Number of points to fade</param>
+    /// <param name="data">Sound to fade</param>
+    /// <returns>Faded sound</returns>
     
     let CutCorners (limit0:int) (data:List<float>) =
         let limit = if limit0>data.Length/2 then data.Length/2 else limit0
