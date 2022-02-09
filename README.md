@@ -667,7 +667,7 @@ We are still using a basic AHDSR envelope :
 
 ``Synth.Envelope (sustain:float) (attack:float) (hold:float) (decay:float) (release) (data:List<float>)``
 
-Example:
+Example :
 
 ```fs
 let synth = Synth()
@@ -681,7 +681,7 @@ synth.WriteToWav "env.wav" [env]
 The above example creates the following sound :
 ![After](Reports/Files/env.png)
 
-<sup>* Please note: when adding an envelope on top of an already existing sound using this method, the release is accounted into the already existing data and the length of the data does not change.</sup>
+<sup>* Please note : when adding an envelope on top of an already existing sound using this method, the release is accounted into the already existing data and the length of the data does not change.</sup>
 
 ### Custom envelope
 
