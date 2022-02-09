@@ -290,10 +290,13 @@ While a minor chord has, going upward in frequencies, a spacing of 3 then 4 and 
 a major chord has spacing of 4 then 3 and sound "happy".
 
 For example, to create a `Am3`, you may use
+
 ```fs
 let Am3 = synth.Chord Quarter Note.A Minor 3
 ```
+
 which is the equivalent of this
+
 ```fs
 let Am3 = synth.Add [
     synth.Note Quarter Note.A 3
@@ -301,6 +304,7 @@ let Am3 = synth.Add [
     synth.Note Quarter Note.E 4
 ]
 ```
+
 <sup>see the `Add` definition [thereafter](#superposing-audio-with-a-predefined-ratio)</sup>
 
 ## Finding frequencies from notes and octaves
@@ -372,11 +376,11 @@ let second = synth.CutMiddle 1. 2. full  // Cuts the first and the last 2 notes,
 
 ## Superposing audio data
 
-You can superpose different sounds together to get a 3rd that is the result of the operation. You have different functions to superpose sounds to help you easily get what you want.
+You can superpose different sounds together to get a 3rd that is the result of the operation. You have different functions to superpose sounds to help you to easily get what you want.
 
 ### Superposing audio with a predefined ratio
 
-There is the function ``synth.Add sounds``. The variable sounds is a List<List<float>> containing the list of sounds that will be superposed together. This function will superpose the sounds together and average the values depending on the number of waves superposed.
+There is the function ``synth.Add sounds``. The variable sounds is a ``List<List<float>>`` containing the list of sounds that will be superposed together. This function will superpose the sounds together and average the values depending on the number of waves superposed.
 
 Example:
 
@@ -390,7 +394,7 @@ let added = synth.Add [sound1;sound2;sound3]
 
 ### Superposing audio with a custom ratio
 
-There is the function ``Utility.AddFactor (map:List<Tuple<List<float>, float>>)``. The variable map contains a list of tuple containing the sounds the user wants to superpose together and the ratio of the sound.
+There is the function ``Utility.AddFactor (map:List<Tuple<List<float>, float>>)``. The variable map contains a list of tuple containing the sounds the user wants to superpose together and the ratio for each of the sound.
 
 Example:
 
@@ -420,8 +424,8 @@ let added = Utility.AddSimple [sound1;sound2]
 ## Composing
 
 One thing you have to be aware of is the ``CutCorners`` function.
-When we first created the compose function we encountered a strange, small sound between each end every note.
-This sound was caused by the notes ending on a not-zero amplitude.
+When we first created the compose function we encountered a strange, small chaotic sound between each end every note.
+This sound was caused by the notes which ending was a not-zero amplitude.
 
 The solution was to add in a filter that gradually lowers the amplitude of the notes start and end to 0.
 
@@ -576,7 +580,7 @@ let MusicWithAmplitude = Filter.ChangeAmplitude 0.5 Music
 ### Custom repeater filter
 
 The repeater filter does exactly what it says on the tin.
-It repeats the inputted data with an offset and reads to the original sound.
+It repeats the input data with an offset and add it to the original sound.
 This filter is the basis on which we built the Reverb and Echo filters.
 
 The function looks like this : ``Filter.Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)``
@@ -622,13 +626,13 @@ The above examples give the following outputs :
 
 ### Reverb
 
-Similarly to echo, reverb repeats and reads the same sound with a delay.
-Except, reverb does so with a delay that is shorter then the original sound.
+Similarly to echo, reverb repeats and play the same sound with a delay.
+Except, reverb does so with a delay that is shorter than the original sound.
 
 ``Filter.Reverb (delayRatio:float) (minAmpRatio:float) (decay:float) (sampleRate:float) (dryData:List<float>)``
 
-Instead of a fixed time, we are using ratio between the the delay and the length of the sound.
-This way, we can just simply input a value between 0 and 1, in which the filter gets more and more pronounce towards 1 instead of needing to play attention to the length of the sound.
+Instead of a fixed time, we are using ratio between the delay and the length of the sound.
+This way, we can just simply input a value between 0 and 1, in which the filter gets more and more pronounce towards 1 instead of needing to pay attention to the length of the sound.
 
 Example:
 
@@ -662,7 +666,7 @@ The results are:
 
 ### Envelope
 
-Just like when we create a sound, we can make an envelope to make the amplitude of a  given audio data follow certain patterns.
+Just like when we create a sound, we can make an envelope to make the amplitude of a given audio data follow certain patterns.
 
 We are still using a basic AHDSR envelope :
 
@@ -716,7 +720,7 @@ This way the new, completely personalized, envelope can easily be applied to a l
 #### AM
 
 The Amplitude Modulation using a Low Frequency Oscillator (LFO AM) also called tremolo changes, as the name, implies the frequency of a sound based on a small frequency.
-This allows for a kind of wobble effect, alternating the amplitude between its maxima in a sinusoidal fashion.
+This allows for a kind of wobble effect, alternating the amplitude between its maximum in a sinusoidal fashion.
 
 The function takes not only the modulating frequency as parameter but also the new lower and upper bounds (usually -1. and 1.) and the music's sample rate.
 
