@@ -356,7 +356,7 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
 
 
     /// <summary>
-    /// 
+    /// Cuts off the edges of the inputed sound data
     /// </summary>
     /// <param name="Cuts off the end of the inputed sound data"></param>
     /// <param name="The amount of time to be cut off from the start in seconds"></param>
