@@ -6,11 +6,11 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Changes the amplitude of the inputed audio data
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="multiplicator">Ratio at which the amplitude needs to be changed at</param>
+    /// <param name="data">Audio data</param>
+    /// <returns>Audio data with the new amplitude</returns>
     
     let ChangeAmplitude (multiplicator:float) (data:List<float>) =
         data |> List.map (( * ) multiplicator)
@@ -18,12 +18,12 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Additions two waves with ratio between them
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="ratio">The ratio between the two waves</param>
+    /// <param name="dataX">First audio input</param>
+    /// <param name="dataY">Second audio input</param>
+    /// <returns>The sum of the two inputed audios</returns>
     
     let AddTwoWaves (ratio:float) (dataX:List<float>) (dataY:List<float>) =
         let mutable output = List.empty
@@ -43,14 +43,14 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Repeats the inputed audio data with a preset delay and changes the amplitude every new repetition
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="nbEcho">Number of times the audio should be repeated</param>
+    /// <param name="decay">How much the amplitude of the echos should be changed (multiplied)</param>
+    /// <param name="delay">The delay for each new repetition (starts at 0, NOT at the end of the audio)</param>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="dryData">The original audio</param>
+    /// <returns>Repeated audio</returns>
     
     let Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) = 
         let rec RepeaterInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
@@ -66,14 +66,14 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Creates a reverberating effect
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="delayRatio">At which point the sound should be repeated (1s sound with 0.6 delay = 0.6s delay)</param>
+    /// <param name="minAmpRatio">Amplitude at which the sound should not be repeated anymore</param>
+    /// <param name="decay">How much the amplitude of the echos should be changed (multiplied)</param>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="dryData">The original audio</param>
+    /// <returns>Filtered audio</returns>
     
     let Reverb (delayRatio:float) (minAmpRatio:float) (decay:float) (sampleRate:float) (dryData:List<float>) =
         let delay = (float dryData.Length * delayRatio) / sampleRate
@@ -90,14 +90,14 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Chreats an echo sound effect
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="nbEcho">Number of times the audio should be repeated</param>
+    /// <param name="decay">How much the amplitude of the echos should be changed (multiplied)</param>
+    /// <param name="delay">The delay for each new repetition (starts at the end of the audio)</param>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="dryData">The original audio</param>
+    /// <returns>Filtered audio</returns>
     
     let Echo (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) =
         Repeater nbEcho decay (float dryData.Length / sampleRate + delay) sampleRate dryData
@@ -107,14 +107,14 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Adds a sweeping sound effect to the audio
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="Delay at which the effect should start at (in ms)"></param>
+    /// <param name="speed">How fast should the effect get stronger</param>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="bpm">Beats per minute</param>
+    /// <param name="dryData">The original audio</param>
+    /// <returns>Filtered audio</returns>
     
     let Flanger (delay:float) (speed:float) (sampleRate:float) (bpm:float) (dryData:List<float>) =
         let step = speed/1000.*sampleRate
@@ -136,12 +136,12 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Creates a custom pattern for the inputed audios amplitude to follow
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="dataPoints0">Coordinates for the envelope to follow [(time1 en s, amp1); (time2 en s, amp2)]</param>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="data">Audio data</param>
+    /// <returns>Edited sound</returns>
     
     let CustomEnvelope (dataPoints0: List<float * float>) (sampleRate:float) (data:List<float>) =
         let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
