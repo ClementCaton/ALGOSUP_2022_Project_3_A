@@ -3,6 +3,7 @@ namespace Synthesizer
 open System
 open System.IO
 
+[<StructuredFormatDisplay("{AsString}")>]
 type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?basePlatform:bool) =
 
     member val bpm = defaultArg baseBpm 90.
@@ -18,7 +19,8 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
     member val waveType = defaultArg baseWaveType Sin
         with get, set
 
-
+    override x.ToString() = $"sampleRate: {x.sampleRate} \nbpm: {x.bpm} \ndefault wave type: {x.waveType}"
+    member x.AsString = x.ToString()
 
     /// <summary>
     /// Calculates a frequency with the base A4=440 Hz
@@ -317,38 +319,38 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
 
 
     /// <summary>
-    /// 
+    /// Cuts off the start of the inputed sound data
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="time">The amount of time to be cut off in seconds</param>
+    /// <param name="data">Data to be edited</param>
+    /// <returns>The end of the inputed sound data</returns>
     
-    member x.CutStart time (data:List<float>) =
+    member x.CutStart (time:float) (data:List<float>) =
         Utility.CutStart x.sampleRate time data
 
 
 
     /// <summary>
-    /// 
+    /// Cuts off the end of the inputed sound data
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="time">The amount of time to be cut off in seconds</param>
+    /// <param name="data">Data to be edited</param>
+    /// <returns>The start of the inputed sound data</returns>
     
-    member x.CutEnd time (data:List<float>) =
+    member x.CutEnd (time:float) (data:List<float>) =
         Utility.CutEnd x.sampleRate time data
 
 
 
     /// <summary>
-    /// 
+    /// Cuts out the middle of the inputed sound data
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="timeStart">The amount of time to be kept at the start in seconds</param>
+    /// <param name="timeEnd">The amount of time to be kept at the end in seconds</param>
+    /// <param name="data">Data to be edited</param>
+    /// <returns>The edges of the inputed sound data</returns>
     
-    member x.CutMiddle timeStart timeEnd (data:List<float>) =
+    member x.CutMiddle (timeStart:float) (timeEnd:float) (data:List<float>) =
         Utility.CutEnd x.sampleRate (float data.Length/x.sampleRate - timeStart) data @ Utility.CutStart x.sampleRate (float data.Length/x.sampleRate - timeEnd) data
 
 
@@ -356,10 +358,10 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
     /// <summary>
     /// 
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="Cuts off the end of the inputed sound data"></param>
+    /// <param name="The amount of time to be cut off from the start in seconds"></param>
+    /// <param name="The amount of time to be cut off from the end in seconds"></param>
+    /// <returns>The edges of the inputed sound data</returns>
     
     member x.CutEdge timeStart timeEnd (data:List<float>) =
         Utility.CutStart x.sampleRate timeStart (Utility.CutEnd x.sampleRate timeEnd data)
@@ -422,3 +424,49 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
             PlayMusic.PlayMac offset ("./Output/" + filePath)
         | _ ->  
             PlayMusic.PlayWithOffsetFromPath offset ("./Output/" + filePath)
+
+    //Filters
+
+    member x.ChangeAmplitude (multiplicator:float) (data:List<float>) =
+        Filter.ChangeAmplitude multiplicator data
+
+    member x.AddTwoWaves (ratio:float) (dataX:List<float>) (dataY:List<float>) =
+        Filter.AddTwoWaves ratio dataX dataY
+    
+    member x.Repeater (nbEcho:int) (decay:float) (delay:float) (dryData:List<float>) =
+        Filter.Repeater nbEcho decay delay x.sampleRate dryData
+
+    member x.Reverb (delayRatio:float) (minAmpRatio:float) (decay:float) (dryData:List<float>) =
+        Filter.Reverb delayRatio minAmpRatio decay x.sampleRate dryData
+    
+    member x.Echo (nbEcho:int) (decay:float) (delay:float) (dryData:List<float>) =
+        Filter.Echo nbEcho decay delay x.sampleRate dryData
+
+    member x.Flanger (delay:float) (speed:float) (dryData:List<float>) =
+        Filter.Flanger delay speed x.sampleRate x.bpm dryData
+
+    member x.CustomEnvelope (dataPoints: List<float * float>) (data:List<float>) =
+        Filter.CustomEnvelope dataPoints x.sampleRate data
+    
+    member x.Envelope (sustain:float) (attack:float) (hold:float) (decay:float) (release:float) (data:List<float>) =
+        Filter.Envelope sustain attack hold decay release x.sampleRate data 
+    
+    member x.LFO_AM (frequency:float) (minAmplitude:float) (maxAmplitude:float) (data:List<float>) =
+        Filter.LFO_AM frequency minAmplitude maxAmplitude x.sampleRate data
+    
+    member x.LFO_FM (modWave:List<float>) (multiplicator:float) (data:List<float>) =
+        Filter.LFO_FM modWave multiplicator data
+    
+    member x.LowPass (cutoffFreq:float) (data:List<float>) =
+        Filter.LowPass x.sampleRate cutoffFreq data
+    
+    member x.HighPass (cutoffFreq:float) (data:List<float>) =
+        Filter.HighPass x.sampleRate cutoffFreq data
+    
+    member x.BandPass (lowFreq:float) (highFreq:float) (data:List<float>) = 
+        Filter.BandPass x.sampleRate lowFreq highFreq data
+    
+    member x.RejectBand (lowFreq:float) (highFreq:float) (data:List<float>) = 
+        Filter.RejectBand x.sampleRate lowFreq highFreq data
+
+    
