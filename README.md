@@ -738,7 +738,7 @@ let sound = Filter.LFO_AM 60. -1. 1. (int synth.sampleRate) basic
 As the name implies, Frequency modulation alternatively increases and decreases the frequency of the input data.
 ``Filter.LFO_FM (modWave:List<float>) (multiplier:float) (data:List<float>)``
 
-The ``modWave`` stands for an inputted wave which the function will follow to modulate the inputted data.
+The ``modWave`` stands for an input wave which the function will follow to modulate the input data.
 The ``multiplier`` is there to help control how strong the effect of the filter is.
 
 Example:
@@ -762,7 +762,7 @@ The output is:
 
 These are 4 filters applicable to the audio data.
 
-They are used to cut off frequencies above a given threshold, below a given threshold, both above and below a given threshold, or both above and below a given threshold and inverse.
+They are used to cut off frequencies above a given threshold, below a given threshold, both above and below a given threshold, or both above and below a given threshold then inversed.
 
 They are used like so :
 
