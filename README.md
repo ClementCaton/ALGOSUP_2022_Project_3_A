@@ -629,7 +629,7 @@ Except, reverb does so with a delay that is shorter then the original sound.
 Instead of a fixed time, we are using ratio between the the delay and the length of the sound.
 This way, we can just simply input a value between 0 and 1, in which the filter gets more and more pronounce towards 1 instead of needing to play attention to the length of the sound.
 
-Example:
+Example :
 
 ```fs
 let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2 // Creating a basic sound with an envelope to make it interesting
@@ -637,7 +637,7 @@ let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 
 let reverb = synth.Reverb 0.4 0.3 0.8 basicSound
 ```
 
-The above examples give the following outputs:
+The above examples give the following outputs :
 ![Repeater examples](Reports/Files/reverb.png)
 
 ### Flanger
@@ -645,7 +645,7 @@ The above examples give the following outputs:
 The flange filter is used to add kind of sweeping sound to the audio.
 ``Synth.Flanger (delay:float) (speed:float) (dryData:List<float>)``
 
-Example:
+Example :
 ```fs
     let synth = Synth() // Init
     let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2 // Creating a basic sound with an envelope to make it interesting
@@ -654,7 +654,7 @@ Example:
     synth.WriteToWav "basic.wav" [basicSound]
     synth.WriteToWav "flanger.wav" [flanger]
 ```
-The results are:
+The results are :
 ![Flanger](Reports/Files/flanger.png)
 
 ### Envelope
