@@ -5,7 +5,7 @@
     <Platforms>AnyCPU;x64</Platforms>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>Synthesizer</PackageId>
-    <Version>1.3.0</Version>
+    <Version>1.2.2</Version>
     <Authors>TheoDct, ClementCaton, leo.chartier, CHAPUT-Mathieu, Louisdechoulot, Molnar-Ivan</Authors>
     <Company>ALGOSUP</Company>
     <Product>Synthesizer</Product>
@@ -18,10 +18,8 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>Sound, Synthesizer, F#, .NET, dotnet, modulation, fourier, ALGOSUP, Echo, Flanger, Filter, SoundWave, Reverb,</PackageTags>
     <PackageReleaseNotes>add Filters</PackageReleaseNotes>
-	<AssemblyVersion>1.3.0.0</AssemblyVersion>
-	<FileVersion>1.3.0.0</FileVersion>
-	<AssemblyName>Synthesizer</AssemblyName>
-	<RootNamespace>Synthesizer</RootNamespace>
+	<AssemblyVersion>1.2.2.0</AssemblyVersion>
+	<FileVersion>1.2.2.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>    
     <Compile Include="Utilities/FrequencyAnalyser.fs" />
@@ -38,6 +36,16 @@
 
     <Compile Include="UI/Filters.fs" />  
     <Compile Include="UI/Synth.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\ALGOSUP_2022_Project_3_A\Reports\Files\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\..\..\ALGOSUP_2022_Project_3_A\Reports\Nuget README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
