@@ -24,10 +24,18 @@ module Program =
     synth.PreviewMap "A 3,4,5 Analysis" output |> ignore
     *)
 
-    let basic = synth.Note (Seconds 2.) Note.A 4
+    //let basic = synth.Note (Seconds 2.) Note.A 4
     // let modWave = synth.Sound 100. (Seconds 2.) Sin
     // let fm = Filter.LFO_FM modWave 2. basic
-    synth.WriteToWav "basic.wav" [basic]
+    //synth.WriteToWav "basic.wav" [basic]
     // synth.WriteToWav "modWave.wav" [modWave]
     // synth.WriteToWav "fm.wav" [fm]
+
+    printfn "%A" synth
+    printfn ""
+    synth.sampleRate <- 50000.
+    printfn "%A" synth
+    printfn ""
+    printfn $"{synth}"
+
 
