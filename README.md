@@ -106,7 +106,7 @@ let synth = Synth()
 ## Modifying and printing default values
 
 The reasoning behind using a ``type`` instead of a ``module`` for our library was to enable default values.
-Values such as the samplerate, the bpm or the default waveform are needed everywhere but tend to stay the same.
+Values such as the samplerate[^11], the bpm[^4] or the default waveform[^3] are needed everywhere but tend to stay the same.
 These values can be accesed and modified directly from the object.
 
 Example:
@@ -842,3 +842,6 @@ Release is the time taken for the level to decay from the sustain level to zero 
 [^9]: [Xplot.Plotly](https://fslab.org/XPlot/plotly.html): Is a nuget which allowsto view data in the form of graphs
 
 [^10]: [Stereo](https://en.wikipedia.org/wiki/Stereophonic_sound): Stereo in opposition to mono, is a sound using multiple audio source (usually 2) to recreate a multi-directional / 3D-sound.
+
+[^11]: [Sample rate](https://www.vocitec.com/docs-tools/blog/sampling-rates-sample-depths-and-bit-rates-basic-audio-concepts#:~:text=The%20sampling%20rate%20refers%20to,a%20specific%20point%20in%20time.):The sampling rate refers to the number of samples of audio recorded every second. 
+
