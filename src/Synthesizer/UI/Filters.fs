@@ -316,8 +316,8 @@ module Filter =
     /// <returns></returns>
     
     let ApplyFilters filterList data =
-        let mutable output = List.empty
+        let mutable output = data
         filterList |> List.map (fun func -> 
-            output <- func data
+            output <- func output
         ) |> ignore
         output
