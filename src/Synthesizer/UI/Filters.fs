@@ -6,14 +6,14 @@ module Filter =
 
 
     /// <summary>
-    /// Changes the amplitude of the inputed audio data
+    /// Changes the amplitude of the inputted audio data
     /// </summary>
-    /// <param name="multiplicator">Ratio at which the amplitude needs to be changed at</param>
+    /// <param name="multiplier">Ratio at which the amplitude needs to be changed at</param>
     /// <param name="data">Audio data</param>
     /// <returns>Audio data with the new amplitude</returns>
     
-    let ChangeAmplitude (multiplicator:float) (data:List<float>) =
-        data |> List.map (( * ) multiplicator)
+    let ChangeAmplitude (multiplier:float) (data:List<float>) =
+        data |> List.map (( * ) multiplier)
 
 
 
@@ -23,7 +23,7 @@ module Filter =
     /// <param name="ratio">The ratio between the two waves</param>
     /// <param name="dataX">First audio input</param>
     /// <param name="dataY">Second audio input</param>
-    /// <returns>The sum of the two inputed audios</returns>
+    /// <returns>The sum of the two inputted audios</returns>
     
     let AddTwoWaves (ratio:float) (dataX:List<float>) (dataY:List<float>) =
         let mutable output = List.empty
@@ -43,7 +43,7 @@ module Filter =
 
 
     /// <summary>
-    /// Repeats the inputed audio data with a preset delay and changes the amplitude every new repetition
+    /// Repeats the inputted audio data with a preset delay and changes the amplitude every new repetition
     /// </summary>
     /// <param name="nbEcho">Number of times the audio should be repeated</param>
     /// <param name="decay">How much the amplitude of the echos should be changed (multiplied)</param>
@@ -90,7 +90,7 @@ module Filter =
 
 
     /// <summary>
-    /// Chreats an echo sound effect
+    /// Creates an echo sound effect
     /// </summary>
     /// <param name="nbEcho">Number of times the audio should be repeated</param>
     /// <param name="decay">How much the amplitude of the echos should be changed (multiplied)</param>
@@ -136,7 +136,7 @@ module Filter =
 
 
     /// <summary>
-    /// Creates a custom pattern for the inputed audios amplitude to follow
+    /// Creates a custom pattern for the inputted audios amplitude to follow
     /// </summary>
     /// <param name="dataPoints0">Coordinates for the envelope to follow [(time1 en s, amp1); (time2 en s, amp2)]</param>
     /// <param name="sampleRate">The inputs sample rate</param>
@@ -168,7 +168,7 @@ module Filter =
     /// <param name=""></param>
     /// <returns></returns>
     
-    let Envelope (sustain:float) (attack:float) (hold0:float) (decay0:float) (release0:float) (sampleRate:float) (data:List<float>) = //release substracts from hold because I don't have the data for the release periode
+    let Envelope (sustain:float) (attack:float) (hold0:float) (decay0:float) (release0:float) (sampleRate:float) (data:List<float>) = //release subtracts from hold because I don't have the data for the release period
         let hold = hold0 + attack
         let decay = hold + decay0
         let release = (float data.Length/float sampleRate) - release0
@@ -198,7 +198,7 @@ module Filter =
             x * (oscillator frequency amplitude verticalShift 0. t)
         )
 
-    let LFO_FM (modWave:List<float>) (multiplicator:float) (data:List<float>) =
+    let LFO_FM (modWave:List<float>) (multiplier:float) (data:List<float>) =
         
         let getShift (startAmp:float) (endAmp:float) (nStep:float)=
             let fullRange = endAmp - startAmp
@@ -212,7 +212,7 @@ module Filter =
             else 
                 //printfn $"{dryData.Length}"
 
-                let delta = modWave[0] * multiplicator
+                let delta = modWave[0] * multiplier
 
                 let wetData = 
                     match None with 
