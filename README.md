@@ -14,6 +14,7 @@
     - [Download](#download)
       - [.Net CLI](#net-cli)
   - [**Basic structure**](#basic-structure)
+  - [Modifying and printing default values](#modifying-and-printing-default-values)
   - [Reading files](#reading-files)
     - [Reading wav files](#reading-wav-files)
   - [Writing to files / Saving](#writing-to-files--saving)
@@ -100,6 +101,39 @@ This object functions as a sort of API towards the rest of the library.
 The synthesizer can be initialysed as follows:
 ```fs
 let synth = Synth()
+```
+
+## Modifying and printing default values
+
+The reasoning behind using a ``type`` instead of a ``module`` for our library was to enable default values.
+Values such as the samplerate, the bpm or the default waveform are needed everywhere but tend to stay the same.
+These values can be accesed and modified directly from the object.
+
+Example:
+```fs
+let synth = Synth()   // Init Synth()
+
+printfn "%A" synth    // Print default values
+
+let oldSampleRate = synth.sampleRate // Save the current sampleRate into an external variable
+
+synth.sampleRate <- 50000.  // Change default sampleRate
+
+print $"{synth}"        // Print default values with new default sampleRate
+print $"{oldSamplRate}" // Print old sampleRate
+```
+
+The above example prints:
+```
+sampleRate: 44100 
+bpm: 90 
+default wave type: Sin
+
+44100
+
+sampleRate: 50000 
+bpm: 90 
+default wave type: Sin
 ```
 
 ## Reading files
