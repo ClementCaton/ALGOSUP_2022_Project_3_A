@@ -12,8 +12,8 @@ module Filter =
     /// <param name=""></param>
     /// <returns></returns>
     
-    let ChangeAmplitude multiplicator (x:List<float>) =
-        x |> List.map (( * ) multiplicator)
+    let ChangeAmplitude (multiplicator:float) (data:List<float>) =
+        data |> List.map (( * ) multiplicator)
 
 
 
@@ -25,19 +25,19 @@ module Filter =
     /// <param name=""></param>
     /// <returns></returns>
     
-    let AddTwoWaves ratio (x:List<float>) (y:List<float>) =
+    let AddTwoWaves (ratio:float) (dataX:List<float>) (dataY:List<float>) =
         let mutable output = List.empty
-        if not (x.Length = y.Length) then
-            let diff = Math.Abs(x.Length - y.Length)
+        if not (dataX.Length = dataY.Length) then
+            let diff = Math.Abs(dataX.Length - dataY.Length)
             let endArray = [for i in [0 .. diff] do 0.0]
-            if x.Length > y.Length then
-                let newY = List.append y endArray
-                output <- List.init x.Length (fun i -> (x[i] * ratio) + (newY[i] * (1.-ratio)))
+            if dataX.Length > dataY.Length then
+                let newY = List.append dataY endArray
+                output <- List.init dataX.Length (fun i -> (dataX[i] * ratio) + (newY[i] * (1.-ratio)))
             else 
-                let newX = List.append x endArray
-                output <- List.init y.Length (fun i -> (newX[i] * ratio) + (y[i] * (1.-ratio)))
+                let newX = List.append dataX endArray
+                output <- List.init dataY.Length (fun i -> (newX[i] * ratio) + (dataY[i] * (1.-ratio)))
         else 
-            output <- List.init x.Length (fun i -> (x[i] * ratio) + (y[i] * (1.-ratio)))
+            output <- List.init dataX.Length (fun i -> (dataX[i] * ratio) + (dataY[i] * (1.-ratio)))
         output
 
 
@@ -168,7 +168,7 @@ module Filter =
     /// <param name=""></param>
     /// <returns></returns>
     
-    let Envelope (sustain:float) (attack:float) (hold0:float) (decay0:float) (release0) (sampleRate:float) (data:List<float>) = //release substracts from hold because I don't have the data for the release periode
+    let Envelope (sustain:float) (attack:float) (hold0:float) (decay0:float) (release0:float) (sampleRate:float) (data:List<float>) = //release substracts from hold because I don't have the data for the release periode
         let hold = hold0 + attack
         let decay = hold + decay0
         let release = (float data.Length/float sampleRate) - release0
@@ -188,7 +188,7 @@ module Filter =
     /// <param name=""></param>
     /// <returns></returns>
     
-    let LFO_AM frequency minAmplitude maxAmplitude sampleRate data =
+    let LFO_AM (frequency:float) (minAmplitude:float) (maxAmplitude:float) (sampleRate:float) (data:List<float>) =
         let oscillator = FourWaves.SinWave
         let amplitude = (maxAmplitude - minAmplitude) / 2.
         let verticalShift = (maxAmplitude + minAmplitude) / 2.
@@ -236,7 +236,7 @@ module Filter =
     /// <param name=""></param>
     /// <returns></returns>
     
-    let LowPass sampleRate cutoffFreq (data:List<float>) =
+    let LowPass (sampleRate:float) (cutoffFreq:float) (data:List<float>) =
         let RC = 1. / (2. * Math.PI * cutoffFreq)
         let dt = 1. / sampleRate
         let alpha = dt / (RC + dt)
@@ -262,7 +262,7 @@ module Filter =
     /// <param name=""></param>
     /// <returns></returns>
     
-    let HighPass sampleRate cutoffFreq (data:List<float>) =
+    let HighPass (sampleRate:float) (cutoffFreq:float) (data:List<float>) =
         let RC = 1. / (2. * Math.PI * cutoffFreq)
         let dt = 1. / sampleRate
         let alpha = RC / (RC + dt)
@@ -288,7 +288,7 @@ module Filter =
     /// <param name=""></param>
     /// <returns></returns>
     
-    let BandPass sampleRate lowFreq highFreq (data:List<float>) = 
+    let BandPass (sampleRate:float) (lowFreq:float) (highFreq:float) (data:List<float>) = 
         data |> LowPass sampleRate lowFreq |> HighPass sampleRate highFreq
 
 
@@ -302,7 +302,7 @@ module Filter =
     /// <param name=""></param>
     /// <returns></returns>
     
-    let RejectBand sampleRate lowFreq highFreq (data:List<float>) = 
+    let RejectBand (sampleRate:float) (lowFreq:float) (highFreq:float) (data:List<float>) = 
         let lowPassData = HighPass sampleRate lowFreq data
         let highPassData = LowPass sampleRate highFreq data
         Utility.AddMean [lowPassData; highPassData]

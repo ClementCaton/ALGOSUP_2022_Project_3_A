@@ -94,13 +94,10 @@ You can simply download our lastest builds by the NuGet platform by these comman
 
 ## **Basic structure**
 
-To interact with the library you'll have to mainly interact with two objects.
-The ``Synth`` object which is the actual sound synthesizer and the ``Filter`` object which contains a list of function that will allow you to modify the created sounds.
+To interact with the library you'll have to mainly interact with the ``Synth`` object.
+This object functions as a sort of API towards the rest of the library.
 
-In the rest of the document, unless specified otherwise, the following line of code is assumed to be at the start of the code.
-This will instantiate a Synthesizer with the default parameters.
-More on that later.
-
+The synthesizer can be initialysed as follows:
 ```fs
 let synth = Synth()
 ```
@@ -467,8 +464,7 @@ Tools to zoom in/zoom out are also present on the page.
 ## Frequency analysis
 
 It's possible to do frequency analysis by using a Fourier transform on an audio file using :
-``Synth.Fourier (data:List<float>) =
-        FrequencyAnalysis.Fourier x.sampleRate data``
+``Synth.Fourier (data:List<float>)``
 
 Example :
 
@@ -530,17 +526,17 @@ You can use this function to apply multiple filters at once like so :
 
 ```fs
 let MusicWithFilters = synth.ApplyFilters [
-    Filter.ChangeAmplitude 0.5
-    Filter.LowPass 44100. 400.
-    Filter.Echo 4 0.7 1.5 44100.] music
+    synth.ChangeAmplitude 0.5
+    synth.LowPass 400.
+    synth.Echo 4 0.7 1.5] music
 ```
 
 ### Changing amplitude
 
-To change the amplitude of a sound, use the ``Filter.ChangeAmplitude (amplitude:float)`` filter like so :
+To change the amplitude of a sound, use the ``Synth.ChangeAmplitude (amplitude:float)`` filter like so :
 
 ```fs
-let MusicWithAmplitude = Filter.ChangeAmplitude 0.5 Music
+let MusicWithAmplitude = synth.ChangeAmplitude 0.5 Music
 ```
 
 ### Custom repeater filter
@@ -549,14 +545,13 @@ The repeater filter does exactly what it says on the tin.
 It repeats the inputted data with an offset and reads to the original sound.
 This filter is the basis on which we built the Reverb and Echo filters.
 
-The function looks like this : ``Filter.Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)``
+The function looks like this : ``Synth.Repeater (nbEcho:int) (decay:float) (delay:float) (dryData:List<float>)``
 
 The variables inputed are :
 
 - nbEcho : The number of times the original sound gets repeated.
 - decay : Each time the sound is repeated we adjust the amplitude of the sound using this value
 - delay : The offset added to the echo (multiplies accordingly to the echo ex : echo 1 will have 1x this value, echo 2 will have 2x this value, etc..)
-- sampleRate : The sampleRate of the sound
 - dryData : The original sound
 
 Example :
@@ -564,8 +559,8 @@ Example :
 ```fs
 let basicSound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5 // Creating a basic sound with an envelope to make it interesting
 
-let repeated1 = Filter.Repeater 5 0.6 2.5 44100. basicSound
-let repeated2 = Filter.Repeater 5 0.9 4. 44100. basicSound
+let repeated1 = synth.Repeater 5 0.6 2.5 basicSound
+let repeated2 = synth.Repeater 5 0.9 4. basicSound
 ```
 
 The above examples give the following outputs :
@@ -575,7 +570,7 @@ The above examples give the following outputs :
 
 The echo filter repeats the same sound with a delay between delays and continuously weakens the the new sounds creating an echo effect.
 
-``Filter.Echo (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>)``
+``synth.Echo (nbEcho:int) (decay:float) (delay:float) (dryData:List<float>)``
 
 In this case, the delay is the time period between two echos, and NOT the delay from the start of the sound.
 
@@ -584,7 +579,7 @@ Example :
 ```fs
 let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2 // Creating a basic sound with an envelope to make it interesting
 
-let echo = Filter.Echo 3 0.6 0.25 44100. basicSound
+let echo = synth.Echo 3 0.6 0.25 basicSound
 ```
 
 The above examples give the following outputs :
@@ -595,7 +590,7 @@ The above examples give the following outputs :
 Similarly to echo, reverb repeats and reads the same sound with a delay.
 Except, reverb does so with a delay that is shorter then the original sound.
 
-``Filter.Reverb (delayRatio:float) (minAmpRatio:float) (decay:float) (sampleRate:float) (dryData:List<float>)``
+``Synth.Reverb (delayRatio:float) (minAmpRatio:float) (decay:float) (dryData:List<float>)``
 
 Instead of a fixed time, we are using ratio between the the delay and the length of the sound.
 This way, we can just simply input a value between 0 and 1, in which the filter gets more and more pronounce towards 1 instead of needing to play attention to the length of the sound.
@@ -605,7 +600,7 @@ Example:
 ```fs
 let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2 // Creating a basic sound with an envelope to make it interesting
 
-let reverb = Filter.Reverb 0.4 0.3 0.8 44100. basicSound
+let reverb = synth.Reverb 0.4 0.3 0.8 basicSound
 ```
 
 The above examples give the following outputs:
@@ -614,13 +609,13 @@ The above examples give the following outputs:
 ### Flanger
 
 The flange filter is used to add kind of sweeping sound to the audio.
-``Filter.Flanger (delay:float) (speed:float) (sampleRate:float) (bpm:float) (dryData:List<float>)``
+``Synth.Flanger (delay:float) (speed:float) (dryData:List<float>)``
 
 Example:
 ```fs
     let synth = Synth() // Init
     let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2 // Creating a basic sound with an envelope to make it interesting
-    let flanger = Filter.Flanger 20. 0.4 44100. 114. basicSound //Adding filter
+    let flanger = synth.Flanger 20. 0.4 basicSound //Adding filter
     
     synth.WriteToWav "basic.wav" [basicSound]
     synth.WriteToWav "flanger.wav" [flanger]
@@ -636,14 +631,14 @@ We are still using a basic AHDSR envelope :
 
 ![Envelope explanation](Reports/Files/envelope.png)
 
-``Filter.Envelope (sustain:float) (attack:float) (hold0:float) (decay0:float) (release0) (sampleRate:float) (data:List<float>)``
+``Synth.Envelope (sustain:float) (attack:float) (hold:float) (decay:float) (release) (data:List<float>)``
 
 Example:
 
 ```fs
 let synth = Synth()
 let basic = synth.Note (Seconds 3.) Note.A 4
-let env = Filter.Envelope 0.5 0.5 0.5 0.5 0.5 44100. basic
+let env = synth.Envelope 0.5 0.5 0.5 0.5 0.5 basic
 
 synth.WriteToWav "basic.wav" [basic]
 synth.WriteToWav "env.wav" [env]
@@ -657,19 +652,19 @@ The above example creates the following sound:
 ### Custom envelope
 
 Just like on creation, it is rather simple to insert a custom pattern into the anvelope.
-This is done using the  ``Filter.CustomEnvelope (dataPoints0: List<float * float>) (sampleRate:float) (data:List<float>)`` function.
+This is done using the  ``Synth.CustomEnvelope (dataPoints0: List<float * float>) (data:List<float>)`` function.
 
 For example, to create a simple filter that starts at 0 then rises to the maximum amplitude at the middle of the sound, then falls back to 0:
 
 ```fs
 let synth = Synth() // Init
 
-let exampleCustomEnvelope (data:List<float>) (sampleRate:float) =
-    Filter.CustomEnvelope [(0., 0.); ((float data.Length / sampleRate / 2.), 1.); ((float data.Length / sampleRate), 0.)] sampleRate data
+let exampleCustomEnvelope (data:List<float>) =
+    Filter.CustomEnvelope [(0., 0.); ((float data.Length / synth.sampleRate / 2.), 1.); ((float data.Length / synth.sampleRate), 0.)] data
 
-let custEnvSound1 = exampleCustomEnvelope (synth.Note (Seconds 1) Note.A 4) 44100.
-let custEnvSound2 = exampleCustomEnvelope (synth.Note (Seconds 2) Note.B 4) 44100.
-let custEnvSound3 = exampleCustomEnvelope (synth.Note (Seconds 3) Note.C 4) 44100.
+let custEnvSound1 = exampleCustomEnvelope (synth.Note (Seconds 1) Note.A 4)
+let custEnvSound2 = exampleCustomEnvelope (synth.Note (Seconds 2) Note.B 4)
+let custEnvSound3 = exampleCustomEnvelope (synth.Note (Seconds 3) Note.C 4)
 
 synth.WriteToWav "custEnvSound1.wav" [custEnvSound1]
 synth.WriteToWav "custEnvSound2.wav" [custEnvSound2]
@@ -694,7 +689,7 @@ Here is an usage example:
 
 ```fs
 let basic = synth.Note (Seconds 10.) Note.A 4
-let sound = Filter.LFO_AM 60. -1. 1. (int synth.sampleRate) basic
+let sound = synth.LFO_AM 60. -1. 1. basic
 ```
 
 ![LFO AM Example](Reports/Files/LFO_AM.png)
@@ -702,7 +697,7 @@ let sound = Filter.LFO_AM 60. -1. 1. (int synth.sampleRate) basic
 #### FM
 
 As the name implies, Frequency modulation alternatively increases and decreases the frequency of the input data.
-``Filter.LFO_FM (modWave:List<float>) (multiplicator:float) (data:List<float>)``
+``Synth.LFO_FM (modWave:List<float>) (multiplicator:float) (data:List<float>)``
 
 The ``modWave`` stands for an inputed wave which the function will follow to modulate the inputed data.
 The ``multiplicator`` is there to help control how strong the effect of the filter is.
@@ -713,7 +708,7 @@ let synth = Synth() // Init
 
 let basic = synth.Note (Seconds 2.) Note.A 4      // Creating a basic note
 let modWave = synth.Sound 100. (Seconds 2.) Sin   // Creating a modWave of 100Hz
-let fm = Filter.LFO_FM modWave 2. basic           // Applying the LFO FM filter
+let fm = synth.LFO_FM modWave 2. basic           // Applying the LFO FM filter
 
 synth.WriteToWav "basic.wav" [basic]
 synth.WriteToWav "modWave.wav" [modWave]
@@ -732,19 +727,19 @@ They are used to cut off frequencies above a given threshold, below a given thre
 They are used like so :
 
 ```fs
-  let musicLowPass = Filter.LowPass sampleRate cutOffFreq Music
+  let musicLowPass = synth.LowPass cutOffFreq Music
 ```
 
 ```fs
-  let musicHighPass = Filter.HighPass sampleRate cutOffFreq Music
+  let musicHighPass = synth.HighPass cutOffFreq Music
 ```
 
 ```fs
-  let musicBandPass = Filter.BandPass sampleRate lowCutOffFreq highCutOffFreq Music
+  let musicBandPass = synth.BandPass lowCutOffFreq highCutOffFreq Music
 ```
 
 ```fs
-  let musicRejectBand = Filter.RejectBand sampleRate lowCutOffFreq highCutOffFreq Music
+  let musicRejectBand = synth.RejectBand lowCutOffFreq highCutOffFreq Music
 ```
 
 # Footnotes

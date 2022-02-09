@@ -397,3 +397,49 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
             PlayMusic.PlayMac offset ("./Output/" + filePath)
         | _ ->  
             PlayMusic.PlayWithOffsetFromPath offset ("./Output/" + filePath)
+
+    //Filters
+
+    member x.ChangeAmplitude (multiplicator:float) (data:List<float>) =
+        Filter.ChangeAmplitude multiplicator data
+
+    member x.AddTwoWaves (ratio:float) (dataX:List<float>) (dataY:List<float>) =
+        Filter.AddTwoWaves ratio dataX dataY
+    
+    member x.Repeater (nbEcho:int) (decay:float) (delay:float) (dryData:List<float>) =
+        Filter.Repeater nbEcho decay delay x.sampleRate dryData
+
+    member x.Reverb (delayRatio:float) (minAmpRatio:float) (decay:float) (dryData:List<float>) =
+        Filter.Reverb delayRatio minAmpRatio decay x.sampleRate dryData
+    
+    member x.Echo (nbEcho:int) (decay:float) (delay:float) (dryData:List<float>) =
+        Filter.Echo nbEcho decay delay x.sampleRate dryData
+
+    member x.Flanger (delay:float) (speed:float) (dryData:List<float>) =
+        Filter.Flanger delay speed x.sampleRate x.bpm dryData
+
+    member x.CustomEnvelope (dataPoints: List<float * float>) (data:List<float>) =
+        Filter.CustomEnvelope dataPoints x.sampleRate data
+    
+    member x.Envelope (sustain:float) (attack:float) (hold:float) (decay:float) (release:float) (data:List<float>) =
+        Filter.Envelope sustain attack hold decay release x.sampleRate data 
+    
+    member x.LFO_AM (frequency:float) (minAmplitude:float) (maxAmplitude:float) (data:List<float>) =
+        Filter.LFO_AM frequency minAmplitude maxAmplitude x.sampleRate data
+    
+    member x.LFO_FM (modWave:List<float>) (multiplicator:float) (data:List<float>) =
+        Filter.LFO_FM modWave multiplicator data
+    
+    member x.LowPass (cutoffFreq:float) (data:List<float>) =
+        Filter.LowPass x.sampleRate cutoffFreq data
+    
+    member x.HighPass (cutoffFreq:float) (data:List<float>) =
+        Filter.HighPass x.sampleRate cutoffFreq data
+    
+    member x.BandPass (lowFreq:float) (highFreq:float) (data:List<float>) = 
+        Filter.BandPass x.sampleRate lowFreq highFreq data
+    
+    member x.RejectBand (lowFreq:float) (highFreq:float) (data:List<float>) = 
+        Filter.RejectBand x.sampleRate lowFreq highFreq data
+
+    
