@@ -3,6 +3,7 @@ namespace Synthesizer
 open System
 open System.IO
 
+[<StructuredFormatDisplay("{AsString}")>]
 type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?basePlatform:bool) =
 
     member val bpm = defaultArg baseBpm 90.
@@ -17,6 +18,9 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
 
     member val waveType = defaultArg baseWaveType Sin
         with get, set
+
+    override x.ToString() = $"sampleRate: {x.sampleRate} \nbpm: {x.bpm} \ndefault wave type: {x.waveType}"
+    member x.AsString = x.ToString()
 
     /// <summary>
     /// Calculates a frequency with the base A4=440 Hz
