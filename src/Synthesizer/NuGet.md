@@ -1,0 +1,1 @@
+Synthesizer is a library that can be used to create music via code for the .NET Framework. Written in F#.

@@ -13,7 +13,7 @@
     <Copyright>MIT</Copyright>
     <PackageProjectUrl>https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A</PackageProjectUrl>
     <PackageIcon>logo.png</PackageIcon>
-    <PackageReadmeFile>Nuget README.md</PackageReadmeFile>
+    <PackageReadmeFile>NuGet.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Sound, Synthesizer, F#, .NET, dotnet, modulation, fourier, ALGOSUP, Echo, Flanger, Filter, SoundWave, Reverb,</PackageTags>
@@ -38,11 +38,11 @@
     <Compile Include="UI/Synth.fs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\..\Pictures\logo.png">
+    <None Include="logo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\..\..\..\ALGOSUP_2022_Project_3_A\Reports\Nuget README.md">
+    <None Include="NuGet.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
