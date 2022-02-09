@@ -19,9 +19,18 @@ module PlayMusic
         music.Play()
         ignore (System.Console.ReadLine()) // press enter to end it // thread.sleep(1) could be another solution
     
+
+
+    /// <summary>
+    /// Plays a sound file on Mac distributions
+    /// </summary>
+    /// <param name="stream">The path where the file is</param>
+    
     let PlayMac offset (file:string) =
         Process.Start("afplay", file + " -t " + string offset) |> ignore
         ignore (System.Console.ReadLine()) // press enter to end it // thread.sleep(1) could be another solution
+
+
 
     /// <summary>
     /// This function is just an alias for PlayWithOffset that gives an offset of 0 seconds. It requires only one parameter
