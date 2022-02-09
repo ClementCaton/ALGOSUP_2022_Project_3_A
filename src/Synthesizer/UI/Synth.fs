@@ -292,38 +292,38 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
 
 
     /// <summary>
-    /// 
+    /// Cuts off the start of the inputed sound data
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="time">The amount of time to be cut off in seconds</param>
+    /// <param name="data">Data to be edited</param>
+    /// <returns>The end of the inputed sound data</returns>
     
-    member x.CutStart time (data:List<float>) =
+    member x.CutStart (time:float) (data:List<float>) =
         Utility.CutStart x.sampleRate time data
 
 
 
     /// <summary>
-    /// 
+    /// Cuts off the end of the inputed sound data
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="time">The amount of time to be cut off in seconds</param>
+    /// <param name="data">Data to be edited</param>
+    /// <returns>The start of the inputed sound data</returns>
     
-    member x.CutEnd time (data:List<float>) =
+    member x.CutEnd (time:float) (data:List<float>) =
         Utility.CutEnd x.sampleRate time data
 
 
 
     /// <summary>
-    /// 
+    /// Cuts out the middle of the inputed sound data
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="timeStart">The amount of time to be kept at the start in seconds</param>
+    /// <param name="timeEnd">The amount of time to be kept at the end in seconds</param>
+    /// <param name="data">Data to be edited</param>
+    /// <returns>The edges of the inputed sound data</returns>
     
-    member x.CutMiddle timeStart timeEnd (data:List<float>) =
+    member x.CutMiddle (timeStart:float) (timeEnd:float) (data:List<float>) =
         Utility.CutEnd x.sampleRate (float data.Length/x.sampleRate - timeStart) data @ Utility.CutStart x.sampleRate (float data.Length/x.sampleRate - timeEnd) data
 
 
@@ -331,10 +331,10 @@ type Synth(?baseBpm:float, ?baseSampleRate:float, ?baseWaveType:BaseWaves, ?base
     /// <summary>
     /// 
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="Cuts off the end of the inputed sound data"></param>
+    /// <param name="The amount of time to be cut off from the start in seconds"></param>
+    /// <param name="The amount of time to be cut off from the end in seconds"></param>
+    /// <returns>The edges of the inputed sound data</returns>
     
     member x.CutEdge timeStart timeEnd (data:List<float>) =
         Utility.CutStart x.sampleRate timeStart (Utility.CutEnd x.sampleRate timeEnd data)
