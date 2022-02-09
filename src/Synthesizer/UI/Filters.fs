@@ -6,24 +6,24 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Changes the amplitude of the inputted audio data
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="multiplier">Ratio at which the amplitude needs to be changed at</param>
+    /// <param name="data">Audio data</param>
+    /// <returns>Audio data with the new amplitude</returns>
     
-    let ChangeAmplitude (multiplicator:float) (data:List<float>) =
-        data |> List.map (( * ) multiplicator)
+    let ChangeAmplitude (multiplier:float) (data:List<float>) =
+        data |> List.map (( * ) multiplier)
 
 
 
     /// <summary>
-    /// 
+    /// Additions two waves with ratio between them
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="ratio">The ratio between the two waves</param>
+    /// <param name="dataX">First audio input</param>
+    /// <param name="dataY">Second audio input</param>
+    /// <returns>The sum of the two inputted audios</returns>
     
     let AddTwoWaves (ratio:float) (dataX:List<float>) (dataY:List<float>) =
         let mutable output = List.empty
@@ -43,14 +43,14 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Repeats the inputted audio data with a preset delay and changes the amplitude every new repetition
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="nbEcho">Number of times the audio should be repeated</param>
+    /// <param name="decay">How much the amplitude of the echos should be changed (multiplied)</param>
+    /// <param name="delay">The delay for each new repetition (starts at 0, NOT at the end of the audio)</param>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="dryData">The original audio</param>
+    /// <returns>Repeated audio</returns>
     
     let Repeater (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) = 
         let rec RepeaterInner (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (wetData:List<float>) (dryData:List<float>) =   // This is also echo
@@ -66,14 +66,14 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Creates a reverberating effect
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="delayRatio">At which point the sound should be repeated (1s sound with 0.6 delay = 0.6s delay)</param>
+    /// <param name="minAmpRatio">Amplitude at which the sound should not be repeated anymore</param>
+    /// <param name="decay">How much the amplitude of the echos should be changed (multiplied)</param>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="dryData">The original audio</param>
+    /// <returns>Filtered audio</returns>
     
     let Reverb (delayRatio:float) (minAmpRatio:float) (decay:float) (sampleRate:float) (dryData:List<float>) =
         let delay = (float dryData.Length * delayRatio) / sampleRate
@@ -90,14 +90,14 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Creates an echo sound effect
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="nbEcho">Number of times the audio should be repeated</param>
+    /// <param name="decay">How much the amplitude of the echos should be changed (multiplied)</param>
+    /// <param name="delay">The delay for each new repetition (starts at the end of the audio)</param>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="dryData">The original audio</param>
+    /// <returns>Filtered audio</returns>
     
     let Echo (nbEcho:int) (decay:float) (delay:float) (sampleRate:float) (dryData:List<float>) =
         Repeater nbEcho decay (float dryData.Length / sampleRate + delay) sampleRate dryData
@@ -107,14 +107,14 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Adds a sweeping sound effect to the audio
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="Delay">Delay at which the effect should start at (in ms)</param>
+    /// <param name="speed">How fast should the effect get stronger</param>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="bpm">Beats per minute</param>
+    /// <param name="dryData">The original audio</param>
+    /// <returns>Filtered audio</returns>
     
     let Flanger (delay:float) (speed:float) (sampleRate:float) (bpm:float) (dryData:List<float>) =
         let step = speed/1000.*sampleRate
@@ -136,12 +136,12 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Creates a custom pattern for the inputted audios amplitude to follow
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="dataPoints0">Coordinates for the envelope to follow [(time1 en s, amp1); (time2 en s, amp2)]</param>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="data">Audio data</param>
+    /// <returns>Edited sound</returns>
     
     let CustomEnvelope (dataPoints0: List<float * float>) (sampleRate:float) (data:List<float>) =
         let dataPoints = if (fst dataPoints0[0] <> 0.) then (0., 0.) :: dataPoints0 else dataPoints0
@@ -157,18 +157,18 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// The envelope is the way a sound change over time.
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="sustain">The level of output while a sustain instruction persists (held note).</param>
+    /// <param name="attack">The amount of time it takes for the envelop to reach the end of that first stage, usually the peak level.</param>
+    /// <param name="hold0">Adjust the time that the peak amplitude level is held before the decay stage of the envelope begins</param>
+    /// <param name="decay0">The amount of time it takes for the envelope to decrease to some specified sustain level</param>
+    /// <param name="release0">The time it takes for the output to decrease to zero after the key is released or the sustain instruction ends.</param>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="data">Audio data</param>
+    /// <returns>Edited Sound</returns>
     
-    let Envelope (sustain:float) (attack:float) (hold0:float) (decay0:float) (release0:float) (sampleRate:float) (data:List<float>) = //release substracts from hold because I don't have the data for the release periode
+    let Envelope (sustain:float) (attack:float) (hold0:float) (decay0:float) (release0:float) (sampleRate:float) (data:List<float>) = //release subtracts from hold because I don't have the data for the release period
         let hold = hold0 + attack
         let decay = hold + decay0
         let release = (float data.Length/float sampleRate) - release0
@@ -179,14 +179,14 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Amplitude modulation using a low frequency oscillator.
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="frequency">The frequency of the modulation </param>
+    /// <param name="minAmplitude">The min amplitude of the sound</param>
+    /// <param name="maxAmplitude">The max amplitude of the sound</param>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="data">Audio data</param>
+    /// <returns>Edited Sound</returns>
     
     let LFO_AM (frequency:float) (minAmplitude:float) (maxAmplitude:float) (sampleRate:float) (data:List<float>) =
         let oscillator = FourWaves.SinWave
@@ -198,7 +198,16 @@ module Filter =
             x * (oscillator frequency amplitude verticalShift 0. t)
         )
 
-    let LFO_FM (modWave:List<float>) (multiplicator:float) (data:List<float>) =
+    
+    /// <summary>
+    /// Frequency modulation using a low frequency oscillator.
+    /// </summary>
+    /// <param name="modWave">The frequency of the modulation</param>
+    /// <param name="multiplier">The min amplitude of the sound</param>
+    /// <param name="data">Audio data</param>
+    /// <returns>Edited Sound</returns>
+    
+    let LFO_FM (modWave:List<float>) (multiplier:float) (data:List<float>) =
         
         let getShift (startAmp:float) (endAmp:float) (nStep:float)=
             let fullRange = endAmp - startAmp
@@ -212,7 +221,7 @@ module Filter =
             else 
                 //printfn $"{dryData.Length}"
 
-                let delta = modWave[0] * multiplicator
+                let delta = modWave[0] * multiplier
 
                 let wetData = 
                     match None with 
@@ -229,12 +238,12 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Cuts the sound depending on the frequency
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="cutoffFreq">The max frequency at which the sound will be cut</param>
+    /// <param name="data">Audio data</param>
+    /// <returns>Edited Sound</returns>
     
     let LowPass (sampleRate:float) (cutoffFreq:float) (data:List<float>) =
         let RC = 1. / (2. * Math.PI * cutoffFreq)
@@ -255,12 +264,12 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Cuts the sound depending on the frequency
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="cutoffFreq">The min frequency at which the sound will be cut</param>
+    /// <param name="data">Audio data</param>
+    /// <returns>Edited Sound</returns>
     
     let HighPass (sampleRate:float) (cutoffFreq:float) (data:List<float>) =
         let RC = 1. / (2. * Math.PI * cutoffFreq)
@@ -278,15 +287,14 @@ module Filter =
         )
 
 
-
     /// <summary>
-    /// 
+    /// Cuts the sound depending on the frequency
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="lowFreq">The min frequency of the interval to be kept</param>
+    /// <param name="highFreq">The max frequency of the interval to be kept</param>
+    /// <param name="data">Audio data</param>
+    /// <returns>Edited Sound</returns>
     
     let BandPass (sampleRate:float) (lowFreq:float) (highFreq:float) (data:List<float>) = 
         data |> LowPass sampleRate lowFreq |> HighPass sampleRate highFreq
@@ -294,13 +302,13 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Cuts the sound depending on the frequency
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="sampleRate">The inputs sample rate</param>
+    /// <param name="lowFreq">The min frequency of the interval to be erased</param>
+    /// <param name="highFreq">The max frequency of the interval to be erased</param>
+    /// <param name="data">Audio data</param>
+    /// <returns>Edited Sound</returns>
     
     let RejectBand (sampleRate:float) (lowFreq:float) (highFreq:float) (data:List<float>) = 
         let lowPassData = HighPass sampleRate lowFreq data
@@ -309,11 +317,11 @@ module Filter =
 
 
     /// <summary>
-    /// 
+    /// Applies multiple filters simultaneously
     /// </summary>
-    /// <param name=""></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+    /// <param name="filterList">List of filters to apply</param>
+    /// <param name="data">Audio data</param>
+    /// <returns>Filtered data</returns>
     
     let ApplyFilters filterList data =
         let mutable output = data
