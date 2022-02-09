@@ -59,7 +59,7 @@
 
 ## Project
 
-The project given by [*Algosup*](https://www.algosup.com/index.html) and [*Robert Pickering*](https://github.com/robertpi) was to create a Sound Synthesizer able to open, modify, create and save sounds, written in F#.
+The project was prposed by [*Algosup*](https://www.algosup.com/index.html) and [*Robert Pickering*](https://github.com/robertpi). Its objective is to create a Sound Synthesizer capable of opening, modifying, createing and saveing sounds using in F#.
 
 ## Project members
 
@@ -76,7 +76,7 @@ The project given by [*Algosup*](https://www.algosup.com/index.html) and [*Rober
 
 ### MP3 developpment
 
-We need to complete the MP3 features, we are supposed to be able to compress and create sounds in MP3, you can already look at your data inside your mp3 files and check the progress inside the [mp3-compression branch](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/tree/compression-mp3)
+MP3 features are still in developpement. We are supposed to be able to compress and decompress MP3 files. It is already possible look at audio data in mp3 files and check the progress inside the [mp3-compression branch](https://github.com/ClementCaton/ALGOSUP_2022_Project_3_A/tree/compression-mp3)
 
 ## Getting Started
 
@@ -86,7 +86,7 @@ Download .NET 6.0 or newer
 
 ### Download
 
-You can simply download our lastest builds by the NuGet platform by these command
+You can simply download our lastest builds by the NuGet platform with this command:
 
 #### .Net CLI
 
