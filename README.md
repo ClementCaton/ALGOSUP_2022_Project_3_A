@@ -56,6 +56,7 @@
   - [Unit Test](#unit-test)
   - [See Also](#see-also)
   - [**Definitions**](#definitions)
+
 </details>
 
 ## Project
@@ -87,7 +88,7 @@ Download .NET 6.0 or newer
 
 ### Download
 
-You can simply download our latest builds by the NuGet platform by these command
+You can simply download our latest build through the NuGet platform with this command
 
 #### .Net CLI
 
@@ -95,7 +96,7 @@ You can simply download our latest builds by the NuGet platform by these command
 
 ## **Basic structure**
 
-To interact with the library you'll have to mainly interact with two objects.
+To interact with the library you will have to mainly interact with two objects.
 The ``Synth`` object which is the actual sound synthesizer and the ``Filter`` object which contains a list of function that will allow you to modify the created sounds.
 
 In the rest of the document, unless specified otherwise, the following line of code is assumed to be at the start of the code.
@@ -177,10 +178,10 @@ For example if we want to write a .wav file with two channels that would look li
 
 ```fs
 let synth = Synth() // Init
-let sound1 = synth.SoundWithEnveloppe 440. (Seconds 2.) Sin 0.5 0.5 0.5 0.5 0.5  // First audio
-let sound2 = synth.SoundWithEnveloppe 440. (Seconds 2.) Sin 0.5 0.2 0.3 0.4 0.5  // Second audio
+let channel1 = synth.SoundWithEnveloppe 440. (Seconds 2.) Sin 0.5 0.5 0.5 0.5 0.5  // First audio
+let channel2 = synth.SoundWithEnveloppe 440. (Seconds 2.) Sin 0.5 0.2 0.3 0.4 0.5  // Second audio
 
-synth.WriteToWav "stereo.wav" [sound1; sound2]  // Writing file with two channels
+synth.WriteToWav "stereo.wav" [channel1; channel2]  // Writing file with two channels
 ```
 
 This will create the following audio file :
@@ -246,7 +247,7 @@ synth.WriteToWav "basic.wav" [basicSound]
 This, of course, live us with a straight blob of a sinusoidal sound wave with a duration of 1 second:
 ![Simple sin wave](Reports/Files/customEnv-0.PNG)
 
-Now if we do the same thing but with our envelope that would look a little like this:
+Now if we do the same thing but with our envelope that would look like this:
 
 ```fs
 let synth = Synth() // Init
@@ -378,6 +379,7 @@ You can superpose different sounds together to get a 3rd that is the result of t
 There is the function ``synth.Add sounds``. The variable sounds is a List<List<float>> containing the list of sounds that will be superposed together. This function will superpose the sounds together and average the values depending on the number of waves superposed.
 
 Example:
+
 ```fs
 let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
 let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
@@ -391,6 +393,7 @@ let added = synth.Add [sound1;sound2;sound3]
 There is the function ``Utility.AddFactor (map:List<Tuple<List<float>, float>>)``. The variable map contains a list of tuple containing the sounds the user wants to superpose together and the ratio of the sound.
 
 Example:
+
 ```fs
 let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
 let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
@@ -403,9 +406,10 @@ It is recommended that the total ratios the user uses is equal to 1. Otherwise t
 
 ### Superposing audio without ratios
 
-There is the function ``AddSimple (sounds:list<list<float>>)``. This function will return the highest absolute value of the data. 
+There is the function ``AddSimple (sounds:list<list<float>>)``. This function will return the highest absolute value of the data.
 
 Example:
+
 ```fs
 let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
 let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
@@ -516,10 +520,12 @@ The above example automatically opens the browser with the following graph:
 To extract the main harmonics from the analysis, use `FrequencyAnalyser.LocalMaxValuesIndices (threshold: float) (map: Map<float, float>)`
 
 For example, with the previous code, running
+
 ```fs
 let frequencies = FrequencyAnalysis.LocalMaxValuesIndices 0.2 analysis
 printfn "Frequencies: %A" frequencies
 ```
+
 will output `Frequencies: [220.0457771; 440.0915541; 879.8466468]`
 
 ## Filters
@@ -641,6 +647,7 @@ The flange filter is used to add kind of sweeping sound to the audio.
 ``Filter.Flanger (delay:float) (speed:float) (sampleRate:float) (bpm:float) (dryData:List<float>)``
 
 Example:
+
 ```fs
     let synth = Synth() // Init
     let basicSound = synth.SoundWithEnveloppe 440. (Seconds 1.) Sin 0.5 0.2 0.2 0.2 0.2 // Creating a basic sound with an envelope to make it interesting
@@ -649,6 +656,7 @@ Example:
     synth.WriteToWav "basic.wav" [basicSound]
     synth.WriteToWav "flanger.wav" [flanger]
 ```
+
 The results are:
 ![Flanger](Reports/Files/flanger.png)
 
@@ -730,6 +738,7 @@ The ``modWave`` stands for an inputted wave which the function will follow to mo
 The ``multiplier`` is there to help control how strong the effect of the filter is.
 
 Example:
+
 ```fs
 let synth = Synth() // Init
 
@@ -741,9 +750,9 @@ synth.WriteToWav "basic.wav" [basic]
 synth.WriteToWav "modWave.wav" [modWave]
 synth.WriteToWav "fm.wav" [fm]
 ```
+
 The output is:
 ![LFO FM](Reports/Files/lfo_fm.png)
-
 
 ### LowPass / HighPass / BandPass / RejectBand filters
 
