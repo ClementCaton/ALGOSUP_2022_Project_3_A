@@ -87,7 +87,7 @@ Download .NET 6.0 or newer
 
 ### Download
 
-You can simply download our lastest builds by the NuGet platform with this command:
+You can simply download our lastest builds by the NuGet platform with this command :
 
 #### .Net CLI
 
@@ -98,7 +98,7 @@ You can simply download our lastest builds by the NuGet platform with this comma
 To interact with the library you'll have to mainly interact with the ``Synth`` object.
 This object functions as a sort of API towards the rest of the library.
 
-The synthesizer can be initialysed as follows:
+The synthesizer can be initialysed as follows :
 ```fs
 let synth = Synth()
 ```
@@ -109,7 +109,7 @@ The reasoning behind using a ``type`` instead of a ``module`` for our library wa
 Values such as the samplerate[^11], the bpm[^4] or the default waveform[^3] are needed everywhere but tend to stay the same.
 These values can be accesed and modified directly from the object.
 
-Example:
+Example :
 ```fs
 let synth = Synth()   // Init Synth()
 
@@ -123,7 +123,7 @@ print $"{synth}"        // Print default values with new default sampleRate
 print $"{oldSamplRate}" // Print old sampleRate
 ```
 
-The above example prints:
+The above example prints :
 ```
 sampleRate: 44100 
 bpm: 90 
@@ -146,7 +146,7 @@ You can open it from your own path using ``synth.readFromWavWithPath (filePath:s
 
 These functions return a tuple containing the ``soundData:list<list<float>>``, ``duration:float``, ``sampleRate:int`` and the ``bitsPerSample:int``.
 
-Example:
+Example :
 
 ```fs
 let inOutputData, inOutputDuration, inOutputSampleRate, inOutputBPSampleRate = synth.ReadFromWav "yourFileName.wav" // get everything from a file in the Output folder
@@ -203,7 +203,7 @@ Whenever data is getting written the input needs to be a list of lists and every
 
 Each of the inner lists represent the audio data in a different channel.
 
-For example if we want to write a .wav file with two channels that would look like this:
+For example if we want to write a .wav file with two channels that would look like this :
 
 ```fs
 let synth = Synth() // Init
@@ -220,7 +220,7 @@ This will create the following audio file :
 
 You can create some basic audio using ``synth.Sound (frequency:float) (duration:Duration) (waveType:BaseWaves)``
 
-Example:
+Example :
 
 ```fs
 let newSound = synth.Sound 440. (Seconds 1.) Sin    // Create a 1 second sinusoidal wave with a frequency of 440Hz.
@@ -229,7 +229,7 @@ let newSound2 synth.Sound (synth.getNoteFreq 3 Note.F) Half Triangular // Create
 
 Alternatively, it is possible to directly create a note with the ``synth.Note (duration:Duration) (mNote:Note) (octave:int)``.
 
-Example:
+Example :
 
 ```fs
 let newNote = synth.Note Quarter Note.D 5 // Create a D5 quarter note.
@@ -243,17 +243,17 @@ We are using a basic AHDSR[^6] envelope[^7] :
 
 ![After](Reports/Files/envelope.png)
 
-Example:
+Example :
 
 ```fs
 let synth = Synth()
 let sound = synth.SoundWithEnveloppe 440. (Seconds 3.) Sin 0.5 0.5 0.5 0.5 0.5  // Create sound with envelope
 ```
 
-The above example creates the following sound:
+The above example creates the following sound :
 ![After](Reports/Files/createWithEnv.png)
 
-<sup>* Please note: when creating a new sound with this method, the release adds data at the end of the normal data.</sup>
+<sup>* Please note : when creating a new sound with this method, the release adds data at the end of the normal data.</sup>
 
 ### Creating audio data with a custom envelope
 
@@ -262,9 +262,9 @@ Its possible to create sounds with more ezoteric envelopes using the ``Synth.Sou
 The ``dataPoints`` variable refers to a list of coordinates for which the envelope will "nudge" the sound towards.
 It contains a list of tuples, each tuple represents a point in time first and an amplitude second.
 
-For the shake of an example, lets create a simple envelope that only rises up from 0 to 1 and than back again to 0:
+For the shake of an example, lets create a simple envelope that only rises up from 0 to 1 and than back again to 0 :
 
-First of all, a simple sound withoun an envelope so we'll have a point of reference:
+First of all, a simple sound withoun an envelope so we'll have a point of reference :
 
 ```fs
 let synth = Synth() // Init
@@ -273,10 +273,10 @@ let basicSound = synth.Note (Seconds 1) Note.A 4
 synth.WriteToWav "basic.wav" [basicSound]
 ```
 
-This, of course, live us with a straight blob of a sinusoidal soundwave with a duration of 1 second:
+This, of course, live us with a straight blob of a sinusoidal soundwave with a duration of 1 second :
 ![Simple sinwave](Reports/Files/customEnv-0.PNG)
 
-Now if we do the same thing but with our envelope that would look a little like this:
+Now if we do the same thing but with our envelope that would look a little like this :
 
 ```fs
 let synth = Synth() // Init
@@ -285,11 +285,11 @@ let custEnvSound = synth.SoundWithCustomEnveloppe (synth.GetNoteFreq Note.A 4) (
 synth.WriteToWav "custEnvSound.wav" [custEnvSound]
 ```
 
-The output already looks a bit more interresting:
+The output already looks a bit more interresting :
 
 ![Custom envelope](Reports/Files/customEnv-1.PNG)
 
-A better way of doing this would be to outright create a function for the new envelope:
+A better way of doing this would be to outright create a function for the new envelope :
 
 ```fs
 let synth = Synth() // Init
@@ -384,7 +384,7 @@ You can superpose different sounds together to get a 3rd that is the result of t
 
 There is the function ``synth.Add sounds``. The variable sounds is a List<List<float>> containing the list of sounds that will be superposed together. This function will superpose the sounds together and average the values depending on the number of waves superposed.
 
-Example:
+Example :
 ```fs
 let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
 let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
@@ -397,7 +397,7 @@ let added = synth.Add [sound1;sound2;sound3]
 
 There is the function ``Utility.AddFactor (map:List<Tuple<List<float>, float>>)``. The variable map contains a list of tuple containing the sounds the user wants to superpose together and the ratio of the sound.
 
-Example:
+Example :
 ```fs
 let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
 let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
@@ -412,7 +412,7 @@ It is recomended that the total ratios the user uses is equal to 1. Otherwise th
 
 There is the function ``AddSimple (sounds:list<list<float>>)``. This function will return the highest absolute value of the data. 
 
-Example:
+Example :
 ```fs
 let sound1 = synth.Compose [synth.Note Eighth Note.C 5]
 let sound2 = synth.Compose [synth.Note Eighth Note.B 8]
@@ -513,11 +513,11 @@ let analysis = synth.Fourier A345
 synth.PreviewMap "Analysis of A3, A4, A5" analysis
 ```
 
-The above example automatically opens the browser with the following graph:
+The above example automatically opens the browser with the following graph :
 
 ![Preview](Reports/Files/Frequency-Analysis.png)
 
-> Note: Tools to zoom and move are present on the page.
+> Note : Tools to zoom and move are present on the page.
 
 To extract the main harmonics from the analysis, use `FrequencyAnalyser.LocalMaxValuesIndices (threshold: float) (map: Map<float, float>)`
 
@@ -576,7 +576,7 @@ let MusicWithAmplitude = synth.ChangeAmplitude 0.5 Music
 ### Custom repeater filter
 
 The repeater filter does exactly what it says on the tin.
-It repeats the inputted data with an offset and reads to the original sound.
+It repeats the inputed data with an offset and reads to the original sound.
 This filter is the basis on which we built the Reverb and Echo filters.
 
 The function looks like this : ``Synth.Repeater (nbEcho:int) (decay:float) (delay:float) (dryData:List<float>)``
@@ -678,7 +678,7 @@ synth.WriteToWav "basic.wav" [basic]
 synth.WriteToWav "env.wav" [env]
 ```
 
-The above example creates the following sound:
+The above example creates the following sound :
 ![After](Reports/Files/env.png)
 
 <sup>* Please note: when adding an envelope on top of an already existing sound using this method, the release is accounted into the already existing data and the length of the data does not change.</sup>
@@ -688,7 +688,7 @@ The above example creates the following sound:
 Just like on creation, it is rather simple to insert a custom pattern into the anvelope.
 This is done using the  ``Synth.CustomEnvelope (dataPoints0: List<float * float>) (data:List<float>)`` function.
 
-For example, to create a simple filter that starts at 0 then rises to the maximum amplitude at the middle of the sound, then falls back to 0:
+For example, to create a simple filter that starts at 0 then rises to the maximum amplitude at the middle of the sound, then falls back to 0bn :
 
 ```fs
 let synth = Synth() // Init
@@ -719,7 +719,7 @@ This allows for a kind of wobble effect, alternating the amplitude between its m
 
 The function takes not only the modulating frequency as parameter but also the new lower and upper bounds (usually -1. and 1.) and the music's sample rate.
 
-Here is an usage example:
+Here is an usage example :
 
 ```fs
 let basic = synth.Note (Seconds 10.) Note.A 4
@@ -736,7 +736,7 @@ As the name implies, Frequency modulation alternatively increases and decreases 
 The ``modWave`` stands for an inputed wave which the function will follow to modulate the inputed data.
 The ``multiplicator`` is there to help control how strong the effect of the filter is.
 
-Example:
+Example :
 ```fs
 let synth = Synth() // Init
 
@@ -748,7 +748,7 @@ synth.WriteToWav "basic.wav" [basic]
 synth.WriteToWav "modWave.wav" [modWave]
 synth.WriteToWav "fm.wav" [fm]
 ```
-The output is:
+The output is :
 ![LFO FM](Reports/Files/lfo_fm.png)
 
 
@@ -788,7 +788,7 @@ The musical notes available are :
 The wave types available are :
 > ``Sin``, ``Square``, ``Triangular``, ``Saw``, ``Silence``, ``CustomInstrument``
 
-- The ``CustomInstrument`` value has a value of ``(float -> float -> float -> float -> float -> float)``. This is because the wave functions need to be written as:
+- The ``CustomInstrument`` value has a value of ``(float -> float -> float -> float -> float -> float)``. This is because the wave functions need to be written as :
 
 ```fs
 let WaveFunc (frequency:float) (amplitude:float) (verticalShift:float) (phaseShift:float) (timeLength:float) 
@@ -818,30 +818,30 @@ Link to our [**Software Architecture Design Choices**](https://github.com/Clemen
 
 ## **Definitions**
 
-[^1]: [Octave](https://en.wikipedia.org/wiki/Octave): A series of eight notes occupying the interval between (and including) two notes, one having twice or half the frequency of vibration of the other.
+[^1]: [Octave](https://en.wikipedia.org/wiki/Octave) : A series of eight notes occupying the interval between (and including) two notes, one having twice or half the frequency of vibration of the other.
 
 [^2]: [Note](https://en.wikipedia.org/wiki/Musical_note) : A note is a symbol denoting a musical sound.
 
-[^3]: [Basic Waves functions](https://www.musictheory.net/lessons/11):<br>A wave function is a mathematical function which can create a wave of a predefined pattern frequency, amplitude, etc.. In the scope of this project we are using the four basic waveforms: Sinusoidal, Square, Triangular and Saw.<br>The four basic waves are -><br><br>The sin wave = the simplest wave with a formula of *sin(2 π  frequency / sampleRate)* <br><br>The square wave = a wave made with an sgn of a sinwave with a formula of *sgn(sinwave)*<br><br>The saw wave = has a form close to a triangle, it has a right angle at the end of its decreasing part *2(t/p - [1/2+t/p]*<br><br>The triangle wave = this wave has the most complicated formula *period/π arcsin[sin(π x)]*
+[^3]: [Basic Waves functions](https://www.musictheory.net/lessons/11) :<br>A wave function is a mathematical function which can create a wave of a predefined pattern frequency, amplitude, etc.. In the scope of this project we are using the four basic waveforms: Sinusoidal, Square, Triangular and Saw.<br>The four basic waves are -><br><br>The sin wave = the simplest wave with a formula of *sin(2 π  frequency / sampleRate)* <br><br>The square wave = a wave made with an sgn of a sinwave with a formula of *sgn(sinwave)*<br><br>The saw wave = has a form close to a triangle, it has a right angle at the end of its decreasing part *2(t/p - [1/2+t/p]*<br><br>The triangle wave = this wave has the most complicated formula *period/π arcsin[sin(π x)]*
 
-[^4]: [beat](https://en.wikipedia.org/wiki/Beat_(music)): Beats is a sort of rythm; 2 beat per second is like a tempo, it will happen two time in a second
+[^4]: [beat](https://en.wikipedia.org/wiki/Beat_(music)) : Beats is a sort of rythm; 2 beat per second is like a tempo, it will happen two time in a second
 
-[^5]: Musical durations: <br>
+[^5]: Musical durations : <br>
 Musical duration is measured in beats[^4] <br>
 ``Whole last 4 beats``<br> ``Half last 2 beats``<br> ``Quarter last 1 beat``<br> ``Eighth last 1/2 beat``<br> ``Sixteenth last 1/4 beat``<br> ``Custom depends of the number of beat``<br> ``Seconds last the number of beats in the number of seconds written``
 
-[^6]: AHDSR: <br>An Envelope parameters -><br> Attack is the time taken for initial run-up of level from nil to peak, beginning when the key is pressed.<br><br>Hold time allows you to adjust the time that the peak amplitude level is held before the decay stage of the envelope begins.<br><br>
+[^6]: AHDSR : <br>An Envelope parameters -><br> Attack is the time taken for initial run-up of level from nil to peak, beginning when the key is pressed.<br><br>Hold time allows you to adjust the time that the peak amplitude level is held before the decay stage of the envelope begins.<br><br>
 Decay is the time taken for the subsequent run down from the attack level to the designated sustain level.<br><br>
 Sustain is the level during the main sequence of the sound's duration, until the key is released.<br><br>
 Release is the time taken for the level to decay from the sustain level to zero after the key is released
 
-[^7]: [Envelope](https://theproaudiofiles.com/synthesis-101-envelope-parameters-uses/): The envelope is the way a sound change over time. It usually enables you to control the wave forms with the AHDSR parameters.
+[^7]: [Envelope](https://theproaudiofiles.com/synthesis-101-envelope-parameters-uses/) : The envelope is the way a sound change over time. It usually enables you to control the wave forms with the AHDSR parameters.
 
-[^8]: [LFO / Low frequency oscillator](https://en.wikipedia.org/wiki/Low-frequency_oscillation): Is an oscillator performing under 20Hz to create audio effects such as vibrato and phasing.
+[^8]: [LFO / Low frequency oscillator](https://en.wikipedia.org/wiki/Low-frequency_oscillation) : Is an oscillator performing under 20Hz to create audio effects such as vibrato and phasing.
 
-[^9]: [Xplot.Plotly](https://fslab.org/XPlot/plotly.html): Is a nuget which allowsto view data in the form of graphs
+[^9]: [Xplot.Plotly](https://fslab.org/XPlot/plotly.html) : Is a nuget which allowsto view data in the form of graphs
 
-[^10]: [Stereo](https://en.wikipedia.org/wiki/Stereophonic_sound): Stereo in opposition to mono, is a sound using multiple audio source (usually 2) to recreate a multi-directional / 3D-sound.
+[^10]: [Stereo](https://en.wikipedia.org/wiki/Stereophonic_sound) : Stereo in opposition to mono, is a sound using multiple audio source (usually 2) to recreate a multi-directional / 3D-sound.
 
-[^11]: [Sample rate](https://www.vocitec.com/docs-tools/blog/sampling-rates-sample-depths-and-bit-rates-basic-audio-concepts#:~:text=The%20sampling%20rate%20refers%20to,a%20specific%20point%20in%20time.):The sampling rate refers to the number of samples of audio recorded every second. 
+[^11]: [Sample rate](https://www.vocitec.com/docs-tools/blog/sampling-rates-sample-depths-and-bit-rates-basic-audio-concepts#:~:text=The%20sampling%20rate%20refers%20to,a%20specific%20point%20in%20time.) : The sampling rate refers to the number of samples of audio recorded every second. 
 
