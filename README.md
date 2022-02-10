@@ -62,7 +62,7 @@
 
 ## Project
 
-The project was prposed by [*Algosup*](https://www.algosup.com/index.html) and [*Robert Pickering*](https://github.com/robertpi). Its objective is to create a Sound Synthesizer capable of opening, modifying, createing and saveing sounds using in F#.
+The project was proposed by [*Algosup*](https://www.algosup.com/index.html) and [*Robert Pickering*](https://github.com/robertpi). Its objective is to create a Sound Synthesizer capable of opening, modifying, createing and saveing sounds using in F#.
 
 ## Project members
 
